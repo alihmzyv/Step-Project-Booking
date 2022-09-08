@@ -37,4 +37,8 @@ public class Flight implements Identifiable, Serializable {
     public int getId() {
         return id;
     }
+
+    public static Flight getFlight() {
+        throw new RuntimeException("not implemented");
+    }
 }
