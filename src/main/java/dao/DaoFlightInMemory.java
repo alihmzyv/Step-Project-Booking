@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class DaoFlightInMemory extends DaoInMemory<Flight> {
-
-
-
     public DaoFlightInMemory(List<Flight> flights) {
         super(flights);
     }

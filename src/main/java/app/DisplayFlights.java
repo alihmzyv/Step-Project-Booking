@@ -1,17 +1,16 @@
 package app;
 
-import controllers.UserController;
+import controllers.FlightController;
 
-public class Register extends MenuItem {
+public class DisplayFlights extends MenuItem {
     private Database database;
-    public Register (int id) {
+    public DisplayFlights(int id) {
         super(id);
     }
 
-
     @Override
     public void run() {
-        throw new RuntimeException("not impl");
+        throw new RuntimeException();
     }
 
     public void setDatabase(Database database) {

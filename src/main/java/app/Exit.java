@@ -1,10 +1,8 @@
 package app;
 
-import controllers.UserController;
-
-public class Register extends MenuItem {
+public class Exit extends MenuItem {
     private Database database;
-    public Register (int id) {
+    public Exit(int id) {
         super(id);
     }
 

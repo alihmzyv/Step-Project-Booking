@@ -20,6 +20,10 @@ public class FlightController {
         return fs.getAllFlights();
     }
 
+    public void displayAllFlights() {
+        fs.displayAllFlights();
+    }
+
     public void updateAllFlights() {
         fs.updateAll();
     }

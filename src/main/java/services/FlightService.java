@@ -17,6 +17,9 @@ public class FlightService {
     public List<Flight> getAllFlights() {
         return dao.getAll();
     }
+    public void displayAllFlights() {
+        throw new RuntimeException("not impl");
+    }
 
     public void updateAll() {
         throw new RuntimeException("not imple");

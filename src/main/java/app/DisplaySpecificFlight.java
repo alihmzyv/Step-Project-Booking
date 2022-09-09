@@ -1,13 +1,12 @@
 package app;
 
-import controllers.UserController;
+import controllers.FlightController;
 
-public class Register extends MenuItem {
+public class DisplaySpecificFlight extends MenuItem {
     private Database database;
-    public Register (int id) {
+    public DisplaySpecificFlight(int id) {
         super(id);
     }
-
 
     @Override
     public void run() {
