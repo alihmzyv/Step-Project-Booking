@@ -3,7 +3,7 @@ package io;
 import java.io.File;
 
 public interface Console {
-    void println(String str);
+    void println(Object obj);
 
     void printFile(File file);
     String getInput(String message);

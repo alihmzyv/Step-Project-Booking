@@ -1,14 +1,16 @@
 package io;
 
 import java.io.*;
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class RealConsole implements Console {
     private final Scanner sn = new Scanner(System.in);
 
     @Override
-    public void println(String str) {
-        throw new RuntimeException("not implemented");
+    public void println(Object obj) {
+        System.out.println(obj.toString());
     }
 
     @Override
@@ -18,20 +20,40 @@ public class RealConsole implements Console {
                     .forEach(this::println);
         }
         catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            System.out.printf("Could not find the file: %s\n", file.getPath());
         }
         catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.printf("Could not read the file: %s\n", file.getPath());
         }
     }
 
     @Override
     public String getInput(String message) {
-        throw new RuntimeException("not implemented");
+        String input;
+        while (true) {
+            try {
+                input = sn.nextLine();
+                return input;
+            }
+            catch (NoSuchElementException exc) {
+                System.out.println("Please do not enter empty string. Try again.");
+            }
+        }
     }
 
     @Override
     public int getPositiveInt(String message) {
-        throw new RuntimeException("not impl");
+        int input;
+        while (true) {
+            try {
+                input = sn.nextInt();
+                if (input < 0) throw new InputMismatchException();
+                sn.nextLine();
+                return input;
+            }
+            catch (InputMismatchException exc) {
+                System.out.println("Please enter a positive integer. Try again.");
+            }
+        }
     }
 }

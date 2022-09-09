@@ -1,9 +1,10 @@
 package entities;
 
-import dao.Identifiable;
+import database.dao.Identifiable;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class User implements Identifiable, Serializable {
@@ -27,8 +28,29 @@ public class User implements Identifiable, Serializable {
         this.bookings = bookings;
     }
 
+    public User(String name, String surname, String username, String password) {
+        this.id = idCounter++;
+        this.name = name;
+        this.surname = surname;
+        this.username = username;
+        this.password = password;
+        bookings = new ArrayList<>();
+    }
+
     @Override
     public int getId() {
         return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void addBooking(Booking booking) {
+        bookings.add(booking);
     }
 }

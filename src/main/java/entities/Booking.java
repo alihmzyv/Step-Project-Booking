@@ -1,7 +1,8 @@
 package entities;
 
-import dao.Identifiable;
+import database.dao.Identifiable;
 
+import java.awt.print.Book;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ public class Booking implements Identifiable, Serializable {
     private Passenger passenger;
     private LocalDateTime dateTimeBooked;
 
-    public Booking(Flight flight, User user, Passenger passenger, LocalDateTime dateTimeBooked) {
+    public Booking(Flight flight, User user, Passenger passenger) {
         this.id = idCounter++;
         this.flight = flight;
         this.user = user;
@@ -29,5 +30,17 @@ public class Booking implements Identifiable, Serializable {
     @Override
     public int getId() {
         return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Passenger getPassenger() {
+        return passenger;
+    }
+
+    public Flight getFlight() {
+        return flight;
     }
 }

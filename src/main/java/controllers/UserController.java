@@ -6,21 +6,25 @@ import services.UserService;
 import java.util.List;
 
 public class UserController {
-    private UserService fs;
+    private UserService us;
 
-    public UserController(UserService fs) {
-        this.fs = fs;
+    public UserController(UserService us) {
+        this.us = us;
     }
 
     public UserController() {
-        fs = new UserService();
+        us = new UserService();
+    }
+
+    public UserService getService() {
+        return us;
+    }
+
+    public void saveUser(User user) {
+        us.saveUser(user);
     }
 
     public List<User> getAllUsers() {
-        return fs.getAllUsers();
-    }
-
-    public void updateAllUsers() {
-        fs.updateAll();
+        return us.getAllUsers();
     }
 }

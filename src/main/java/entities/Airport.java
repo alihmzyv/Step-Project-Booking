@@ -9,9 +9,14 @@ public enum Airport implements Serializable {
 
     private final String countryCode;
     private final String code;
+    private City city;
 
     Airport(String countryCode, String code) {
         this.countryCode = countryCode;
         this.code = code;
+    }
+
+    public City getCity() {
+        return city;
     }
 }

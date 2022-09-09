@@ -6,21 +6,21 @@ import services.PassengerService;
 import java.util.List;
 
 public class PassengerController {
-    private PassengerService fs;
+    private PassengerService ps;
 
-    public PassengerController(PassengerService fs) {
-        this.fs = fs;
+    public PassengerController(PassengerService ps) {
+        this.ps = ps;
     }
 
     public PassengerController() {
-        fs = new PassengerService();
+        ps = new PassengerService();
+    }
+
+    public PassengerService getService() {
+        return ps;
     }
 
     public List<Passenger> getAllPassengers() {
-        return fs.getAllPassengers();
-    }
-
-    public void updateAllPassengers() {
-        fs.updateAll();
+        return ps.getAllPassengers();
     }
 }
