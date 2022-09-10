@@ -1,16 +1,20 @@
 package entities;
 
+import database.Database;
 import database.dao.Identifiable;
 
 import java.awt.print.Book;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Objects;
 
 public class Booking implements Identifiable, Serializable {
     @Serial
     private static final long serialVersionUID = -2078227854687969036L;
-    private static int idCounter = 1;
+    private static int idCounter;
 
 
     private final int id;
@@ -18,6 +22,10 @@ public class Booking implements Identifiable, Serializable {
     private User user;
     private Passenger passenger;
     private LocalDateTime dateTimeBooked;
+
+    static {
+        idCounter = Database.getIdCounter("Booking");
+    }
 
     public Booking(Flight flight, User user, Passenger passenger) {
         this.id = idCounter++;
@@ -30,6 +38,10 @@ public class Booking implements Identifiable, Serializable {
     @Override
     public int getId() {
         return id;
+    }
+
+    public static int getIdCounter() {
+        return idCounter;
     }
 
     public User getUser() {
@@ -46,10 +58,25 @@ public class Booking implements Identifiable, Serializable {
 
     @Override
     public String toString() {
-        return  String.format("%s %s %s %s",
-                        id,
-                        flight.getFlightDesignator() +
-                        passenger +
-                        dateTimeBooked);
+        return String.join(" || ",
+                String.valueOf(id),
+                passenger.toString(),
+                flight.getFlightDesignator(),
+                flight.getFrom().toString(),
+                flight.getTo().toString(),
+                dateTimeBooked.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Booking booking = (Booking) o;
+        return id == booking.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

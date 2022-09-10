@@ -6,6 +6,6 @@ public enum City {
 
     @Override
     public String toString() {
-        return Character.toLowerCase(name().charAt(0)) + name().substring(1);
+        return name().charAt(0) + name().substring(1).toLowerCase();
     }
 }

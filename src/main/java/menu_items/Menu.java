@@ -43,6 +43,10 @@ public class Menu implements Runnable {
 
     @Override
     public void run() {
+        if (database.isUpdated()) {
+            database.outdate();
+            return;
+        }
         try {
             menuText = getMenuText();
         }
@@ -63,7 +67,7 @@ public class Menu implements Runnable {
             }
             try {
                 console.println(menuText);
-                int menuItemIdInput = console.getPositiveInt("Please select an item from the menu displayed above.");
+                int menuItemIdInput = console.getPositiveInt("Please select an item from the menu displayed above:");
                 menuItems.stream()
                         .filter(menuItem -> menuItem.getId() == menuItemIdInput)
                         .findFirst()

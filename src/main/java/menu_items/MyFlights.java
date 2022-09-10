@@ -19,6 +19,11 @@ public class MyFlights extends MenuItem {
 
     @Override
     public void run() {
-        IndexedDisplayer.displayIndexed(user.getAllBookings());
+        System.out.println("\t\t\t" + "=".repeat(100));
+        System.out.println(String.join(" || ",
+                "\t\t\tBooking ID", "Passenger", "Flight", "From", "To", "Time of Booking"));
+        System.out.println("\t\t\t" + "-".repeat(100));
+        user.getAllBookings().forEach(booking -> System.out.println("\t\t\t" + booking));
+        System.out.println("\t\t\t" + "=".repeat(100));
     }
 }

@@ -8,7 +8,7 @@ public interface IndexedDisplayer {
             System.out.println("There is nothing to display.");
             return;
         }
-        int[] index = {0};
+        int[] index = {1};
         objects.forEach(obj -> System.out.printf("%d. %s\n", index[0]++, obj.toString()));
     }
 }

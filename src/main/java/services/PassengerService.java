@@ -36,4 +36,7 @@ public class PassengerService {
     public boolean removePassenger(int id) {
         return dao.remove(id);
     }
+    public int getMaxId() {
+        return dao.getMaxId();
+    }
 }

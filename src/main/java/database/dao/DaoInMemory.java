@@ -1,5 +1,6 @@
 package database.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,5 +43,24 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
     @Override
     public boolean remove(int id) {
         return objects.removeIf(obj -> obj.getId() == id);
+    }
+
+    @Override
+    public boolean isPresent() {
+        return getAll().isPresent();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return getAll().isEmpty();
+    }
+
+    @Override
+    public int getMaxId() {
+        return getAll().orElseGet(ArrayList::new).stream()
+                .map(Identifiable::getId)
+                .mapToInt(id -> id)
+                .max()
+                .orElse(1);
     }
 }

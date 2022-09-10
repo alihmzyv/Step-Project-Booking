@@ -1,46 +1,56 @@
 package entities;
 
+import database.Database;
 import database.dao.Identifiable;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.io.*;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Flight implements Identifiable, Serializable{
     @Serial
     private static final long serialVersionUID = 9203702769697625107L;
-    private static int idCounter = 1;
+    private static int idCounter;
     private final int id;
     private String flightDesignator;
     private LocalDateTime dateTimeOfDeparture;
     private LocalDateTime dateTimeOfLanding;
     private Duration flightDuration;
+    private Airlines airline;
     private Airport from;
     private Airport to;
     private int capacity;
     private List<Passenger> passengers;
 
-    public Flight(String flightDesignator, LocalDateTime dateTimeOfDeparture, LocalDateTime dateTimeOfLanding, Airport from, Airport to, int capacity, List<Passenger> passengers) {
+    static {
+        idCounter = Database.getIdCounter("Flight");
+    }
+
+    public Flight(LocalDateTime dateTimeOfDeparture, LocalDateTime dateTimeOfLanding, Airlines airline, Airport from, Airport to, int capacity) {
         this.id = idCounter++;
-        this.flightDesignator = flightDesignator;
         this.dateTimeOfDeparture = dateTimeOfDeparture;
         this.dateTimeOfLanding = dateTimeOfLanding;
-        this.flightDuration = Duration.between(dateTimeOfLanding, dateTimeOfDeparture);
+        this.flightDuration = Duration.between(dateTimeOfDeparture, dateTimeOfLanding);
+        this.airline = airline;
         this.from = from;
         this.to = to;
         this.capacity = capacity;
-        this.passengers = passengers;
+        this.flightDesignator = getDesignator();
+        this.passengers = new ArrayList<>();
     }
+
 
     @Override
     public int getId() {
         return id;
+    }
+
+    public static int getIdCounter() {
+        return idCounter;
     }
 
     public LocalDateTime getDateTimeOfDeparture() {
@@ -76,7 +86,28 @@ public class Flight implements Identifiable, Serializable{
     }
 
     public static Flight getFlight() {
-        throw new RuntimeException("not implemented");
+        Random rnd = new Random();
+        LocalDateTime dateTimeOfDeparture = LocalDateTime.now().plusHours(rnd.nextInt(1, 24));
+        LocalDateTime dateTimeOfLanding = dateTimeOfDeparture.plusMinutes(rnd.nextInt(180, 420));
+        Airlines airline = Airlines.values()[rnd.nextInt(Airlines.values().length)];
+        Airport from = Airport.values()[rnd.nextInt(Airport.values().length)];
+        Airport[] airportsWithoutFrom = Arrays.stream(Airport.values())
+                .filter(airport -> !airport.equals(from))
+                .toArray(Airport[]::new);
+        Airport to = airportsWithoutFrom[rnd.nextInt(airportsWithoutFrom.length)];
+        int capacity = rnd.nextInt(1, 101);
+        return new Flight(dateTimeOfDeparture,
+                dateTimeOfLanding,
+                airline,
+                from,
+                to,
+                capacity);
+    }
+
+    public static List<Flight> getFlights(int count) {
+        return IntStream.range(0, count)
+                .mapToObj(i -> getFlight())
+                .collect(Collectors.toList());
     }
 
     public void setCapacity(int capacity) {
@@ -91,12 +122,42 @@ public class Flight implements Identifiable, Serializable{
         setCapacity(getCapacity() + 1);
     }
 
+    public String getDesignator() {
+        return String.format("%s%d",
+                this.airline.getIATADesignator(), Math.abs(Objects.hash(dateTimeOfDeparture,
+                        dateTimeOfLanding,
+                        airline,
+                        from,
+                        to,
+                        capacity))).substring(0, 6);
+    }
+
+    public String getHumanReadableDuration(Duration duration) {
+        return duration.toString()
+                .substring(2)
+                .replaceAll("(\\d[HMS])(?!$)", "$1 ")
+                .toLowerCase();
+    }
+
     @Override
     public String toString() {
-        return String.join(" || ", String.valueOf(id), flightDesignator,
+        return String.join(" || ", flightDesignator,
                 from.toString(), to.toString(),
                 dateTimeOfDeparture.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)),
                 dateTimeOfLanding.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)),
-                flightDuration.toString());
+                getHumanReadableDuration(flightDuration));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Flight flight = (Flight) o;
+        return id == flight.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

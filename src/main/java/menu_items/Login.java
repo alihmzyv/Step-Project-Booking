@@ -37,8 +37,8 @@ public class Login extends MenuItem {
                 getConsole().println(exc.getMessage());
                 continue;
             }
-
             getUserMenu(userLoggedIn).run();
+            break;
         }
     }
 

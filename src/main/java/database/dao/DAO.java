@@ -10,4 +10,7 @@ public interface DAO<A extends Identifiable> {
     Optional<List<A>> getAll();
     void setAll(List<A> data);
     boolean remove(int id);
+    boolean isPresent();
+    boolean isEmpty();
+    int getMaxId();
 }

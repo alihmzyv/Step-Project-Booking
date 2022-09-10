@@ -29,4 +29,7 @@ public class PassengerController {
     public void setAllPassengers(List<Passenger> data) {
         ps.setAllPassengers(data);
     }
+    public int getMaxId() {
+        return ps.getMaxId();
+    }
 }

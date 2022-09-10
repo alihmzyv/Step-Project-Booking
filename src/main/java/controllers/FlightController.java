@@ -4,9 +4,11 @@ import entities.Flight;
 import services.FlightService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class FlightController {
     private FlightService fs;
@@ -36,10 +38,23 @@ public class FlightController {
     }
 
     public void updateAllFlights() {
-        fs.getAllFlights().ifPresent(flights ->
-                flights.stream()
-                        .filter(flight -> flight.getDateTimeOfDeparture().isBefore(LocalDateTime.now()))
-                        .forEach(flight ->
-                        flight.setDateTimeOfDeparture(LocalDateTime.now().plusHours(new Random().nextInt(24)))));
+        List<Flight> updatedFlights = getAllFlights().orElseGet(ArrayList::new)
+                .stream()
+                .filter(flight -> flight.getDateTimeOfDeparture().isBefore(LocalDateTime.now()) ||
+                        flight.getCapacity() == 0)
+                .map(flight -> Flight.getFlight())
+                .collect(Collectors.toList());
+
+        fs.setAllFlights(updatedFlights);
+    }
+
+    public boolean isPresent() {
+        return fs.isPresent();
+    }
+    public boolean isEmpty() {
+        return fs.isEmpty();
+    }
+    public int getMaxId() {
+        return fs.getMaxId();
     }
 }

@@ -35,13 +35,17 @@ public class FindFlight extends MenuItem {
         }
         int freeSeatsInput = getConsole().getPositiveInt("Enter the number of tickets you want to buy:");
         LocalDate finalDateInput = dateInput;
-        List<Flight> flightListMatching = getDatabase().getFcInMemory().getAllFlights().get().stream()
+        System.out.println("\t\t\t" + "=".repeat(111));
+        System.out.println(String.join(" || ",
+                "\t\t\tFlight", "From", "To", "Time of Departure", "Time of Landing", "Flight Duration"));
+        System.out.println("\t\t\t" + "-".repeat(111));
+        getDatabase().getFcInMemory().getAllFlights().get().stream()
                 .filter(flight ->
-                        flight.getFrom().getCity().equals(fromInput) &&
-                        flight.getTo().getCity().equals(toInput) &&
+                        flight.getFrom().getCity().toLowerCase().equals(fromInput) &&
+                        flight.getTo().getCity().toLowerCase().equals(toInput) &&
                         flight.getDate().equals(finalDateInput) &&
                         flight.getCapacity() >= freeSeatsInput)
-                .toList();
-        IndexedDisplayer.displayIndexed(flightListMatching);
+                .forEach(flight -> System.out.println("\t\t\t" + flight));
+        System.out.println("\t\t\t" + "=".repeat(111));
     }
 }

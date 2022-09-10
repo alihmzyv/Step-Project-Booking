@@ -39,4 +39,8 @@ public class BookingService {
     public boolean removeBooking(int id) {
         return dao.remove(id);
     }
+
+    public int getMaxId() {
+        return dao.getMaxId();
+    }
 }

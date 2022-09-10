@@ -32,4 +32,7 @@ public class UserController {
     public void setAllUsers(List<User> data) {
         us.setAllUsers(data);
     }
+    public int getMaxId() {
+        return us.getMaxId();
+    }
 }

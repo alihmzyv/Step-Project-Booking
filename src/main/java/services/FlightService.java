@@ -40,6 +40,16 @@ public class FlightService {
     }
 
     public void displayAllFlights() {
-        IndexedDisplayer.displayIndexed(getAllFlights().orElseGet(ArrayList::new));
+        getAllFlights().ifPresent(flights ->
+                flights.forEach(flight -> System.out.println("\t\t\t" + flight)));
+    }
+    public boolean isPresent() {
+        return dao.isPresent();
+    }
+    public boolean isEmpty() {
+        return dao.isEmpty();
+    }
+    public int getMaxId() {
+        return dao.getMaxId();
     }
 }

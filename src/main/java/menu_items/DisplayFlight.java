@@ -23,6 +23,7 @@ public class DisplayFlight extends MenuItem {
                         .findFirst()
                         .orElseThrow(() -> new NoSuchFlightException("There is no matching designator. Try again."));
                 getConsole().println(flightFound);
+                break;
             }
             catch (NoSuchFlightException exc) {
                 System.out.println(exc.getMessage());

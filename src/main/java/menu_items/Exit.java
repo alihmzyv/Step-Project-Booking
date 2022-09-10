@@ -4,7 +4,6 @@ import database.Database;
 import io.Console;
 
 public class Exit extends MenuItem {
-    private Database database;
     public Exit(int id) {
         super(id);
     }
@@ -14,5 +13,4 @@ public class Exit extends MenuItem {
     public void run() {
         System.exit(1);
     }
-
 }

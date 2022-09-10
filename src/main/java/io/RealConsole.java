@@ -10,7 +10,7 @@ public class RealConsole implements Console {
 
     @Override
     public void println(Object obj) {
-        System.out.println(obj.toString());
+        System.out.println(obj);
     }
 
     @Override
@@ -55,6 +55,7 @@ public class RealConsole implements Console {
             }
             catch (InputMismatchException exc) {
                 System.out.println("Please enter a positive integer. Try again.");
+                sn.nextLine();
             }
         }
     }

@@ -15,27 +15,18 @@ import java.util.stream.IntStream;
 
 public class BookFlight extends MenuItem {
     private User user;
-    private FindFlight findFlight;
 
     public BookFlight(int id, User user) {
         super(id);
         this.user = user;
-        findFlight = new FindFlight(1);
     }
 
     @Override
     public void run() {
-        while (true) {
-            findFlight.run();
-            String input = getConsole().getInput("Do you want to book ?(e.g., yes or no)");
-            if (input.equals("no")) {
-                break;
-            }
-            Flight flightFound = getExistingFlight();
-            List<Passenger> passengers = getPassengers(getAvailableCapacity(flightFound));
-            passengers.forEach(passenger ->
-                    getDatabase().getBcInMemory().saveBooking(new Booking(flightFound, user, passenger)));
-        }
+        Flight flightFound = getExistingFlight();
+        List<Passenger> passengers = getPassengers(getAvailableCapacity(flightFound));
+        passengers.forEach(passenger ->
+                getDatabase().getBcInMemory().saveBooking(new Booking(flightFound, user, passenger)));
     }
 
     private Flight getExistingFlight() {
@@ -81,17 +72,5 @@ public class BookFlight extends MenuItem {
         String name = getConsole().getInput("Please enter name:");
         String surname = getConsole().getInput("Please enter surname:");
         return new Passenger(name, surname);
-    }
-
-    @Override
-    public void setDatabase(Database database) {
-        super.setDatabase(database);
-        findFlight.setDatabase(database);
-    }
-
-    @Override
-    public void setConsole(Console console) {
-        super.setConsole(console);
-        findFlight.setConsole(console);
     }
 }

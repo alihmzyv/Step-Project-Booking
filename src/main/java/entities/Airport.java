@@ -12,7 +12,7 @@ public enum Airport implements Serializable {
 
     private final String IATAcode;
     private final City city;
-    private Country country;
+    private final Country country;
 
     Airport(String IATAcode, City city, Country country) {
         this.IATAcode = IATAcode;
@@ -21,12 +21,12 @@ public enum Airport implements Serializable {
     }
 
     public String getCity() {
-        return city.name().toLowerCase();
+        return city.name().charAt(0) + city.name().substring(1);
     }
 
     @Override
     public String toString() {
-        return String.format("%s, %s (%s)\n",
-                city, Character.toLowerCase(name().charAt(0)) + name().substring(1), IATAcode);
+        return String.format("%s (%s)",
+                IATAcode, city);
     }
 }

@@ -6,12 +6,15 @@ import controllers.PassengerController;
 import controllers.UserController;
 import database.dao.*;
 import entities.Booking;
+import entities.Flight;
+import entities.Passenger;
+import entities.User;
 import services.BookingService;
 import services.FlightService;
 import services.PassengerService;
 import services.UserService;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 
 public class Database {
@@ -30,7 +33,6 @@ public class Database {
         fcFile = new FlightController(
                 new FlightService(
                         new DaoFlightFile(new File("src/main/java/database/database_files/flights.bin"))));
-        fcFile.updateAllFlights();
         ucFile = new UserController
                 (new UserService(
                         new DaoUserFile(new File("src/main/java/database/database_files/users.bin"))));
@@ -68,11 +70,52 @@ public class Database {
         return pcInMemory;
     }
 
-    public void update() {
+    public FlightController getFcFile() {
+        return fcFile;
+    }
+
+    public void updateLocal() {
         bcFile.setAllBookings(bcInMemory.getAllBookings().get());
         ucFile.setAllUsers(ucInMemory.getAllUsers().get());
         fcFile.setAllFlights(fcInMemory.getAllFlights().get());
         pcFile.setAllPassengers(pcInMemory.getAllPassengers().get());
+        isUpdated = true;
+    }
+
+    public void updateFcMemory() {
+        fcInMemory.setAllFlights(fcFile.getAllFlights().get());
+    }
+
+    public void updateIdCounters() {
+        try(PrintWriter pw = new PrintWriter(
+                new FileWriter("src/main/java/database/database_files/idCounters.txt"))) {
+            pw.println(String.format("Flight = %d;", fcFile.getMaxId()));
+            pw.println(String.format("Booking = %d;", bcFile.getMaxId()));
+            pw.println(String.format("User = %d;", ucFile.getMaxId()));
+            pw.println(String.format("Passenger = %d;", pcFile.getMaxId()));
+        }
+        catch (IOException exc) {
+            exc.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public static int getIdCounter(String className) {
+        int idCounterFound = 1;
+        try(BufferedReader ois = new BufferedReader(
+                new FileReader("src/main/java/database/database_files/idCounters.txt"))) {
+            idCounterFound = ois.lines()
+                    .filter(line -> line.startsWith(className))
+                    .findFirst()
+                    .map(line -> line.charAt(line.length() - 2))
+                    .map(ch -> Integer.parseInt(ch.toString()))
+                    .get();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return idCounterFound;
     }
 
     public boolean isUpdated() {

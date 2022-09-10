@@ -1,8 +1,5 @@
 package menu_items;
 
-import database.Database;
-import io.Console;
-
 public class EndSession extends MenuItem implements Runnable {
 
 
@@ -12,6 +9,6 @@ public class EndSession extends MenuItem implements Runnable {
 
     @Override
     public void run() {
-        getDatabase().update();
+        getDatabase().updateLocal();
     }
 }

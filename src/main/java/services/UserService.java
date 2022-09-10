@@ -33,5 +33,7 @@ public class UserService {
     public Optional<List<User>> getAllUsers() {
         return dao.getAll();
     }
-
+    public int getMaxId() {
+        return dao.getMaxId();
+    }
 }

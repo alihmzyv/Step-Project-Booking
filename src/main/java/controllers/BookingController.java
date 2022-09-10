@@ -65,4 +65,8 @@ public class BookingController {
         bs.removeBooking(id);
         return true;
     }
+
+    public int getMaxId() {
+        return bs.getMaxId();
+    }
 }

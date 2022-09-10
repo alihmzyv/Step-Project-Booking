@@ -64,4 +64,25 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
         }
         return data.get().removeIf(obj -> obj.getId() == id);
     }
+
+    @Override
+    public boolean isPresent() {
+        return getAll().isPresent();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return getAll().isEmpty();
+    }
+
+    @Override
+    public int getMaxId() {
+        return getAll().orElseGet(ArrayList::new).stream()
+                .map(Identifiable::getId)
+                .mapToInt(id -> id)
+                .max()
+                .orElse(1);
+    }
+
+
 }
