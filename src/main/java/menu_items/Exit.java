@@ -15,12 +15,4 @@ public class Exit extends MenuItem {
         System.exit(1);
     }
 
-    public void setDatabase(Database database) {
-        this.database = database;
-    }
-
-    @Override
-    protected void setConsole(Console console) {
-
-    }
 }

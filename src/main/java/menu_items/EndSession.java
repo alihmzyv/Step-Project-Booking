@@ -12,16 +12,6 @@ public class EndSession extends MenuItem implements Runnable {
 
     @Override
     public void run() {
-
-    }
-
-    @Override
-    public void setDatabase(Database database) {
-
-    }
-
-    @Override
-    protected void setConsole(Console console) {
-
+        getDatabase().update();
     }
 }

@@ -4,6 +4,7 @@ import database.dao.DAO;
 import entities.Passenger;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PassengerService {
     private DAO<Passenger> dao;
@@ -24,8 +25,15 @@ public class PassengerService {
     public void saveAllPassengers(List<Passenger> passengers) {
         dao.saveAll(passengers);
     }
-    public List<Passenger> getAllPassengers() {
+    public Optional<List<Passenger>> getAllPassengers() {
         return dao.getAll();
     }
 
+    public void setAllPassengers(List<Passenger> data) {
+        dao.setAll(data);
+    }
+
+    public boolean removePassenger(int id) {
+        return dao.remove(id);
+    }
 }

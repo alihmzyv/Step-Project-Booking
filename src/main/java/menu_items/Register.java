@@ -9,7 +9,6 @@ import java.io.File;
 import java.util.List;
 
 public class Register extends MenuItem {
-    private Database database;
     private User userRegistered;
     public Register (int id) {
         super(id);
@@ -25,6 +24,7 @@ public class Register extends MenuItem {
         String password = getConsole().getInput("Enter your password:");
         userRegistered = new User(name, surname, username, password);
         getDatabase().getUcInMemory().saveUser(userRegistered);
+        System.out.println("Registration was successful!");
         getUserMenu(userRegistered).run();
     }
 
@@ -36,15 +36,6 @@ public class Register extends MenuItem {
                 new CancelFlight(4, user),
                 new MyFlights(5, user),
                 new EndSession(6));
-        return new Menu(this.database, userMenuTextFile, userMenuItems, user);
-    }
-
-    public void setDatabase(Database database) {
-        this.database = database;
-    }
-
-    @Override
-    protected void setConsole(Console console) {
-
+        return new Menu(getDatabase(), userMenuTextFile, userMenuItems);
     }
 }

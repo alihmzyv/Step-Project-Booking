@@ -16,7 +16,7 @@ public abstract class MenuItem implements Runnable{
         this.database = database;
     }
 
-    protected void setConsole(Console console) {
+    public void setConsole(Console console) {
         this.console = console;
     }
 

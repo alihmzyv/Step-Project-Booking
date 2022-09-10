@@ -1,12 +1,15 @@
 package controllers;
 
 import entities.Booking;
+import entities.Flight;
+import exceptions.NoSuchBookingException;
 import services.BookingService;
 import services.FlightService;
 import services.PassengerService;
 import services.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class BookingController {
     private BookingService bs;
@@ -29,13 +32,37 @@ public class BookingController {
     }
 
     public void saveBooking(Booking booking) {
-//        bs.saveBooking(booking);
-//        us.getUser(booking.getUser().getId()).get().addBooking(booking);
-//        fs.getFlight(booking.getFlight().getId()).get().decrementCapacity();
-//        ps.savePassenger(booking.getPassenger());
+        bs.saveBooking(booking);
+        ps.savePassenger(booking.getPassenger());
+        booking.getUser().addBooking(booking);
+        booking.getFlight().decrementCapacity();
     }
 
-    public List<Booking> getAllBookings() {
+    public Optional<Booking> getBooking(int id) {
+        return bs.getBooking(id);
+    }
+
+    public void saveAllBookings(List<Booking> bookings) {
+        bs.saveAllBookings(bookings);
+    }
+
+    public Optional<List<Booking>> getAllBookings() {
         return bs.getAllBookings();
+    }
+
+    public void setAllBookings(List<Booking> data) {
+        bs.setAllBookings(data);
+    }
+
+    public boolean deleteBooking(int id){
+        Optional<Booking> bookingFoundOptional = getBooking(id);
+        if (bookingFoundOptional.isEmpty()) {
+            return false;
+        }
+        Booking bookingFound = bookingFoundOptional.get();
+        bookingFound.getFlight().incrementCapacity();
+        ps.removePassenger(bookingFound.getPassenger().getId());
+        bs.removeBooking(id);
+        return true;
     }
 }

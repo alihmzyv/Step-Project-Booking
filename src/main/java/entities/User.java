@@ -6,6 +6,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class User implements Identifiable, Serializable {
     @Serial
@@ -52,5 +53,24 @@ public class User implements Identifiable, Serializable {
 
     public void addBooking(Booking booking) {
         bookings.add(booking);
+    }
+
+    public boolean cancelBooking(int bookingIdInput) {
+        Optional<Booking> bookingFoundOptional = getBooking(id);
+        if (bookingFoundOptional.isEmpty()) {
+            return false;
+        }
+        bookings.remove(bookingFoundOptional.get());
+        return true;
+    }
+
+    public Optional<Booking> getBooking(int id) {
+        return bookings.stream()
+                .filter(booking -> booking.getId() == id)
+                .findFirst();
+    }
+
+    public List<Booking> getAllBookings() {
+        return bookings;
     }
 }

@@ -87,9 +87,13 @@ public class Flight implements Identifiable, Serializable{
         setCapacity(getCapacity() - 1);
     }
 
+    public void incrementCapacity() {
+        setCapacity(getCapacity() + 1);
+    }
+
     @Override
     public String toString() {
-        return String.join(" || ", flightDesignator,
+        return String.join(" || ", String.valueOf(id), flightDesignator,
                 from.toString(), to.toString(),
                 dateTimeOfDeparture.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)),
                 dateTimeOfLanding.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)),

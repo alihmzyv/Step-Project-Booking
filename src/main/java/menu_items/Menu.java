@@ -43,7 +43,6 @@ public class Menu implements Runnable {
 
     @Override
     public void run() {
-        Console console = new RealConsole();
         try {
             menuText = getMenuText();
         }
@@ -58,6 +57,10 @@ public class Menu implements Runnable {
 
 
         while (true) {
+            if (database.isUpdated()) {
+                database.outdate();
+                break;
+            }
             try {
                 console.println(menuText);
                 int menuItemIdInput = console.getPositiveInt("Please select an item from the menu displayed above.");
@@ -77,15 +80,8 @@ public class Menu implements Runnable {
         try(BufferedReader br = new BufferedReader(new FileReader(menuTextFile))) {
             StringBuilder sb = new StringBuilder();
             br.lines()
-                    .forEach(sb::append);
+                    .forEach(line -> sb.append(line).append("\n"));
             return sb.toString();
         }
-    }
-
-    public void setDatabase(Database database) {
-        this.database = database;
-    }
-    protected void setConsole(Console console) {
-        this.console = console;
     }
 }

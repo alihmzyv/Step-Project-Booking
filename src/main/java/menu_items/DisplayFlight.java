@@ -18,7 +18,7 @@ public class DisplayFlight extends MenuItem {
         while (true) {
             try {
                 String flightDesignatorInput = getConsole().getInput("Please enter the designator of the flight:");
-                flightFound = getDatabase().getFcInMemory().getAllFlights().stream()
+                flightFound = getDatabase().getFcInMemory().getAllFlights().get().stream()
                         .filter(flight -> flight.getFlightDesignator().equals(flightDesignatorInput))
                         .findFirst()
                         .orElseThrow(() -> new NoSuchFlightException("There is no matching designator. Try again."));

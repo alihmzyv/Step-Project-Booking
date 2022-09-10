@@ -43,4 +43,13 @@ public class Booking implements Identifiable, Serializable {
     public Flight getFlight() {
         return flight;
     }
+
+    @Override
+    public String toString() {
+        return  String.format("%s %s %s %s",
+                        id,
+                        flight.getFlightDesignator() +
+                        passenger +
+                        dateTimeBooked);
+    }
 }

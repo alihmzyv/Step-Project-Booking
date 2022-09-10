@@ -15,13 +15,12 @@ import java.util.stream.IntStream;
 
 public class BookFlight extends MenuItem {
     private User user;
-    private Database database;
     private FindFlight findFlight;
-    private Flight flightFound;
 
     public BookFlight(int id, User user) {
         super(id);
         this.user = user;
+        findFlight = new FindFlight(1);
     }
 
     @Override
@@ -32,18 +31,18 @@ public class BookFlight extends MenuItem {
             if (input.equals("no")) {
                 break;
             }
-            getExistingFlight();
-            List<Passenger> passengers = getPassengers(getAvailableCapacity());
+            Flight flightFound = getExistingFlight();
+            List<Passenger> passengers = getPassengers(getAvailableCapacity(flightFound));
             passengers.forEach(passenger ->
                     getDatabase().getBcInMemory().saveBooking(new Booking(flightFound, user, passenger)));
         }
     }
 
-    private void getExistingFlight() {
+    private Flight getExistingFlight() {
         while (true) {
             try {
                 String flightDesignatorInput = getConsole().getInput("Please enter the designator of the flight you want to book");
-                flightFound = getDatabase().getFcInMemory().getAllFlights().stream()
+                return getDatabase().getFcInMemory().getAllFlights().get().stream()
                         .filter(flight -> flight.getFlightDesignator().equals(flightDesignatorInput))
                         .findFirst()
                         .orElseThrow(() -> new NoSuchFlightException("There is no matching designator. Try again."));
@@ -54,7 +53,7 @@ public class BookFlight extends MenuItem {
         }
     }
 
-    private int getAvailableCapacity() {
+    private int getAvailableCapacity(Flight flightFound) {
         while (true) {
             try {
                 int numberOfTickets = getConsole().getPositiveInt("Please enter the number of ticket you want to book.");
@@ -83,13 +82,16 @@ public class BookFlight extends MenuItem {
         String surname = getConsole().getInput("Please enter surname:");
         return new Passenger(name, surname);
     }
+
+    @Override
     public void setDatabase(Database database) {
-        this.database = database;
+        super.setDatabase(database);
         findFlight.setDatabase(database);
     }
 
     @Override
     public void setConsole(Console console) {
-
+        super.setConsole(console);
+        findFlight.setConsole(console);
     }
 }

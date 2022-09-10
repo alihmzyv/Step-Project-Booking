@@ -25,7 +25,12 @@ public class UserService {
     public void saveAllUsers(List<User> users) {
         dao.saveAll(users);
     }
-    public List<User> getAllUsers() {
+
+    public void setAllUsers(List<User> data) {
+        dao.setAll(data);
+    }
+
+    public Optional<List<User>> getAllUsers() {
         return dao.getAll();
     }
 

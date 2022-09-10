@@ -5,6 +5,7 @@ import entities.Flight;
 import entities.IndexedDisplayer;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -30,10 +31,15 @@ public class FlightService {
     public void saveAllFlights(List<Flight> flights) {
         dao.saveAll(flights);
     }
-    public List<Flight> getAllFlights() {
+    public Optional<List<Flight>> getAllFlights() {
         return dao.getAll();
     }
+
+    public void setAllFlights(List<Flight> flights) {
+        dao.setAll(flights);
+    }
+
     public void displayAllFlights() {
-        IndexedDisplayer.displayIndexed(getAllFlights());
+        IndexedDisplayer.displayIndexed(getAllFlights().orElseGet(ArrayList::new));
     }
 }

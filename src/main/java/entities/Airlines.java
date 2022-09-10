@@ -3,13 +3,19 @@ package entities;
 import java.io.Serializable;
 
 public enum Airlines implements Serializable {
-    DELTA_AIR_LINES("DAL"),
-    AMERICAN_AIRLINES_GROUP("AAL");
+    QATAR_AIRWAYS("QTR"),
+    TURKISH_AIRLINES("THY");
 
-    private final String code;
+    private final String ICAOcode;
 
 
-    Airlines(String code) {
-        this.code = code;
+    Airlines(String ICAOcode) {
+        this.ICAOcode = ICAOcode;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s (%s)",
+                Character.toLowerCase(name().charAt(0)) + name().substring(1), ICAOcode);
     }
 }

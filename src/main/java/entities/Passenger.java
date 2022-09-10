@@ -25,4 +25,17 @@ public class Passenger implements Identifiable, Serializable {
     public int getId() {
         return id;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s", name, surname);
+    }
 }

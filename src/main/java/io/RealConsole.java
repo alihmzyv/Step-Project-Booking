@@ -29,6 +29,7 @@ public class RealConsole implements Console {
 
     @Override
     public String getInput(String message) {
+        println(message);
         String input;
         while (true) {
             try {
@@ -43,6 +44,7 @@ public class RealConsole implements Console {
 
     @Override
     public int getPositiveInt(String message) {
+        println(message);
         int input;
         while (true) {
             try {

@@ -1,6 +1,7 @@
 package database.dao;
 
-import java.io.File;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,21 +15,53 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
 
     @Override
     public void save(A object) {
-        throw new RuntimeException("not impl");
+        List<A> data = getAll().orElseGet(ArrayList::new);
+        data.add(object);
+        saveAll(data);
     }
 
     @Override
     public Optional<A> get(int id) {
-        throw new RuntimeException("not impl");
+        return getAll().orElseGet(ArrayList::new).stream()
+                .filter(obj -> obj.getId() == id)
+                .findFirst();
     }
 
     @Override
     public void saveAll(List<A> objects) {
-        throw new RuntimeException("not impl");
+        List<A> data = getAll().orElseGet(ArrayList::new);
+        data.addAll(objects);
+        setAll(data);
+    }
+
+    public Optional<List<A>> getAll() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            return Optional.of((List<A>) ois.readObject());
+        }
+        catch (EOFException exc) {
+        }
+        catch (ClassNotFoundException | IOException exc) {
+            exc.printStackTrace();
+            System.exit(1);
+        }
+        return Optional.empty();
+    }
+
+    public void setAll(List<A> data) {
+        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+            oos.writeObject(data);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public List<A> getAll() {
-        throw new RuntimeException("not impl");
+    public boolean remove(int id) {
+        Optional<List<A>> data = getAll();
+        if (data.isEmpty()) {
+            return false;
+        }
+        return data.get().removeIf(obj -> obj.getId() == id);
     }
 }

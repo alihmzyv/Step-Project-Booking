@@ -5,6 +5,7 @@ import entities.Booking;
 
 import java.awt.print.Book;
 import java.util.List;
+import java.util.Optional;
 
 public class BookingService {
     private DAO<Booking> dao;
@@ -19,15 +20,23 @@ public class BookingService {
     public void saveBooking(Booking booking) {
         dao.save(booking);
     }
-    public void getBooking(int id) {
-        dao.get(id);
+    public Optional<Booking> getBooking(int id) {
+        return dao.get(id);
     }
 
     public void saveAllBookings(List<Booking> bookings) {
         dao.saveAll(bookings);
     }
 
-    public List<Booking> getAllBookings() {
+    public Optional<List<Booking>> getAllBookings() {
         return dao.getAll();
+    }
+
+    public void setAllBookings(List<Booking> data) {
+        dao.setAll(data);
+    }
+
+    public boolean removeBooking(int id) {
+        return dao.remove(id);
     }
 }

@@ -2,11 +2,11 @@ package menu_items;
 
 import database.Database;
 import entities.User;
+import exceptions.NoSuchBookingException;
 import io.Console;
 
 public class CancelFlight extends MenuItem {
     private User user;
-    private Database database;
 
     public CancelFlight(int id) {
         super(id);
@@ -19,15 +19,13 @@ public class CancelFlight extends MenuItem {
 
     @Override
     public void run() {
-
-    }
-
-    public void setDatabase(Database database) {
-        this.database = database;
-    }
-
-    @Override
-    protected void setConsole(Console console) {
-
+        int bookingIdInput;
+        while (true) {
+            bookingIdInput = getConsole().getPositiveInt("Please enter the id of a booking you have.");
+            if (user.cancelBooking(bookingIdInput) && getDatabase().getBcInMemory().deleteBooking(bookingIdInput)) {
+                break;
+            }
+            getConsole().println("There is no booking found. Try again.");
+        }
     }
 }

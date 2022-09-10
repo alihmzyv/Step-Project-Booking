@@ -1,9 +1,11 @@
 package controllers;
 
+import entities.Booking;
 import entities.Passenger;
 import services.PassengerService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PassengerController {
     private PassengerService ps;
@@ -20,7 +22,11 @@ public class PassengerController {
         return ps;
     }
 
-    public List<Passenger> getAllPassengers() {
+    public Optional<List<Passenger>> getAllPassengers() {
         return ps.getAllPassengers();
+    }
+
+    public void setAllPassengers(List<Passenger> data) {
+        ps.setAllPassengers(data);
     }
 }

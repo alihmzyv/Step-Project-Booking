@@ -4,6 +4,7 @@ import entities.User;
 import services.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class UserController {
     private UserService us;
@@ -24,7 +25,11 @@ public class UserController {
         us.saveUser(user);
     }
 
-    public List<User> getAllUsers() {
+    public Optional<List<User>> getAllUsers() {
         return us.getAllUsers();
+    }
+
+    public void setAllUsers(List<User> data) {
+        us.setAllUsers(data);
     }
 }

@@ -19,26 +19,26 @@ public class FindFlight extends MenuItem {
     @Override
     public void run() {
         getConsole().println("Please enter below the details of flight you want.");
-        String fromInput = getConsole().getInput("From:");
-        String toInput = getConsole().getInput("To:");
+        String fromInput = getConsole().getInput("From:").toLowerCase();
+        String toInput = getConsole().getInput("To:").toLowerCase();
         LocalDate dateInput;
         while (true) {
             try {
                 dateInput = LocalDate.parse(
-                        getConsole().getInput("Enter your departure date: (e.g. 1.1.2022)"),
-                        DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        getConsole().getInput("Enter your departure date: (e.g. 1/1/2022)"),
+                        DateTimeFormatter.ofPattern("d/M/yyyy"));
                 break;
             }
             catch (DateTimeParseException exc) {
                 System.out.println("Please enter date as described. Try again.");
             }
         }
-        int freeSeatsInput = getConsole().getPositiveInt("Enter the number of ticket you want to buy:");
+        int freeSeatsInput = getConsole().getPositiveInt("Enter the number of tickets you want to buy:");
         LocalDate finalDateInput = dateInput;
-        List<Flight> flightListMatching = getDatabase().getFcInMemory().getAllFlights().stream()
+        List<Flight> flightListMatching = getDatabase().getFcInMemory().getAllFlights().get().stream()
                 .filter(flight ->
-                        flight.getFrom().getCity().toString().equals(fromInput) &&
-                        flight.getTo().getCity().toString().equals(toInput) &&
+                        flight.getFrom().getCity().equals(fromInput) &&
+                        flight.getTo().getCity().equals(toInput) &&
                         flight.getDate().equals(finalDateInput) &&
                         flight.getCapacity() >= freeSeatsInput)
                 .toList();
