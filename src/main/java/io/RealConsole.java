@@ -2,6 +2,7 @@ package io;
 
 import java.io.*;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -14,17 +15,34 @@ public class RealConsole implements Console {
     }
 
     @Override
-    public void printFile(File file) {
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            br.lines()
-                    .forEach(this::println);
-        }
-        catch (FileNotFoundException e) {
-            System.out.printf("Could not find the file: %s\n", file.getPath());
-        }
-        catch (IOException e) {
-            System.out.printf("Could not read the file: %s\n", file.getPath());
-        }
+    public <A> void printAsTable(List<String> headings, List<A> objects, int width) {
+        System.out.println("\t".repeat(3) + "=".repeat(width));
+        System.out.print("\t".repeat(3));
+        System.out.println(String.join(" || ", headings));
+        System.out.print("\t".repeat(3));
+        System.out.println("-".repeat(width));
+        objects.stream().forEach(obj -> {
+            System.out.print("\t".repeat(3));
+            System.out.println(obj);
+        });
+        System.out.println("\t".repeat(3) + "=".repeat(width));
+    }
+
+    @Override
+    public <A> void printAsIndexedTable(List<String> headings, List<A> objects, int width) {
+        headings.add(0, "ID");
+        System.out.println("\t".repeat(3) + "=".repeat(width));
+        System.out.print("\t".repeat(3));
+        System.out.println(String.join(" || ", headings));
+        System.out.print("\t".repeat(3));
+        System.out.println("-".repeat(width));
+        int[] indexCounter = {1};
+        objects.stream().forEach(obj -> {
+            System.out.print("\t".repeat(3));
+            System.out.print(indexCounter[0]++ + "  || ");
+            System.out.println(obj);
+        });
+        System.out.println("\t".repeat(3) + "=".repeat(width));
     }
 
     @Override

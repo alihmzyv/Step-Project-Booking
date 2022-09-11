@@ -43,10 +43,6 @@ public class Menu implements Runnable {
 
     @Override
     public void run() {
-        if (database.isUpdated()) {
-            database.outdate();
-            return;
-        }
         try {
             menuText = getMenuText();
         }
@@ -61,18 +57,17 @@ public class Menu implements Runnable {
 
 
         while (true) {
-            if (database.isUpdated()) {
-                database.outdate();
-                break;
-            }
             try {
                 console.println(menuText);
                 int menuItemIdInput = console.getPositiveInt("Please select an item from the menu displayed above:");
-                menuItems.stream()
+                MenuItem menuItemChosen = menuItems.stream()
                         .filter(menuItem -> menuItem.getId() == menuItemIdInput)
                         .findFirst()
-                        .orElseThrow(() -> new WrongMenuItemAppException("Wrong menu item. Try again."))
-                        .run();
+                        .orElseThrow(() -> new WrongMenuItemAppException("Wrong menu item. Try again."));
+                menuItemChosen.run();
+                if (menuItemChosen instanceof ExitButton) {
+                    break;
+                }
             }
             catch (WrongMenuItemAppException exc) {
                 System.out.println(exc.getMessage());

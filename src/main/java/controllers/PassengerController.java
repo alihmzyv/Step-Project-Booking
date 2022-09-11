@@ -1,6 +1,7 @@
 package controllers;
 
 import entities.Booking;
+import entities.Flight;
 import entities.Passenger;
 import services.PassengerService;
 
@@ -20,6 +21,14 @@ public class PassengerController {
 
     public PassengerService getService() {
         return ps;
+    }
+
+    public Optional<Passenger> getPassenger(int id) {
+        return ps.getPassenger(id);
+    }
+
+    public Optional<Passenger> getPassenger(Passenger passenger) {
+        return ps.getPassenger(passenger);
     }
 
     public Optional<List<Passenger>> getAllPassengers() {

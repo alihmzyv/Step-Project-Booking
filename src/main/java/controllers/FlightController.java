@@ -4,10 +4,8 @@ import entities.Flight;
 import services.FlightService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class FlightController {
@@ -25,6 +23,14 @@ public class FlightController {
         return fs;
     }
 
+    public Optional<Flight> getFlight(int id) {
+        return fs.getFlight(id);
+    }
+
+    public Optional<Flight> getFlight(Flight flight) {
+        return fs.getFlight(flight);
+    }
+
     public Optional<List<Flight>> getAllFlights() {
         return fs.getAllFlights();
     }
@@ -33,18 +39,37 @@ public class FlightController {
         fs.setAllFlights(flights);
     }
 
+    public boolean removeFlight(int id) {
+        Optional<Flight> flightOptional = getFlight(id);
+        if (flightOptional.isEmpty()) {
+            return false;
+        }
+        return fs.removeFlight(flightOptional.get());
+    }
+
+    public boolean removeFlight(Flight flight) {
+        Optional<Flight> flightOptional = getFlight(flight);
+        if (flightOptional.isEmpty()) {
+            return false;
+        }
+        return fs.removeFlight(flightOptional.get());
+    }
+
     public void displayAllFlights() {
         fs.displayAllFlights();
     }
 
     public void updateAllFlights() {
-        List<Flight> updatedFlights = getAllFlights().orElseGet(ArrayList::new)
+        List<Flight> updatedFlights = getAllFlights().get()
                 .stream()
-                .filter(flight -> flight.getDateTimeOfDeparture().isBefore(LocalDateTime.now()) ||
-                        flight.getCapacity() == 0)
-                .map(flight -> Flight.getFlight())
+                .map(flight -> {
+                    if (flight.getDateTimeOfDeparture().isBefore(LocalDateTime.now()) ||
+                            flight.getCapacity() == 0) {
+                        return Flight.getRandom();
+                    }
+                    return flight;
+                })
                 .collect(Collectors.toList());
-
         fs.setAllFlights(updatedFlights);
     }
 

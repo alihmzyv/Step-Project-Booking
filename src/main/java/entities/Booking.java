@@ -3,7 +3,6 @@ package entities;
 import database.Database;
 import database.dao.Identifiable;
 
-import java.awt.print.Book;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,17 +14,17 @@ public class Booking implements Identifiable, Serializable {
     @Serial
     private static final long serialVersionUID = -2078227854687969036L;
     private static int idCounter;
-
-
     private final int id;
     private Flight flight;
     private User user;
     private Passenger passenger;
     private LocalDateTime dateTimeBooked;
 
+
     static {
         idCounter = Database.getIdCounter("Booking");
     }
+
 
     public Booking(Flight flight, User user, Passenger passenger) {
         this.id = idCounter++;
@@ -35,13 +34,10 @@ public class Booking implements Identifiable, Serializable {
         this.dateTimeBooked = LocalDateTime.now();
     }
 
+
     @Override
     public int getId() {
         return id;
-    }
-
-    public static int getIdCounter() {
-        return idCounter;
     }
 
     public User getUser() {
@@ -59,7 +55,6 @@ public class Booking implements Identifiable, Serializable {
     @Override
     public String toString() {
         return String.join(" || ",
-                String.valueOf(id),
                 passenger.toString(),
                 flight.getFlightDesignator(),
                 flight.getFrom().toString(),

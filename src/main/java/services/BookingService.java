@@ -24,6 +24,10 @@ public class BookingService {
         return dao.get(id);
     }
 
+    public Optional<Booking> getBooking(Booking booking) {
+        return dao.get(booking);
+    }
+
     public void saveAllBookings(List<Booking> bookings) {
         dao.saveAll(bookings);
     }
@@ -38,6 +42,10 @@ public class BookingService {
 
     public boolean removeBooking(int id) {
         return dao.remove(id);
+    }
+
+    public boolean removeBooking(Booking booking) {
+        return dao.remove(booking);
     }
 
     public int getMaxId() {

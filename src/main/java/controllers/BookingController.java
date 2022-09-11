@@ -1,8 +1,6 @@
 package controllers;
 
 import entities.Booking;
-import entities.Flight;
-import exceptions.NoSuchBookingException;
 import services.BookingService;
 import services.FlightService;
 import services.PassengerService;
@@ -32,14 +30,18 @@ public class BookingController {
     }
 
     public void saveBooking(Booking booking) {
-        bs.saveBooking(booking);
+        us.getUser(booking.getUser()).get().addBooking(booking);
+        fs.getFlight(booking.getFlight()).get().decrementCapacity();
         ps.savePassenger(booking.getPassenger());
-        booking.getUser().addBooking(booking);
-        booking.getFlight().decrementCapacity();
+        bs.saveBooking(booking);
     }
 
     public Optional<Booking> getBooking(int id) {
         return bs.getBooking(id);
+    }
+
+    public Optional<Booking> getBooking(Booking booking) {
+        return bs.getBooking(booking);
     }
 
     public void saveAllBookings(List<Booking> bookings) {
@@ -54,15 +56,29 @@ public class BookingController {
         bs.setAllBookings(data);
     }
 
-    public boolean deleteBooking(int id){
+    public boolean removeBooking(int id){
         Optional<Booking> bookingFoundOptional = getBooking(id);
         if (bookingFoundOptional.isEmpty()) {
             return false;
         }
         Booking bookingFound = bookingFoundOptional.get();
-        bookingFound.getFlight().incrementCapacity();
-        ps.removePassenger(bookingFound.getPassenger().getId());
+        fs.getFlight(bookingFound.getFlight()).get().incrementCapacity();
+        ps.removePassenger(bookingFound.getPassenger());
+        us.getUser(bookingFound.getUser()).get().cancelBooking(bookingFound.getId());
         bs.removeBooking(id);
+        return true;
+    }
+
+    public boolean removeBooking(Booking booking){
+        Optional<Booking> bookingFoundOptional = getBooking(booking);
+        if (bookingFoundOptional.isEmpty()) {
+            return false;
+        }
+        Booking bookingFound = bookingFoundOptional.get();
+        fs.getFlight(bookingFound.getFlight()).get().incrementCapacity();
+        us.getUser(bookingFound.getUser()).get().cancelBooking(booking.getId());
+        ps.removePassenger(bookingFound.getPassenger());
+        bs.removeBooking(booking);
         return true;
     }
 

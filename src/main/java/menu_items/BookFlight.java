@@ -24,32 +24,32 @@ public class BookFlight extends MenuItem {
     @Override
     public void run() {
         Flight flightFound = getExistingFlight();
-        List<Passenger> passengers = getPassengers(getAvailableCapacity(flightFound));
+        List<Passenger> passengers = getPassengers(getAvailableCapacity(flightFound.getCapacity()));
         passengers.forEach(passenger ->
                 getDatabase().getBcInMemory().saveBooking(new Booking(flightFound, user, passenger)));
+        System.out.println("Booking was saved!");
     }
 
     private Flight getExistingFlight() {
         while (true) {
             try {
-                String flightDesignatorInput = getConsole().getInput("Please enter the designator of the flight you want to book");
-                return getDatabase().getFcInMemory().getAllFlights().get().stream()
-                        .filter(flight -> flight.getFlightDesignator().equals(flightDesignatorInput))
-                        .findFirst()
-                        .orElseThrow(() -> new NoSuchFlightException("There is no matching designator. Try again."));
+                int flightIdInput = getConsole().getPositiveInt("Please enter the id of the flight you want to book:");
+                return getDatabase().getFcInMemory().getFlight(flightIdInput)
+                        .orElseThrow(() -> new NoSuchFlightException("There is no matching id."));
             }
             catch (NoSuchFlightException exc) {
                 getConsole().println(exc.getMessage());
+                System.out.println("Try again.");
             }
         }
     }
 
-    private int getAvailableCapacity(Flight flightFound) {
+    private int getAvailableCapacity(int max) {
         while (true) {
             try {
-                int numberOfTickets = getConsole().getPositiveInt("Please enter the number of ticket you want to book.");
-                if (numberOfTickets > flightFound.getCapacity()) {
-                    throw new InsufficientCapacityException(String.format("%d is greater than the capacity of flight: %d", numberOfTickets, flightFound.getCapacity()));
+                int numberOfTickets = getConsole().getPositiveInt("Please enter the number of tickets you want to book:");
+                if (numberOfTickets > max) {
+                    throw new InsufficientCapacityException(String.format("%d is greater than the capacity of flight: %d", numberOfTickets, max));
                 }
                 return numberOfTickets;
             }

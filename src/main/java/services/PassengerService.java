@@ -19,9 +19,14 @@ public class PassengerService {
     public void savePassenger(Passenger passenger) {
         dao.save(passenger);
     }
-    public void getPassenger(int id) {
-        dao.get(id);
+    public Optional<Passenger> getPassenger(int id) {
+        return dao.get(id);
     }
+
+    public Optional<Passenger> getPassenger(Passenger passenger) {
+        return dao.get(passenger);
+    }
+
     public void saveAllPassengers(List<Passenger> passengers) {
         dao.saveAll(passengers);
     }
@@ -35,6 +40,9 @@ public class PassengerService {
 
     public boolean removePassenger(int id) {
         return dao.remove(id);
+    }
+    public boolean removePassenger(Passenger passenger) {
+        return dao.remove(passenger);
     }
     public int getMaxId() {
         return dao.getMaxId();

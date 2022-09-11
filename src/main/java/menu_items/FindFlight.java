@@ -1,15 +1,12 @@
 package menu_items;
 
-import database.Database;
 import entities.Flight;
-import entities.IndexedDisplayer;
-import io.Console;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.format.FormatStyle;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FindFlight extends MenuItem {
     public FindFlight(int id) {
@@ -35,17 +32,15 @@ public class FindFlight extends MenuItem {
         }
         int freeSeatsInput = getConsole().getPositiveInt("Enter the number of tickets you want to buy:");
         LocalDate finalDateInput = dateInput;
-        System.out.println("\t\t\t" + "=".repeat(111));
-        System.out.println(String.join(" || ",
-                "\t\t\tFlight", "From", "To", "Time of Departure", "Time of Landing", "Flight Duration"));
-        System.out.println("\t\t\t" + "-".repeat(111));
-        getDatabase().getFcInMemory().getAllFlights().get().stream()
+        List<Flight> matchingFlights = getDatabase().getFcInMemory().getAllFlights().get().stream()
                 .filter(flight ->
                         flight.getFrom().getCity().toLowerCase().equals(fromInput) &&
                         flight.getTo().getCity().toLowerCase().equals(toInput) &&
-                        flight.getDate().equals(finalDateInput) &&
+                        flight.getDateOfDeparture().equals(finalDateInput) &&
                         flight.getCapacity() >= freeSeatsInput)
-                .forEach(flight -> System.out.println("\t\t\t" + flight));
-        System.out.println("\t\t\t" + "=".repeat(111));
+                .collect(Collectors.toList());
+        getConsole().printAsTable(List.of("ID", "Flight", "From", "To", "Time of Departure", "Time of Landing", "Flight Duration"),
+                matchingFlights,
+                100);
     }
 }

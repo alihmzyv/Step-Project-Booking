@@ -9,7 +9,7 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
     private List<A> objects;
 
     public DaoInMemory(List<A> objects) {
-        this.objects = objects;
+        this.objects = new ArrayList<>(objects);
     }
 
     @Override
@@ -25,6 +25,11 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
     }
 
     @Override
+    public Optional<A> get(A object) {
+        return get(object.getId());
+    }
+
+    @Override
     public void saveAll(List<A> objects) {
         this.objects.addAll(objects);
     }
@@ -37,12 +42,20 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
 
     @Override
     public void setAll(List<A> data) {
-        objects = data;
+        objects = new ArrayList<>(data);
     }
 
     @Override
     public boolean remove(int id) {
         return objects.removeIf(obj -> obj.getId() == id);
+    }
+    @Override
+    public boolean remove(A object) {
+        Optional<List<A>> data = getAll();
+        if (data.isEmpty()) {
+            return false;
+        }
+        return data.get().remove(object);
     }
 
     @Override

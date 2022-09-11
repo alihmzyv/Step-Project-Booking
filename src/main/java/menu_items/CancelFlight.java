@@ -1,9 +1,7 @@
 package menu_items;
 
-import database.Database;
 import entities.User;
 import exceptions.NoSuchBookingException;
-import io.Console;
 
 public class CancelFlight extends MenuItem {
     private User user;
@@ -19,13 +17,20 @@ public class CancelFlight extends MenuItem {
 
     @Override
     public void run() {
-        int bookingIdInput;
+        int bookingIndexInput;
         while (true) {
-            bookingIdInput = getConsole().getPositiveInt("Please enter the id of a booking you have.");
-            if (user.cancelBooking(bookingIdInput) && getDatabase().getBcInMemory().deleteBooking(bookingIdInput)) {
-                break;
+            bookingIndexInput = getConsole().getPositiveInt("Please enter the index of a booking you have:");
+            try {
+                if (getDatabase().getBcInMemory().removeBooking(user.getAllBookings().get(bookingIndexInput - 1))) {
+                    System.out.println("Booking was cancelled!");
+                    break;
+                }
+                throw new NoSuchBookingException("There is no such booking.");
             }
-            getConsole().println("There is no booking found. Try again.");
+            catch (NoSuchBookingException exc) {
+                getConsole().println(exc.getMessage());
+                System.out.println("Try again.");
+            }
         }
     }
 }

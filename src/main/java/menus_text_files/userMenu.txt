@@ -1,7 +1,7 @@
                         ==================================================================
                                          1.SHOW ALL THE AVAILABLE FLIGHTS
                                       2.SHOW THE DETAILED INFO ABOUT A FLIGHT
-                                                3.BOOK FLIGHT
+                                              3.SEARCH AND BOOK
                                                4.CANCEL FLIGHT
                                                  5.MY FLIGHTS
                                                 6.END SESSION

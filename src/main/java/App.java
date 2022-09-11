@@ -12,13 +12,12 @@ public class App implements Runnable {
         Database database = new Database();
         database.updateIdCounters();
         if (database.getFcFile().isEmpty()) {
-            database.getFcFile().setAllFlights(Flight.getFlights(20));
+            database.getFcFile().setAllFlights(Flight.getRandom(10));
         }
         else {
             database.getFcFile().updateAllFlights();
         }
-        database.updateFcMemory();
-
+        database.updateFcInMemory();
         File mainMenuTextFile = new File("src/main/java/menus_text_files/menu.txt");
         List<MenuItem> mainMenuItems = List.of(new Login(1),
                 new Register(2),

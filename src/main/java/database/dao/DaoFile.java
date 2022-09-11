@@ -1,5 +1,7 @@
 package database.dao;
 
+import entities.Passenger;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,11 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
     }
 
     @Override
+    public Optional<A> get(A object) {
+        return get(object.getId());
+    }
+
+    @Override
     public void saveAll(List<A> objects) {
         List<A> data = getAll().orElseGet(ArrayList::new);
         data.addAll(objects);
@@ -39,12 +46,13 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
             return Optional.of((List<A>) ois.readObject());
         }
         catch (EOFException exc) {
+            return Optional.empty();
         }
         catch (ClassNotFoundException | IOException exc) {
             exc.printStackTrace();
             System.exit(1);
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
     public void setAll(List<A> data) {
@@ -66,6 +74,15 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
     }
 
     @Override
+    public boolean remove(A object) {
+        Optional<List<A>> data = getAll();
+        if (data.isEmpty()) {
+            return false;
+        }
+        return data.get().remove(object);
+    }
+
+    @Override
     public boolean isPresent() {
         return getAll().isPresent();
     }
@@ -83,6 +100,4 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
                 .max()
                 .orElse(1);
     }
-
-
 }

@@ -5,6 +5,8 @@ import entities.Flight;
 import exceptions.NoSuchFlightException;
 import io.Console;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class DisplayFlight extends MenuItem {
@@ -17,12 +19,15 @@ public class DisplayFlight extends MenuItem {
         Flight flightFound;
         while (true) {
             try {
-                String flightDesignatorInput = getConsole().getInput("Please enter the designator of the flight:");
-                flightFound = getDatabase().getFcInMemory().getAllFlights().get().stream()
-                        .filter(flight -> flight.getFlightDesignator().equals(flightDesignatorInput))
-                        .findFirst()
-                        .orElseThrow(() -> new NoSuchFlightException("There is no matching designator. Try again."));
-                getConsole().println(flightFound);
+                int flightIdInput = getConsole().getPositiveInt("Please enter the id of the flight:");
+                flightFound = getDatabase().getFcInMemory().getFlight(flightIdInput)
+                        .orElseThrow(() -> new NoSuchFlightException("There is no matching id. Try again."));
+                System.out.println(String.join(" || ",
+                        "Flight", "ID", "From", "To", "Time of Departure",
+                        "Time of Landing", "Flight Duration", "Capacity"
+                ));
+                System.out.println(String.join(" || ",
+                        flightFound.toString(), String.valueOf(flightFound.getCapacity())));
                 break;
             }
             catch (NoSuchFlightException exc) {

@@ -1,6 +1,6 @@
 package menu_items;
 
-public class EndSession extends MenuItem implements Runnable {
+public class EndSession extends ExitButton {
 
 
     public EndSession(int id) {
@@ -9,6 +9,6 @@ public class EndSession extends MenuItem implements Runnable {
 
     @Override
     public void run() {
-        getDatabase().updateLocal();
+        System.out.println("Logging out..");
     }
 }

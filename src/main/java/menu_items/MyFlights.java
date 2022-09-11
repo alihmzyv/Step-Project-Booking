@@ -1,9 +1,10 @@
 package menu_items;
 
 import database.Database;
-import entities.IndexedDisplayer;
 import entities.User;
-import io.Console;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyFlights extends MenuItem {
     private User user;
@@ -19,11 +20,8 @@ public class MyFlights extends MenuItem {
 
     @Override
     public void run() {
-        System.out.println("\t\t\t" + "=".repeat(100));
-        System.out.println(String.join(" || ",
-                "\t\t\tBooking ID", "Passenger", "Flight", "From", "To", "Time of Booking"));
-        System.out.println("\t\t\t" + "-".repeat(100));
-        user.getAllBookings().forEach(booking -> System.out.println("\t\t\t" + booking));
-        System.out.println("\t\t\t" + "=".repeat(100));
+        getConsole().printAsIndexedTable(new ArrayList<>(List.of("Passenger", "Flight", "From", "To", "Time of Booking")),
+                user.getAllBookings(),
+                100);
     }
 }

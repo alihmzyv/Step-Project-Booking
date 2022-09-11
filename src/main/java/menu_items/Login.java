@@ -32,21 +32,21 @@ public class Login extends MenuItem {
                         .filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password))
                         .findFirst()
                         .orElseThrow(() -> new NoSuchUserException("Wrong username and/or password. Try again."));
+                break;
             }
             catch (NoSuchUserException exc) {
                 getConsole().println(exc.getMessage());
-                continue;
             }
-            getUserMenu(userLoggedIn).run();
-            break;
         }
+        System.out.println("Logging in...");
+        getUserMenu(userLoggedIn).run();
     }
 
     private Menu getUserMenu(User user) {
         File userMenuTextFile = new File("src/main/java/menus_text_files/userMenu.txt");
         List<MenuItem> userMenuItems = List.of(new DisplayAllFlights(1),
                 new DisplayFlight(2),
-                new BookFlight(3, user),
+                new FindAndBookFlight(3, new FindFlight(1), new BookFlight(2, user)),
                 new CancelFlight(4, user),
                 new MyFlights(5, user),
                 new EndSession(6));

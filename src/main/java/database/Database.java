@@ -5,10 +5,6 @@ import controllers.FlightController;
 import controllers.PassengerController;
 import controllers.UserController;
 import database.dao.*;
-import entities.Booking;
-import entities.Flight;
-import entities.Passenger;
-import entities.User;
 import services.BookingService;
 import services.FlightService;
 import services.PassengerService;
@@ -26,7 +22,6 @@ public class Database {
     private UserController ucInMemory;
     private PassengerController pcFile;
     private PassengerController pcInMemory;
-    private boolean isUpdated;
 
 
     public Database() {
@@ -79,10 +74,9 @@ public class Database {
         ucFile.setAllUsers(ucInMemory.getAllUsers().get());
         fcFile.setAllFlights(fcInMemory.getAllFlights().get());
         pcFile.setAllPassengers(pcInMemory.getAllPassengers().get());
-        isUpdated = true;
     }
 
-    public void updateFcMemory() {
+    public void updateFcInMemory() {
         fcInMemory.setAllFlights(fcFile.getAllFlights().get());
     }
 
@@ -116,13 +110,5 @@ public class Database {
             System.exit(1);
         }
         return idCounterFound;
-    }
-
-    public boolean isUpdated() {
-        return isUpdated;
-    }
-
-    public void outdate() {
-        isUpdated = false;
     }
 }

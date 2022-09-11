@@ -3,7 +3,7 @@ package menu_items;
 import database.Database;
 import io.Console;
 
-public class Exit extends MenuItem {
+public class Exit extends ExitButton {
     public Exit(int id) {
         super(id);
     }
@@ -11,6 +11,7 @@ public class Exit extends MenuItem {
 
     @Override
     public void run() {
-        System.exit(1);
+        getDatabase().updateLocal();
+        System.out.println("Exiting the application..");
     }
 }
