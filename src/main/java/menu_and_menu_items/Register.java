@@ -15,7 +15,7 @@ public class Register extends MenuItem {
 
 
     @Override
-    public void run() throws BookingMenuException {
+    public void run() throws BookingMenuException{
         String name = getConsole().getInput("Enter your name:");
         String surname = getConsole().getInput("Enter your surname:");
         String username = getConsole().getInput("Enter your username:");

@@ -18,14 +18,30 @@ public class RealConsole implements Console {
     }
 
     @Override
-    public void printAsTable(List<String> headings, List objects, int width) {
+    public void printAsTable(String title, List<String> headings, List objects, int width) {
+        printThickLine(width);
+        printf("%s%s\n", "\t".repeat(width / 8), title);
         printTableHeading(headings, width);
         objects.forEach(obj -> printf("%s%s\n", "\t".repeat(3), obj));
         printThickLine(width);
     }
 
     @Override
-    public void printAsIndexedTable(List<String> headings, List objects, int width) {
+    public void printNestedAsTable(String title, List<String> headings, List<List> objects, int width) {
+        printThickLine(width);
+        printf("%s%s\n", "\t".repeat(width / 8), title);
+        printTableHeading(headings, width);
+        objects.forEach(list -> {
+            list.forEach(obj -> printf("%s%s\n", "\t".repeat(3), obj));
+            printThinLine(width);
+        });
+        printThickLine(width);
+    }
+
+    @Override
+    public void printAsIndexedTable(String title, List<String> headings, List objects, int width) {
+        printThickLine(width);
+        printf("%s%s\n", "\t".repeat(width / 8), title);
         headings = new ArrayList<>(headings);
         headings.add(0, "ID");
         printTableHeading(headings, width);

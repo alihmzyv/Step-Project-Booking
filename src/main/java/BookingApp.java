@@ -9,9 +9,7 @@ import java.io.File;
 import java.util.List;
 
 public class BookingApp implements Runnable {
-
     BookingMenu mainMenu;
-
     BookingApp() {
         Database database = new Database();
         if (database.getFcFile().isEmpty()) {

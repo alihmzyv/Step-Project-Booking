@@ -72,8 +72,8 @@ public class FlightService {
         }
         Flight flightFound = flightOptional.get();
         List fields = List.of(
-                flightFound.getFlightDesignator(),
                 flightFound.getId(),
+                flightFound.getFlightDesignator(),
                 flightFound.getFrom(),
                 flightFound.getTo(),
                 flightFound.getDateTimeOfDeparture().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)),
@@ -81,10 +81,10 @@ public class FlightService {
                 Helper.getHumanReadableDuration(flightFound.getFlightDuration()),
                 flightFound.getCapacity());
         console.printInRow(
-                List.of("ID", "Flight", "From", "To", "Time of Departure", "Time of Landing",
-                        "Flight Duration", "Capacity"),
+                List.of("ID", "FLIGHT", "FROM", "TO", "TIME OF DEPARTURE", "TIME OF LANDING",
+                        "FLIGHT DURATION", "CAPACITY"),
                 fields,
-                115);
+                130);
     }
     public void displayAllFlights(Console console) {
         if (isEmpty()) {
@@ -92,9 +92,10 @@ public class FlightService {
             return;
         }
         console.printAsTable(
-                List.of("ID", "Flight", "From", "To", "Time of Departure", "Time of Landing", "Flight Duration"),
+                "ALL AVAILABLE FLIGHTS",
+                List.of("ID", "FLIGHT", "FROM", "TO", "TIME OF DEPARTURE", "TIME OF LANDING", "FLIGHT DURATION"),
                 getAllFlights().orElseGet(ArrayList::new),
-                110);
+                125);
     }
     public boolean isPresent() {
         return dao.isPresent();

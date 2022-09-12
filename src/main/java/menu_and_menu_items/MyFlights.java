@@ -20,7 +20,7 @@ public class MyFlights extends MenuItem {
 
     @Override
     public void run() {
-        getConsole().printAsIndexedTable(List.of("Passenger", "Flight", "From", "To", "Time of Booking"),
+        getConsole().printAsIndexedTable("YOUR FLIGHTS", List.of("PASSENGER", "FLIGHT", "FROM", "TO", "TIME OF BOOKING"),
                 user.getAllBookings(),
                 100);
     }

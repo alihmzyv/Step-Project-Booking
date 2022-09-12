@@ -1,8 +1,8 @@
-                        ==================================================================
-                                                    1.LOGIN
-                                                  2.REGISTER
-                                        3.SHOW ALL THE AVAILABLE FLIGHTS
-                                    4.SHOW THE DETAILED INFO ABOUT A FLIGHT
-                                                    5.SEARCH
-                                                     6.EXIT
-                        ==================================================================
+                                ==================================================================
+                                                            1.LOGIN
+                                                          2.REGISTER
+                                                3.SHOW ALL THE AVAILABLE FLIGHTS
+                                            4.SHOW THE DETAILED INFO ABOUT A FLIGHT
+                                                            5.SEARCH
+                                                             6.EXIT
+                                ==================================================================

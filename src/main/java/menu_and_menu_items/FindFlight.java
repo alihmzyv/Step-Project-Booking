@@ -33,20 +33,21 @@ public class FindFlight extends MenuItem {
         }
         LocalDate finalDateInput = dateInput;
         int freeSeatsInput = getConsole().getPositiveInt("Enter the number of tickets you want to buy:");
-        List<Flight> matchingFlights = getDatabase().getFcInMemory().getAllFlights().orElseGet(ArrayList::new).stream()
+        List<Flight> directFlights = getDatabase().getFcInMemory().getAllFlights().orElseGet(ArrayList::new).stream()
                 .filter(flight ->
                         flight.getFrom().getCity().toLowerCase().equals(fromInput) &&
                         flight.getTo().getCity().toLowerCase().equals(toInput) &&
                         flight.getDateOfDeparture().equals(finalDateInput) &&
                         flight.getCapacity() >= freeSeatsInput)
                 .collect(Collectors.toList());
-        if (matchingFlights.isEmpty()) {
-            System.out.println("There is no flight matching your search.");
-            return;
+        if (directFlights.isEmpty()) {
+            System.out.printf("%s%s\n", "\t".repeat(10),"There is no direct flight matching your search.");
         }
-        getConsole().printAsTable(
-                List.of("ID", "Flight", "From", "To", "Time of Departure", "Time of Landing", "Flight Duration"),
-                matchingFlights,
-                100);
+        else {
+            getConsole().printAsTable("DIRECT FLIGHTS",
+                    List.of("ID", "FLIGHT", "FROM", "TO", "TIME OF DEPARTURE", "TIME OF LANDING", "FLIGHT DURATION"),
+                    directFlights,
+                    125);
+        }
     }
 }
