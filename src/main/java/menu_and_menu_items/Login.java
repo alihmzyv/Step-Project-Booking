@@ -25,7 +25,7 @@ public class Login extends MenuItem {
             throw new NoSuchUserException("Wrong username and/or password. Try again.");
         }
         File userMenuTextFile = new File("src/main/java/menus_text_files/userMenu.txt");
-        BookingMenu.getBookingUserMenu(getDatabase(), getConsole(), userMenuTextFile, userOptional.get()).run();
         System.out.println("Logging in...");
+        BookingMenu.getBookingUserMenu(getDatabase(), getConsole(), userMenuTextFile, userOptional.get()).run();
     }
 }
