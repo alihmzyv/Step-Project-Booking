@@ -1,27 +1,27 @@
 package database;
 
-import controllers.BookingController;
-import controllers.FlightController;
-import controllers.PassengerController;
-import controllers.UserController;
+import database.controllers.BookingController;
+import database.controllers.FlightController;
+import database.controllers.PassengerController;
+import database.controllers.UserController;
 import database.dao.*;
-import services.BookingService;
-import services.FlightService;
-import services.PassengerService;
-import services.UserService;
+import database.services.BookingService;
+import database.services.FlightService;
+import database.services.PassengerService;
+import database.services.UserService;
 
 import java.io.*;
 import java.util.ArrayList;
 
 public class Database {
-    private FlightController fcFile;
-    private FlightController fcInMemory;
-    private BookingController bcFile;
-    private BookingController bcInMemory;
-    private UserController ucFile;
-    private UserController ucInMemory;
-    private PassengerController pcFile;
-    private PassengerController pcInMemory;
+    private final FlightController fcFile;
+    private final FlightController fcInMemory;
+    private final BookingController bcFile;
+    private final BookingController bcInMemory;
+    private final UserController ucFile;
+    private final UserController ucInMemory;
+    private final PassengerController pcFile;
+    private final PassengerController pcInMemory;
 
 
     public Database() {

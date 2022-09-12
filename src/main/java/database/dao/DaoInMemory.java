@@ -26,7 +26,9 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
 
     @Override
     public Optional<A> get(A object) {
-        return get(object.getId());
+        return objects.stream()
+                .filter(obj -> obj.equals(object))
+                .findFirst();
     }
 
     @Override
@@ -37,7 +39,7 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
 
     @Override
     public Optional<List<A>> getAll() {
-        return Optional.of(objects);
+        return Optional.ofNullable(objects);
     }
 
     @Override

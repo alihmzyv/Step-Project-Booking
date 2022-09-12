@@ -3,6 +3,7 @@ package entities;
 import database.Database;
 import database.dao.Identifiable;
 
+import java.awt.print.Book;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,25 +17,18 @@ public class User implements Identifiable, Serializable {
     private static int idCounter;
 
     private final int id;
-    private String name;
-    private String surname;
-    private String username;
-    private String password;
-    private List<Booking> bookings;
+    private final String name;
+    private final String surname;
+    private final String username;
+    private final String password;
+    private final List<Booking> bookings;
 
     static {
         idCounter = Database.getIdCounter("User");
     }
 
-    public User(String name, String surname, String username, String password, List<Booking> bookings) {
-        this.id = idCounter++;
-        this.name = name;
-        this.surname = surname;
-        this.username = username;
-        this.password = password;
-        this.bookings = bookings;
-    }
 
+    //constructors
     public User(String name, String surname, String username, String password) {
         this.id = idCounter++;
         this.name = name;
@@ -44,13 +38,14 @@ public class User implements Identifiable, Serializable {
         bookings = new ArrayList<>();
     }
 
+    //getter and setters
     @Override
     public int getId() {
         return id;
     }
 
-    public static int getIdCounter() {
-        return idCounter;
+    public List<Booking> getAllBookings() {
+        return bookings;
     }
 
     public String getUsername() {
@@ -61,38 +56,48 @@ public class User implements Identifiable, Serializable {
         return password;
     }
 
+    //methods
+    //instance methods
+    public Optional<Booking> getBooking(int bookingIndexInput) {
+        try {
+            return Optional.of(bookings.get(bookingIndexInput));
+        }
+        catch (IndexOutOfBoundsException exc) {
+            return Optional.empty();
+        }
+    }
+
     public void addBooking(Booking booking) {
         bookings.add(booking);
     }
 
-    public boolean cancelBooking(int bookingIdInput) {
-        Optional<Booking> bookingFoundOptional = getBooking(bookingIdInput);
-        if (bookingFoundOptional.isEmpty()) {
+    public boolean removeBooking(int bookingIndexInput) {
+        try {
+            bookings.remove(bookingIndexInput);
+            return true;
+        }
+        catch (IndexOutOfBoundsException exc) {
             return false;
         }
-        return bookings.remove(bookingFoundOptional.get());
     }
 
-    public Optional<Booking> getBooking(int bookingId) {
-        return bookings.stream()
-                .filter(booking -> booking.getId() == bookingId)
-                .findFirst();
+    public boolean removeBooking(Booking booking) {
+        return bookings.remove(booking);
     }
 
-    public List<Booking> getAllBookings() {
-        return bookings;
-    }
 
+    //equals and hashcode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id;
+        return Objects.equals(username, user.username) && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(username, password);
     }
+
 }

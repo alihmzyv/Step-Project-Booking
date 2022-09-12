@@ -17,15 +17,15 @@ public class Flight implements Identifiable, Serializable{
     private static int idCounter;
 
     private final int id;
-    private String flightDesignator;
-    private Airline airline;
-    private Airport from;
-    private Airport to;
-    private LocalDateTime dateTimeOfDeparture;
-    private LocalDateTime dateTimeOfLanding;
-    private Duration flightDuration;
+    private final String flightDesignator;
+    private final Airline airline;
+    private final Airport from;
+    private final Airport to;
+    private final LocalDateTime dateTimeOfDeparture;
+    private final LocalDateTime dateTimeOfLanding;
+    private final Duration flightDuration;
     private int capacity;
-    private List<Passenger> passengers;
+    private final List<Passenger> passengers;
 
 
     static {
@@ -84,7 +84,9 @@ public class Flight implements Identifiable, Serializable{
         return dateTimeOfDeparture.toLocalDate();
     }
 
-
+    public Duration getFlightDuration() {
+        return flightDuration;
+    }
     //methods
     //static methods
     public static Flight getRandom() {
@@ -142,5 +144,9 @@ public class Flight implements Identifiable, Serializable{
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public LocalDateTime getDateTimeOfLanding() {
+        return dateTimeOfLanding;
     }
 }

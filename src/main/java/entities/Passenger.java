@@ -13,12 +13,14 @@ public class Passenger implements Identifiable, Serializable {
     private static int idCounter;
 
     private final int id;
-    private String name;
-    private String surname;
+    private final String name;
+    private final String surname;
+
 
     static {
         idCounter = Database.getIdCounter("Passenger");
     }
+
 
     //constructors
     public Passenger(String name, String surname) {
@@ -27,23 +29,16 @@ public class Passenger implements Identifiable, Serializable {
         this.surname = surname;
     }
 
+
+    //getter and setters
     @Override
     public int getId() {
         return id;
     }
 
-    public static int getIdCounter() {
-        return idCounter;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
+    //methods
+    //instance methods
     @Override
     public String toString() {
         return String.format("%s %s", name, surname);

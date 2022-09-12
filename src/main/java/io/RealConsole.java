@@ -15,35 +15,48 @@ public class RealConsole implements Console {
     }
 
     @Override
-    public <A> void printAsTable(List<String> headings, List<A> objects, int width) {
-        System.out.println("\t".repeat(3) + "=".repeat(width));
-        System.out.print("\t".repeat(3));
-        System.out.println(String.join(" || ", headings));
-        System.out.print("\t".repeat(3));
-        System.out.println("-".repeat(width));
-        objects.stream().forEach(obj -> {
-            System.out.print("\t".repeat(3));
-            System.out.println(obj);
-        });
-        System.out.println("\t".repeat(3) + "=".repeat(width));
+    public void printf(String format, Object...args) {
+        System.out.printf(format, args);
     }
 
     @Override
-    public <A> void printAsIndexedTable(List<String> headings, List<A> objects, int width) {
-        headings.add(0, "ID");
-        System.out.println("\t".repeat(3) + "=".repeat(width));
-        System.out.print("\t".repeat(3));
-        System.out.println(String.join(" || ", headings));
-        System.out.print("\t".repeat(3));
-        System.out.println("-".repeat(width));
-        int[] indexCounter = {1};
-        objects.stream().forEach(obj -> {
-            System.out.print("\t".repeat(3));
-            System.out.print(indexCounter[0]++ + "  || ");
-            System.out.println(obj);
-        });
-        System.out.println("\t".repeat(3) + "=".repeat(width));
+    public void printAsTable(List<String> headings, List objects, int width) {
+        printTableHeading(headings, width);
+        objects.forEach(obj -> printf("%s%s\n", "\t".repeat(3), obj));
+        printThickLine(width);
     }
+
+    @Override
+    public void printAsIndexedTable(List<String> headings, List objects, int width) {
+        headings.add(0, "ID");
+        printTableHeading(headings, width);
+        int[] indexCounter = {1};
+        objects.forEach(obj -> printf("%s%s%s%s\n","\t".repeat(3), indexCounter[0]++, " || ", obj));
+        printThinLine(width);
+    }
+
+    @Override
+    public void printInRow(List<String> headings, List fields, int width) {
+        List<String> stringOfFields = fields.stream().map(field -> field.toString()).toList();
+        printTableHeading(headings, width);
+        println(String.join(" || ", stringOfFields));
+        printf("%s%s\n", "\t".repeat(3), "=".repeat(width));
+    }
+
+    private void printTableHeading(List<String> headings, int width) {
+        printThickLine(width);
+        printf("%s%s\n", "\t".repeat(3), String.join(" || ", headings));
+        printThinLine(width);
+    }
+
+    private void printThickLine(int width) {
+        printf("%s%s\n","\t".repeat(3), "=".repeat(width));
+    }
+
+    private void printThinLine(int width) {
+        printf("%s%s\n","\t".repeat(3), "-".repeat(width));
+    }
+
 
     @Override
     public String getInput(String message) {

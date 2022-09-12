@@ -42,7 +42,7 @@ public enum Airport implements Serializable {
     public static Airport getRandomExcept(Airport that) {
         return Arrays.stream(Airport.values())
                 .filter(airport -> airport != that)
-                .toArray(Airport[]::new)[Airport.values().length - 1];
+                .toArray(Airport[]::new)[new Random().nextInt(Airport.values().length - 1)];
     }
 
     //instance methods

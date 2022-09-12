@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class DaoFile<A extends Identifiable> implements DAO<A> {
 
-    private File file;
+    private final File file;
 
     public DaoFile(File file) {
         this.file = file;
@@ -31,7 +31,9 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
 
     @Override
     public Optional<A> get(A object) {
-        return get(object.getId());
+        return getAll().orElseGet(ArrayList::new).stream()
+                .filter(obj -> obj.equals(object))
+                .findFirst();
     }
 
     @Override

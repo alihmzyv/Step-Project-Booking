@@ -14,11 +14,12 @@ public class Booking implements Identifiable, Serializable {
     @Serial
     private static final long serialVersionUID = -2078227854687969036L;
     private static int idCounter;
+
     private final int id;
-    private Flight flight;
-    private User user;
-    private Passenger passenger;
-    private LocalDateTime dateTimeBooked;
+    private final Flight flight;
+    private final User user;
+    private final Passenger passenger;
+    private final LocalDateTime dateTimeBooked;
 
 
     static {
@@ -26,15 +27,17 @@ public class Booking implements Identifiable, Serializable {
     }
 
 
+    //constructors
     public Booking(Flight flight, User user, Passenger passenger) {
+        this.dateTimeBooked = LocalDateTime.now();
         this.id = idCounter++;
         this.flight = flight;
         this.user = user;
         this.passenger = passenger;
-        this.dateTimeBooked = LocalDateTime.now();
     }
 
 
+    //getter and setters
     @Override
     public int getId() {
         return id;
@@ -52,6 +55,9 @@ public class Booking implements Identifiable, Serializable {
         return flight;
     }
 
+
+    //methods
+    //instance methods
     @Override
     public String toString() {
         return String.join(" || ",
@@ -62,6 +68,7 @@ public class Booking implements Identifiable, Serializable {
                 dateTimeBooked.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)));
     }
 
+    //equals and hashcode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
