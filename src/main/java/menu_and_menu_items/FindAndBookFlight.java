@@ -1,6 +1,7 @@
 package menu_and_menu_items;
 
 import database.Database;
+import exceptions.booking_menu_exceptions.InsufficientCapacityException;
 import exceptions.booking_menu_exceptions.NoSuchFlightException;
 import io.Console;
 
@@ -15,7 +16,7 @@ public class FindAndBookFlight extends MenuItem {
     }
 
 
-    public void run() throws NoSuchFlightException {
+    public void run() throws NoSuchFlightException, InsufficientCapacityException {
         findFlight.run();
         String answer = getConsole().getInput("Do you want to book? (e.g. y/n)");
         if (answer.equals("y")) {

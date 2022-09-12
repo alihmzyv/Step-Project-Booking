@@ -8,7 +8,7 @@ public class Exit extends ExitButton {
 
     @Override
     public void run() {
-        getDatabase().updateLocal();
+        getDatabase().updateLocalDatabase();
         System.out.println("Exiting the application..");
     }
 }

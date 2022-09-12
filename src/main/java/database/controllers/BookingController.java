@@ -63,14 +63,12 @@ public class BookingController {
     }
 
     public boolean removeBooking(Booking booking){
-        Optional<Booking> bookingFoundOptional = getBooking(booking);
-        if (bookingFoundOptional.isEmpty()) {
+        if (getBooking(booking).isEmpty()) {
             return false;
         }
-        Booking bookingFound = bookingFoundOptional.get();
-        fs.getFlight(bookingFound.getFlight()).get().incrementCapacity();
-        us.getUser(bookingFound.getUser()).get().removeBooking(booking);
-        ps.removePassenger(bookingFound.getPassenger());
+        fs.getFlight(booking.getFlight()).get().incrementCapacity();
+        us.getUser(booking.getUser()).get().removeBooking(booking);
+        ps.removePassenger(booking.getPassenger());
         bs.removeBooking(booking);
         return true;
     }

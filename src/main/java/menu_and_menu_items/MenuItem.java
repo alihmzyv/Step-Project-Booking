@@ -2,6 +2,7 @@ package menu_and_menu_items;
 
 import database.Database;
 import exceptions.MenuException;
+import exceptions.booking_menu_exceptions.BookingMenuException;
 import io.Console;
 
 public abstract class MenuItem {
@@ -12,7 +13,7 @@ public abstract class MenuItem {
     public MenuItem(int id) {
         this.id = id;
     }
-    public abstract void run() throws MenuException;
+    public abstract void run() throws BookingMenuException;
 
     public void setDatabase(Database database) {
         this.database = database;

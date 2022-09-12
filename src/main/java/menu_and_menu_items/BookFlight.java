@@ -4,6 +4,7 @@ import entities.Booking;
 import entities.Flight;
 import entities.Passenger;
 import entities.User;
+import exceptions.booking_menu_exceptions.InsufficientCapacityException;
 import exceptions.booking_menu_exceptions.NoSuchFlightException;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class BookFlight extends MenuItem {
         this.user = user;
     }
 
-    public void run() throws NoSuchFlightException {
+    public void run() throws NoSuchFlightException, InsufficientCapacityException {
         Flight flightFound = getExistingFlight();
         List<Passenger> passengers = getPassengers(getAvailableCapacity(flightFound.getCapacity()));
         passengers.forEach(passenger ->
@@ -32,15 +33,12 @@ public class BookFlight extends MenuItem {
                 .orElseThrow(() -> new NoSuchFlightException("There is no matching id."));
     }
 
-    private int getAvailableCapacity(int max) {
-        while (true) {
-            int numberOfTickets = getConsole().getPositiveInt("Please enter the number of tickets you want to book:");
-            if (numberOfTickets > max) {
-                System.out.printf("%d is greater than the capacity of flight: %d", numberOfTickets, max);
-                continue;
-            }
-            return numberOfTickets;
+    private int getAvailableCapacity(int max) throws InsufficientCapacityException {
+        int numberOfTickets = getConsole().getPositiveInt("Please enter the number of tickets you want to book:");
+        if (numberOfTickets > max) {
+            throw new InsufficientCapacityException("There is no such amount of free seats in this flight.");
         }
+        return numberOfTickets;
     }
 
     private List<Passenger> getPassengers(int countBooked) {

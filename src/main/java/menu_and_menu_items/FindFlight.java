@@ -44,7 +44,8 @@ public class FindFlight extends MenuItem {
             System.out.println("There is no flight matching your search.");
             return;
         }
-        getConsole().printAsTable(List.of("ID", "Flight", "From", "To", "Time of Departure", "Time of Landing", "Flight Duration"),
+        getConsole().printAsTable(
+                List.of("ID", "Flight", "From", "To", "Time of Departure", "Time of Landing", "Flight Duration"),
                 matchingFlights,
                 100);
     }

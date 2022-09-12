@@ -1,12 +1,7 @@
 package menu_and_menu_items;
 
-public class ExitButton extends MenuItem {
+public abstract class ExitButton extends MenuItem {
     public ExitButton(int id) {
         super(id);
-    }
-
-    @Override
-    public void run() {
-
     }
 }

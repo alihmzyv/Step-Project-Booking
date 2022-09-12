@@ -15,12 +15,12 @@ import java.util.ArrayList;
 
 public class Database {
     private final FlightController fcFile;
-    private final FlightController fcInMemory;
     private final BookingController bcFile;
-    private final BookingController bcInMemory;
     private final UserController ucFile;
-    private final UserController ucInMemory;
     private final PassengerController pcFile;
+    private final FlightController fcInMemory;
+    private final BookingController bcInMemory;
+    private final UserController ucInMemory;
     private final PassengerController pcInMemory;
 
 
@@ -61,32 +61,29 @@ public class Database {
         return ucInMemory;
     }
 
-    public PassengerController getPcInMemory() {
-        return pcInMemory;
-    }
-
     public FlightController getFcFile() {
         return fcFile;
     }
 
-    public void updateLocal() {
+    public void updateLocalDatabase() {
         bcFile.setAllBookings(bcInMemory.getAllBookings().get());
         ucFile.setAllUsers(ucInMemory.getAllUsers().get());
         fcFile.setAllFlights(fcInMemory.getAllFlights().get());
         pcFile.setAllPassengers(pcInMemory.getAllPassengers().get());
+        updateLocaleIdCounters();
     }
 
     public void updateFcInMemory() {
         fcInMemory.setAllFlights(fcFile.getAllFlights().get());
     }
 
-    public void updateIdCounters() {
+    private void updateLocaleIdCounters() {
         try(PrintWriter pw = new PrintWriter(
                 new FileWriter("src/main/java/database/database_files/idCounters.txt"))) {
-            pw.println(String.format("Flight = %d;", fcFile.getMaxId()));
-            pw.println(String.format("Booking = %d;", bcFile.getMaxId()));
-            pw.println(String.format("User = %d;", ucFile.getMaxId()));
-            pw.println(String.format("Passenger = %d;", pcFile.getMaxId()));
+            pw.println(String.format("Flight = %d;", fcInMemory.getMaxId()));
+            pw.println(String.format("Booking = %d;", bcInMemory.getMaxId()));
+            pw.println(String.format("User = %d;", ucInMemory.getMaxId()));
+            pw.println(String.format("Passenger = %d;", pcInMemory.getMaxId()));
         }
         catch (IOException exc) {
             exc.printStackTrace();
@@ -95,20 +92,26 @@ public class Database {
     }
 
     public static int getIdCounter(String className) {
-        int idCounterFound = 1;
+        int idCounter = 0;
         try(BufferedReader ois = new BufferedReader(
                 new FileReader("src/main/java/database/database_files/idCounters.txt"))) {
-            idCounterFound = ois.lines()
+            idCounter = ois.lines()
                     .filter(line -> line.startsWith(className))
                     .findFirst()
                     .map(line -> line.charAt(line.length() - 2))
                     .map(ch -> Integer.parseInt(ch.toString()))
-                    .get();
+                    .orElse(1);
         }
-        catch (IOException e) {
-            e.printStackTrace();
+        catch (FileNotFoundException e) {
+            System.out.printf("Could not find idCounter file at %s\n",
+                    "src/main/java/database/database_files/idCounters.txt");
             System.exit(1);
         }
-        return idCounterFound;
+        catch (IOException exc) {
+            System.out.printf("Could not read idCounter file at %s\n",
+                    "src/main/java/database/database_files/idCounters.txt");
+            System.exit(1);
+        }
+        return idCounter;
     }
 }

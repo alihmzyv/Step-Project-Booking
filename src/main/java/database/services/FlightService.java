@@ -6,6 +6,8 @@ import entities.Helper;
 import io.Console;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -74,12 +76,12 @@ public class FlightService {
                 flightFound.getId(),
                 flightFound.getFrom(),
                 flightFound.getTo(),
-                flightFound.getDateOfDeparture(),
-                flightFound.getDateOfLanding(),
+                flightFound.getDateTimeOfDeparture().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)),
+                flightFound.getDateTimeOfLanding().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)),
                 Helper.getHumanReadableDuration(flightFound.getFlightDuration()),
                 flightFound.getCapacity());
         console.printInRow(
-                List.of("Flight", "ID", "From", "To", "Time of Departure", "Time of Landing",
+                List.of("ID", "Flight", "From", "To", "Time of Departure", "Time of Landing",
                         "Flight Duration", "Capacity"),
                 fields,
                 115);
@@ -90,7 +92,7 @@ public class FlightService {
             return;
         }
         console.printAsTable(
-                List.of("Flight", "ID", "From", "To", "Time of Departure", "Time of Landing", "Flight Duration"),
+                List.of("ID", "Flight", "From", "To", "Time of Departure", "Time of Landing", "Flight Duration"),
                 getAllFlights().orElseGet(ArrayList::new),
                 110);
     }

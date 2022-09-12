@@ -1,10 +1,8 @@
 package io;
 
 import java.io.*;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class RealConsole implements Console {
     private final Scanner sn = new Scanner(System.in);
@@ -28,6 +26,7 @@ public class RealConsole implements Console {
 
     @Override
     public void printAsIndexedTable(List<String> headings, List objects, int width) {
+        headings = new ArrayList<>(headings);
         headings.add(0, "ID");
         printTableHeading(headings, width);
         int[] indexCounter = {1};
@@ -37,10 +36,9 @@ public class RealConsole implements Console {
 
     @Override
     public void printInRow(List<String> headings, List fields, int width) {
-        List<String> stringOfFields = fields.stream().map(Object::toString).toList();
         printTableHeading(headings, width);
         System.out.print("\t".repeat(3));
-        println(String.join(" || ", stringOfFields));
+        println(String.join(" || ", fields.stream().map(obj -> obj.toString()).toList()));
         printf("%s%s\n", "\t".repeat(3), "=".repeat(width));
     }
 
