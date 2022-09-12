@@ -149,4 +149,8 @@ public class Flight implements Identifiable, Serializable{
     public LocalDateTime getDateTimeOfLanding() {
         return dateTimeOfLanding;
     }
+
+    public LocalDate getDateOfLanding() {
+        return dateTimeOfLanding.toLocalDate();
+    }
 }

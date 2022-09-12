@@ -69,12 +69,13 @@ public class FlightService {
             return;
         }
         Flight flightFound = flightOptional.get();
-        List fields = List.of(flightFound.getFlightDesignator(),
+        List fields = List.of(
+                flightFound.getFlightDesignator(),
                 flightFound.getId(),
                 flightFound.getFrom(),
                 flightFound.getTo(),
-                flightFound.getDateTimeOfDeparture(),
-                flightFound.getDateTimeOfLanding(),
+                flightFound.getDateOfDeparture(),
+                flightFound.getDateOfLanding(),
                 Helper.getHumanReadableDuration(flightFound.getFlightDuration()),
                 flightFound.getCapacity());
         console.printInRow(

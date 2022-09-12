@@ -45,6 +45,17 @@ public class Menu {
     public Menu(Database database, File menuTextFile, List<MenuItem> menuItems, User user) {
         this.database = database;
         this.menuTextFile = menuTextFile;
+        try {
+            menuText = getMenuText();
+        }
+        catch (FileNotFoundException exc) {
+            System.out.println("Could not find the main menu text file.");
+            System.exit(1);
+        }
+        catch (IOException exc) {
+            System.out.println("Could not read the main menu.");
+            System.exit(1);
+        }
         this.menuItems = menuItems;
         console = new RealConsole();
         menuItems

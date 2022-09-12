@@ -37,8 +37,9 @@ public class RealConsole implements Console {
 
     @Override
     public void printInRow(List<String> headings, List fields, int width) {
-        List<String> stringOfFields = fields.stream().map(field -> field.toString()).toList();
+        List<String> stringOfFields = fields.stream().map(Object::toString).toList();
         printTableHeading(headings, width);
+        System.out.print("\t".repeat(3));
         println(String.join(" || ", stringOfFields));
         printf("%s%s\n", "\t".repeat(3), "=".repeat(width));
     }
