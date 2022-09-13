@@ -12,15 +12,6 @@ public class BookingApp implements Runnable {
     BookingMenu mainMenu;
     BookingApp() {
         Database database = new Database();
-        if (database.getFcFile().isEmpty()) {
-            database.getFcFile().setAllFlights(Flight.getRandom(10));
-        }
-        else {
-            database.getFcFile().updateAllFlights();
-        }
-        database.updateFcInMemory();
-
-
         File mainMenuTextFile = new File("src/main/java/menus_text_files/menu.txt");
         List<MenuItem> mainMenuItems = List.of(new Login(1),
                 new Register(2),
@@ -29,7 +20,6 @@ public class BookingApp implements Runnable {
                 new FindFlight(5),
                 new Exit(6));
         Console console = new RealConsole();
-
         this.mainMenu = new BookingMenu(database, console, mainMenuItems, mainMenuTextFile);
     }
     @Override

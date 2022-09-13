@@ -9,6 +9,7 @@ import database.services.BookingService;
 import database.services.FlightService;
 import database.services.PassengerService;
 import database.services.UserService;
+import entities.Flight;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -28,6 +29,9 @@ public class Database {
         fcFile = new FlightController(
                 new FlightService(
                         new DaoFlightFile(new File("src/main/java/database/database_files/flights.bin"))));
+        if (fcFile.isEmpty()) {
+            fcFile.setAllFlights(Flight.getRandom(10));
+        }
         ucFile = new UserController
                 (new UserService(
                         new DaoUserFile(new File("src/main/java/database/database_files/users.bin"))));
@@ -41,6 +45,7 @@ public class Database {
                 fcFile.getService(),
                 pcFile.getService());
         fcInMemory = new FlightController(new FlightService(new DaoFlightInMemory(fcFile.getAllFlights().orElseGet(ArrayList::new))));
+        fcInMemory.updateAllFlights();
         ucInMemory = new UserController(new UserService(new DaoUserInMemory(ucFile.getAllUsers().orElseGet(ArrayList::new))));
         pcInMemory = new PassengerController(new PassengerService(new DaoPassengerInMemory(pcFile.getAllPassengers().orElseGet(ArrayList::new))));
         bcInMemory = new BookingController(new BookingService(new DaoBookingInMemory(bcFile.getAllBookings().orElseGet(ArrayList::new))),
