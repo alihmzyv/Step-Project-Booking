@@ -66,20 +66,12 @@ public class Database {
         return ucInMemory;
     }
 
-    public FlightController getFcFile() {
-        return fcFile;
-    }
-
     public void updateLocalDatabase() {
         bcFile.setAllBookings(bcInMemory.getAllBookings().get());
         ucFile.setAllUsers(ucInMemory.getAllUsers().get());
         fcFile.setAllFlights(fcInMemory.getAllFlights().get());
         pcFile.setAllPassengers(pcInMemory.getAllPassengers().get());
         updateLocaleIdCounters();
-    }
-
-    public void updateFcInMemory() {
-        fcInMemory.setAllFlights(fcFile.getAllFlights().get());
     }
 
     private void updateLocaleIdCounters() {
@@ -97,10 +89,9 @@ public class Database {
     }
 
     public static int getIdCounter(String className) {
-        int idCounter = 0;
         try(BufferedReader ois = new BufferedReader(
                 new FileReader("src/main/java/database/database_files/idCounters.txt"))) {
-            idCounter = ois.lines()
+            return ois.lines()
                     .filter(line -> line.startsWith(className))
                     .findFirst()
                     .map(line -> line.charAt(line.length() - 2))
@@ -111,12 +102,13 @@ public class Database {
             System.out.printf("Could not find idCounter file at %s\n",
                     "src/main/java/database/database_files/idCounters.txt");
             System.exit(1);
+            return - 1;
         }
         catch (IOException exc) {
             System.out.printf("Could not read idCounter file at %s\n",
                     "src/main/java/database/database_files/idCounters.txt");
             System.exit(1);
+            return - 1;
         }
-        return idCounter;
     }
 }
