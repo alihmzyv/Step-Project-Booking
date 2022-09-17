@@ -1,5 +1,7 @@
 package database.dao;
 
+import entities.Identifiable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,23 +21,36 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
 
     @Override
     public Optional<A> get(int id) {
-        return objects.stream()
+        if (getAll().isEmpty()) {
+            return Optional.empty();
+        }
+        return getAll().get().stream()
                 .filter(obj -> obj.getId() == id)
-                .findFirst();
+                .findAny();
     }
 
     @Override
     public Optional<A> get(A object) {
-        return objects.stream()
+        if (getAll().isEmpty()) {
+            return Optional.empty();
+        }
+        return getAll().get().stream()
                 .filter(obj -> obj.equals(object))
-                .findFirst();
+                .findAny();
     }
 
     @Override
-    public void saveAll(List<A> objects) {
-        this.objects.addAll(objects);
+    public boolean remove(int id) {
+        return objects.removeIf(obj -> obj.getId() == id);
     }
 
+    @Override
+    public boolean remove(A object) {
+        if (getAll().isEmpty()) {
+            return false;
+        }
+        return getAll().get().remove(object);
+    }
 
     @Override
     public Optional<List<A>> getAll() {
@@ -43,21 +58,13 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
     }
 
     @Override
-    public void setAll(List<A> data) {
-        objects = new ArrayList<>(data);
+    public void saveAll(List<A> objects) {
+        this.objects.addAll(objects);
     }
 
     @Override
-    public boolean remove(int id) {
-        return objects.removeIf(obj -> obj.getId() == id);
-    }
-    @Override
-    public boolean remove(A object) {
-        Optional<List<A>> data = getAll();
-        if (data.isEmpty()) {
-            return false;
-        }
-        return data.get().remove(object);
+    public void setAllTo(List<A> data) {
+        objects = new ArrayList<>(data);
     }
 
     @Override

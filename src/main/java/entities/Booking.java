@@ -1,7 +1,6 @@
 package entities;
 
 import database.Database;
-import database.dao.Identifiable;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -28,12 +27,12 @@ public class Booking implements Identifiable, Serializable {
 
 
     //constructors
-    public Booking(Flight flight, User user, Passenger passenger) {
-        this.dateTimeBooked = LocalDateTime.now();
-        this.id = idCounter++;
+    public Booking(User user, Flight flight, Passenger passenger) {
         this.flight = flight;
         this.user = user;
         this.passenger = passenger;
+        this.id = idCounter++;
+        this.dateTimeBooked = LocalDateTime.now();
     }
 
 
@@ -47,12 +46,12 @@ public class Booking implements Identifiable, Serializable {
         return user;
     }
 
-    public Passenger getPassenger() {
-        return passenger;
-    }
-
     public Flight getFlight() {
         return flight;
+    }
+
+    public Passenger getPassenger() {
+        return passenger;
     }
 
 
@@ -65,7 +64,10 @@ public class Booking implements Identifiable, Serializable {
                 flight.getFlightDesignator(),
                 flight.getFrom().toString(),
                 flight.getTo().toString(),
-                dateTimeBooked.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)));
+                flight.getDateTimeOfDeparture().
+                        format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)),
+                dateTimeBooked.
+                        format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)));
     }
 
     //equals and hashcode

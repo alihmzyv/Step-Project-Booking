@@ -1,4 +1,4 @@
-package database.dao;
+package entities;
 
 public interface Identifiable {
     int getId();

@@ -43,7 +43,7 @@ public enum Airline implements Serializable {
     //instance methods
     /*
      * returns the name of the Airline enum constant in the format
-     * in which all the words starts with capital letter, e.g. TURKISH_AIRLINES --> Turkish Airlines
+     * in which each word starts with capital letter, e.g. TURKISH_AIRLINES --> Turkish Airlines
      */
     private String getName() {
         return String.join(" ",
@@ -59,6 +59,6 @@ public enum Airline implements Serializable {
     @Override
     public String toString() {
         return String.format("%s (%s)",
-                String.join(" ", getName(), ICAOcode));
+                getName(), ICAOcode);
     }
 }

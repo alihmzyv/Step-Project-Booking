@@ -1,6 +1,6 @@
 package database.dao;
 
-import entities.Passenger;
+import entities.Identifiable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -24,23 +24,50 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
 
     @Override
     public Optional<A> get(int id) {
-        return getAll().orElseGet(ArrayList::new).stream()
+        Optional<List<A>> dataOpt = getAll();
+        if (dataOpt.isEmpty()) {
+            return Optional.empty();
+        }
+        return dataOpt.get().stream()
                 .filter(obj -> obj.getId() == id)
-                .findFirst();
+                .findAny();
     }
 
     @Override
     public Optional<A> get(A object) {
-        return getAll().orElseGet(ArrayList::new).stream()
+        Optional<List<A>> dataOpt = getAll();
+        if (dataOpt.isEmpty()) {
+            return Optional.empty();
+        }
+        return dataOpt.get().stream()
                 .filter(obj -> obj.equals(object))
-                .findFirst();
+                .findAny();
     }
+
+    @Override
+    public boolean remove(int id) {
+        Optional<List<A>> dataOpt = getAll();
+        if (dataOpt.isEmpty()) {
+            return false;
+        }
+        return dataOpt.get().removeIf(obj -> obj.getId() == id);
+    }
+
+    @Override
+    public boolean remove(A object) {
+        Optional<List<A>> dataOpt = getAll();
+        if (dataOpt.isEmpty()) {
+            return false;
+        }
+        return dataOpt.get().remove(object);
+    }
+
 
     @Override
     public void saveAll(List<A> objects) {
         List<A> data = getAll().orElseGet(ArrayList::new);
         data.addAll(objects);
-        setAll(data);
+        setAllTo(data);
     }
 
     public Optional<List<A>> getAll() {
@@ -57,31 +84,13 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
         }
     }
 
-    public void setAll(List<A> data) {
+    public void setAllTo(List<A> data) {
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(data);
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public boolean remove(int id) {
-        Optional<List<A>> data = getAll();
-        if (data.isEmpty()) {
-            return false;
-        }
-        return data.get().removeIf(obj -> obj.getId() == id);
-    }
-
-    @Override
-    public boolean remove(A object) {
-        Optional<List<A>> data = getAll();
-        if (data.isEmpty()) {
-            return false;
-        }
-        return data.get().remove(object);
     }
 
     @Override

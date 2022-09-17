@@ -16,15 +16,24 @@ public class DisplayFlight extends MenuItem {
         this.user = user;
     }
 
-    public void run() throws NoSuchFlightException {
-        int flightIdInput = getConsole().getPositiveInt("Please enter the id of the flight:");
+    @Override
+    public void run() {
+        int flightIdInput = getFlightIdInput();
+        logSearching(flightIdInput);
         getDatabase().getFcInMemory().displayFlight(flightIdInput, getConsole());
-        if (getUser().isPresent()) {
-            getLogger().searchInfo(user, flightIdInput);
-        }
     }
 
     public Optional<User> getUser() {
         return Optional.ofNullable(user);
+    }
+
+    private int getFlightIdInput() {
+        return getConsole().getPositiveInt("Please enter the id of the flight:");
+    }
+
+    private void logSearching(int flightId) {
+        if (getUser().isPresent()) {
+            getLogger().searchInfo(this.user, flightId);
+        }
     }
 }

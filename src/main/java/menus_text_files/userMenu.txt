@@ -1,8 +1,9 @@
                                 ==================================================================
-                                                 1.SHOW ALL THE AVAILABLE FLIGHTS
-                                              2.SHOW THE DETAILED INFO ABOUT A FLIGHT
-                                                      3.SEARCH AND BOOK
-                                                       4.CANCEL FLIGHT
-                                                         5.MY FLIGHTS
-                                                        6.END SESSION
+                                                 1.SHOW FLIGHTS WITHIN 24 HOURS
+                                                  2.SHOW ALL AVAILABLE FLIGHTS
+                                              3.SHOW THE DETAILED INFO ABOUT A FLIGHT
+                                                      4.SEARCH AND BOOK
+                                                       5.CANCEL FLIGHT
+                                                        6.MY FLIGHTS
+                                                        7.END SESSION
                                 ==================================================================

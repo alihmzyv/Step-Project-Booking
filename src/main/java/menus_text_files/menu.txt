@@ -1,8 +1,9 @@
                                 ==================================================================
                                                             1.LOGIN
                                                           2.REGISTER
-                                                3.SHOW ALL THE AVAILABLE FLIGHTS
+                                                  3.SHOW FLIGHTS WITHIN 24 HOURS
+                                                   4.SHOW ALL AVAILABLE FLIGHTS
                                             4.SHOW THE DETAILED INFO ABOUT A FLIGHT
-                                                            5.SEARCH
+                                                        5.SEARCH FLIGHT
                                                              6.EXIT
                                 ==================================================================

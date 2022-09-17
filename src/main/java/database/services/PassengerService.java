@@ -7,13 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class PassengerService {
-    private DAO<Passenger> dao;
+    private final DAO<Passenger> dao;
 
     public PassengerService(DAO<Passenger> dao) {
         this.dao = dao;
-    }
-
-    public PassengerService() {
     }
 
     public void savePassenger(Passenger passenger) {
@@ -27,6 +24,13 @@ public class PassengerService {
         return dao.get(passenger);
     }
 
+    public boolean removePassenger(int id) {
+        return dao.remove(id);
+    }
+    public boolean removePassenger(Passenger passenger) {
+        return dao.remove(passenger);
+    }
+
     public void saveAllPassengers(List<Passenger> passengers) {
         dao.saveAll(passengers);
     }
@@ -34,16 +38,10 @@ public class PassengerService {
         return dao.getAll();
     }
 
-    public void setAllPassengers(List<Passenger> data) {
-        dao.setAll(data);
+    public void setAllPassengersTo(List<Passenger> data) {
+        dao.setAllTo(data);
     }
 
-    public boolean removePassenger(int id) {
-        return dao.remove(id);
-    }
-    public boolean removePassenger(Passenger passenger) {
-        return dao.remove(passenger);
-    }
     public int getMaxId() {
         return dao.getMaxId();
     }

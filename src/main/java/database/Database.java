@@ -28,22 +28,23 @@ public class Database {
     public Database() {
         fcFile = new FlightController(
                 new FlightService(
-                        new DaoFlightFile(new File("src/main/java/database/database_files/flights.bin"))));
+                        new DaoFlightFile(new File("src/main/java/database/local_database_files/flights.bin"))));
         if (fcFile.isEmpty()) {
-            fcFile.setAllFlights(Flight.getRandom(100));
+            fcFile.setAllFlightsTo(Flight.getRandom(100));
         }
         ucFile = new UserController
                 (new UserService(
-                        new DaoUserFile(new File("src/main/java/database/database_files/users.bin"))));
+                        new DaoUserFile(new File("src/main/java/database/local_database_files/users.bin"))));
         pcFile = new PassengerController(
                 new PassengerService(
-                        new DaoPassengerFile(new File("src/main/java/database/database_files/passengers.bin"))));
+                        new DaoPassengerFile(new File("src/main/java/database/local_database_files/passengers.bin"))));
         bcFile = new BookingController(
                 new BookingService
-                        (new DaoBookingFile(new File("src/main/java/database/database_files/bookings.bin"))),
+                        (new DaoBookingFile(new File("src/main/java/database/local_database_files/bookings.bin"))),
                 ucFile.getService(),
                 fcFile.getService(),
                 pcFile.getService());
+
         fcInMemory = new FlightController(new FlightService(new DaoFlightInMemory(fcFile.getAllFlights().orElseGet(ArrayList::new))));
         fcInMemory.updateAllFlights();
         ucInMemory = new UserController(new UserService(new DaoUserInMemory(ucFile.getAllUsers().orElseGet(ArrayList::new))));
@@ -67,16 +68,16 @@ public class Database {
     }
 
     public void updateLocalDatabase() {
-        bcFile.setAllBookings(bcInMemory.getAllBookings().get());
-        ucFile.setAllUsers(ucInMemory.getAllUsers().get());
-        fcFile.setAllFlights(fcInMemory.getAllFlights().get());
-        pcFile.setAllPassengers(pcInMemory.getAllPassengers().get());
+        bcFile.setAllBookingsTo(bcInMemory.getAllBookings().get());
+        ucFile.setAllUsersTo(ucInMemory.getAllUsers().get());
+        fcFile.setAllFlightsTo(fcInMemory.getAllFlights().get());
+        pcFile.setAllPassengersTo(pcInMemory.getAllPassengers().get());
         updateLocaleIdCounters();
     }
 
     private void updateLocaleIdCounters() {
         try(PrintWriter pw = new PrintWriter(
-                new FileWriter("src/main/java/database/database_files/idCounters.txt"))) {
+                new FileWriter("src/main/java/database/local_database_files/idCounters.txt"))) {
             pw.println(String.format("Flight = %d;", fcInMemory.getMaxId()));
             pw.println(String.format("Booking = %d;", bcInMemory.getMaxId()));
             pw.println(String.format("User = %d;", ucInMemory.getMaxId()));
@@ -90,23 +91,23 @@ public class Database {
 
     public static int getIdCounter(String className) {
         try(BufferedReader ois = new BufferedReader(
-                new FileReader("src/main/java/database/database_files/idCounters.txt"))) {
+                new FileReader("src/main/java/database/local_database_files/idCounters.txt"))) {
             return ois.lines()
                     .filter(line -> line.startsWith(className))
-                    .findFirst()
+                    .findAny()
                     .map(line -> line.charAt(line.length() - 2))
                     .map(ch -> Integer.parseInt(ch.toString()))
                     .orElse(1);
         }
         catch (FileNotFoundException e) {
             System.out.printf("Could not find idCounter file at %s\n",
-                    "src/main/java/database/database_files/idCounters.txt");
+                    "src/main/java/database/local_database_files/idCounters.txt");
             System.exit(1);
             return - 1;
         }
         catch (IOException exc) {
             System.out.printf("Could not read idCounter file at %s\n",
-                    "src/main/java/database/database_files/idCounters.txt");
+                    "src/main/java/database/local_database_files/idCounters.txt");
             System.exit(1);
             return - 1;
         }

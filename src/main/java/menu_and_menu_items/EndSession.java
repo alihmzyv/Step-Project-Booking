@@ -13,7 +13,11 @@ public class EndSession extends ExitButton {
 
     @Override
     public void run() {
-        getLogger().logoutInfo(user);
+        logLoggingOut();
         getConsole().println("Logging out..");
+    }
+
+    private void logLoggingOut() {
+        getLogger().logoutInfo(this.user);
     }
 }

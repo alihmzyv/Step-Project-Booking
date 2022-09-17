@@ -19,24 +19,27 @@ public class BookFlight extends MenuItem {
         this.user = user;
     }
 
-    public void run() throws NoSuchFlightException, InsufficientCapacityException {
-        Flight flightFound = getExistingFlight();
-        List<Passenger> passengers = getPassengers(getAvailableCapacity(flightFound.getCapacity()));
-        passengers.forEach(passenger -> {
-            Booking bookingMade = new Booking(flightFound, user, passenger);
-            getLogger().bookingInfo(user, bookingMade);
-            getDatabase().getBcInMemory().saveBooking(bookingMade);
+
+    @Override
+    public void run() {
+        Flight flightInput = getFlightInput();
+        int numOfTicketsInput = getCapacityInput(flightInput.getCapacity());
+        List<Passenger> passengersInput = getPassengersInput(numOfTicketsInput);
+        passengersInput.forEach(passenger -> {
+            Booking bookingMade = new Booking(this.user, flightInput, passenger);
+            saveBooking(bookingMade);
+            logBooking(bookingMade);
         });
         getConsole().println("Bookings were made !");
     }
 
-    private Flight getExistingFlight() throws NoSuchFlightException {
+    private Flight getFlightInput() {
         return getDatabase().getFcInMemory()
                 .getFlight(getConsole().getPositiveInt("Please enter the id of the flight you want to book:"))
                 .orElseThrow(() -> new NoSuchFlightException("There is no matching id."));
     }
 
-    private int getAvailableCapacity(int max) throws InsufficientCapacityException {
+    private int getCapacityInput(int max) {
         int numberOfTickets = getConsole().getPositiveInt("Please enter the number of tickets you want to book:");
         if (numberOfTickets > max) {
             throw new InsufficientCapacityException("There is no such amount of free seats in this flight.");
@@ -44,17 +47,25 @@ public class BookFlight extends MenuItem {
         return numberOfTickets;
     }
 
-    private List<Passenger> getPassengers(int countBooked) {
+    private List<Passenger> getPassengersInput(int countBooked) {
         return IntStream.rangeClosed(1, countBooked)
                 .mapToObj(i -> {
                     System.out.printf("Enter the info about passenger %d\n", i);
-                    return getPassenger();
+                    return getPassengerInput();
                 })
                 .collect(Collectors.toList());
     }
 
-    private Passenger getPassenger() {
-        return new Passenger(getConsole().getInput("Please enter name:"),
-                getConsole().getInput("Please enter surname:"));
+    private Passenger getPassengerInput() {
+        return new Passenger(getConsole().getStringInput("Please enter name:"),
+                getConsole().getStringInput("Please enter surname:"));
+    }
+
+    private void saveBooking(Booking bookingMade) {
+        getDatabase().getBcInMemory().saveBooking(bookingMade);
+    }
+
+    private void logBooking(Booking booking) {
+        getLogger().bookingInfo(this.user, booking);
     }
 }

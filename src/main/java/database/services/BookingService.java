@@ -3,18 +3,14 @@ package database.services;
 import database.dao.DAO;
 import entities.Booking;
 
-import java.awt.print.Book;
 import java.util.List;
 import java.util.Optional;
 
 public class BookingService {
-    private DAO<Booking> dao;
+    private final DAO<Booking> dao;
 
     public BookingService(DAO<Booking> dao) {
         this.dao = dao;
-    }
-
-    public BookingService() {
     }
 
     public void saveBooking(Booking booking) {
@@ -28,6 +24,15 @@ public class BookingService {
         return dao.get(booking);
     }
 
+    public boolean removeBooking(int id) {
+        return dao.remove(id);
+    }
+
+    public boolean removeBooking(Booking booking) {
+        return dao.remove(booking);
+    }
+
+
     public void saveAllBookings(List<Booking> bookings) {
         dao.saveAll(bookings);
     }
@@ -36,16 +41,16 @@ public class BookingService {
         return dao.getAll();
     }
 
-    public void setAllBookings(List<Booking> data) {
-        dao.setAll(data);
+    public void setAllBookingsTo(List<Booking> data) {
+        dao.setAllTo(data);
     }
 
-    public boolean removeBooking(int id) {
-        return dao.remove(id);
+    public boolean isEmpty() {
+        return dao.isEmpty();
     }
 
-    public boolean removeBooking(Booking booking) {
-        return dao.remove(booking);
+    public boolean isPresent() {
+        return dao.isPresent();
     }
 
     public int getMaxId() {

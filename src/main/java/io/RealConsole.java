@@ -6,33 +6,33 @@ import java.util.*;
 
 public class RealConsole implements Console {
     private final Scanner sn = new Scanner(System.in);
-
+    private final PrintStream out = System.out;
     @Override
     public void println(Object obj) {
-        System.out.println(obj);
+        out.println(obj);
     }
 
     @Override
     public void printf(String format, Object...args) {
-        System.out.printf(format, args);
+        out.printf(format, args);
     }
 
     @Override
     public <A> void printAsTable(String title, List<String> headings, List<A> objects, int width) {
         printThickLine(width);
-        printf("%s%s\n", "\t".repeat(width / 8), title);
+        printTitle(title, width);
         printTableHeading(headings, width);
-        objects.forEach(obj -> printf("%s%s\n", "\t".repeat(3), obj));
+        objects.forEach(obj -> println("\t".repeat(3) + obj));
         printThickLine(width);
     }
 
     @Override
-    public <A> void printNestedAsTable(String title, List<String> headings, List<List<A>> objects, int width) {
+    public <A> void printNestedListAsTable(String title, List<String> headings, List<List<A>> objects, int width) {
         printThickLine(width);
-        printf("%s%s\n", "\t".repeat(width / 8), title);
+        printTitle(title, width);
         printTableHeading(headings, width);
         objects.forEach(list -> {
-            list.forEach(obj -> printf("%s%s\n", "\t".repeat(3), obj));
+            list.forEach(obj -> println("\t".repeat(3) + obj));
             printThinLine(width);
         });
         printThickLine(width);
@@ -41,21 +41,17 @@ public class RealConsole implements Console {
     @Override
     public <A> void printAsIndexedTable(String title, List<String> headings, List<A> objects, int width) {
         printThickLine(width);
-        printf("%s%s\n", "\t".repeat(width / 8), title);
+        printTitle(title, width);
         headings = new ArrayList<>(headings);
         headings.add(0, "ID");
         printTableHeading(headings, width);
         int[] indexCounter = {1};
-        objects.forEach(obj -> printf("%s%s%s%s\n","\t".repeat(3), indexCounter[0]++, " || ", obj));
-        printThinLine(width);
+        objects.forEach(obj -> printf("%s || %s\n", "\t".repeat(3) + indexCounter[0]++, obj));
+        printThickLine(width);
     }
 
-    @Override
-    public <A> void printInRow(List<String> headings, List<A> fields, int width) {
-        printTableHeading(headings, width);
-        System.out.print("\t".repeat(3));
-        println(String.join(" || ", fields.stream().map(obj -> obj.toString()).toList()));
-        printf("%s%s\n", "\t".repeat(3), "=".repeat(width));
+    private void printTitle(String title, int width) {
+        printf("%s%s\n", "\t".repeat(width / 8), title);
     }
 
     private void printTableHeading(List<String> headings, int width) {
@@ -74,13 +70,11 @@ public class RealConsole implements Console {
 
 
     @Override
-    public String getInput(String message) {
+    public String getStringInput(String message) {
         println(message);
-        String input;
         while (true) {
             try {
-                input = sn.nextLine();
-                return input.strip();
+                return sn.nextLine().strip();
             }
             catch (NoSuchElementException exc) {
                 println("Please do not enter empty string. Try again.");
@@ -91,11 +85,10 @@ public class RealConsole implements Console {
     @Override
     public int getPositiveInt(String message) {
         println(message);
-        int input;
         while (true) {
             try {
-                input = sn.nextInt();
-                if (input < 0) throw new InputMismatchException();
+                int input = sn.nextInt();
+                if (input <= 0) throw new InputMismatchException();
                 sn.nextLine();
                 return input;
             }

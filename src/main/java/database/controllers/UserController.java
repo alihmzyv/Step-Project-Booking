@@ -13,10 +13,6 @@ public class UserController {
         this.us = us;
     }
 
-    public UserController() {
-        us = new UserService();
-    }
-
     public UserService getService() {
         return us;
     }
@@ -36,8 +32,8 @@ public class UserController {
         return us.getAllUsers();
     }
 
-    public void setAllUsers(List<User> data) {
-        us.setAllUsers(data);
+    public void setAllUsersTo(List<User> data) {
+        us.setAllUsersTo(data);
     }
     public boolean removeUser(int id) {
         return us.removeUser(id);

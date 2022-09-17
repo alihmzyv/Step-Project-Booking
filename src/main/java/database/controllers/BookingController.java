@@ -5,8 +5,8 @@ import database.services.BookingService;
 import database.services.FlightService;
 import database.services.PassengerService;
 import database.services.UserService;
+import entities.Passenger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,10 +24,11 @@ public class BookingController {
     }
 
     public void saveBooking(Booking booking) {
+        bs.saveBooking(booking);
         us.getUser(booking.getUser()).get().addBooking(booking);
         fs.getFlight(booking.getFlight()).get().decrementCapacity();
+        fs.getFlight(booking.getFlight()).get().addPassenger(booking.getPassenger());
         ps.savePassenger(booking.getPassenger());
-        bs.saveBooking(booking);
     }
 
     public Optional<Booking> getBooking(int id) {
@@ -46,31 +47,19 @@ public class BookingController {
         return bs.getAllBookings();
     }
 
-    public void setAllBookings(List<Booking> data) {
-        bs.setAllBookings(data);
-    }
-
-    public boolean removeBooking(int id){
-        Optional<Booking> bookingFoundOptional = getBooking(id);
-        if (bookingFoundOptional.isEmpty()) {
-            return false;
-        }
-        Booking bookingFound = bookingFoundOptional.get();
-        fs.getFlight(bookingFound.getFlight()).get().incrementCapacity();
-        ps.removePassenger(bookingFound.getPassenger());
-        us.getUser(bookingFound.getUser()).get().removeBooking(bookingFound);
-        bs.removeBooking(id);
-        return true;
+    public void setAllBookingsTo(List<Booking> data) {
+        bs.setAllBookingsTo(data);
     }
 
     public boolean removeBooking(Booking booking){
         if (getBooking(booking).isEmpty()) {
             return false;
         }
-        fs.getFlight(booking.getFlight()).get().incrementCapacity();
-        us.getUser(booking.getUser()).get().removeBooking(booking);
-        ps.removePassenger(booking.getPassenger());
         bs.removeBooking(booking);
+        us.getUser(booking.getUser()).get().removeBooking(booking);
+        fs.getFlight(booking.getFlight()).get().incrementCapacity();
+        fs.getFlight(booking.getFlight()).get().removePassenger(booking.getPassenger());
+        ps.removePassenger(booking.getPassenger());
         return true;
     }
 

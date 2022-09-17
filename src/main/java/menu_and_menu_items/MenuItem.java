@@ -1,31 +1,18 @@
 package menu_and_menu_items;
 
 import database.Database;
-import entities.BookingLogger;
+import entities.BookingAppLogger;
 import exceptions.booking_menu_exceptions.BookingMenuException;
 import io.Console;
 
-public abstract class MenuItem {
+public abstract class MenuItem implements Runnable {
     private final int id;
     private Database database;
     private Console console;
-    private BookingLogger logger;
+    private BookingAppLogger logger;
     
     public MenuItem(int id) {
         this.id = id;
-    }
-    public abstract void run() throws BookingMenuException;
-
-    public void setDatabase(Database database) {
-        this.database = database;
-    }
-
-    public void setConsole(Console console) {
-        this.console = console;
-    }
-
-    public void setLogger(BookingLogger logger) {
-        this.logger = logger;
     }
 
     public int getId() {
@@ -40,7 +27,22 @@ public abstract class MenuItem {
         return database;
     }
 
-    public BookingLogger getLogger() {
+    public BookingAppLogger getLogger() {
         return logger;
+    }
+
+    public void setDatabase(Database database) {
+        this.database = database;
+    }
+
+    public void setConsole(Console console) {
+        this.console = console;
+    }
+
+    public void setLogger(BookingAppLogger logger) {
+        this.logger = logger;
+    }
+    public boolean isExit() {
+        return this instanceof ExitButton;
     }
 }

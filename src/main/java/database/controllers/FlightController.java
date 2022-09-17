@@ -7,16 +7,13 @@ import database.services.FlightService;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class FlightController {
     private final FlightService fs;
 
     public FlightController(FlightService fs) {
         this.fs = fs;
-    }
-
-    public FlightController() {
-        fs = new FlightService();
     }
 
     public FlightService getService() {
@@ -35,8 +32,8 @@ public class FlightController {
         return fs.getAllFlights();
     }
 
-    public void setAllFlights(List<Flight> flights) {
-        fs.setAllFlights(flights);
+    public void setAllFlightsTo(List<Flight> flights) {
+        fs.setAllFlightsTo(flights);
     }
 
     public void displayAllFlights(Console console) {
@@ -49,6 +46,10 @@ public class FlightController {
 
     public void displayFlights(Duration withinNext, Console console) {
         fs.displayFlights(withinNext, console);
+    }
+
+    public void displayFlights(Predicate<Flight> filter, Console console) {
+        fs.displayFlights(filter, console);
     }
 
     public boolean removeFlight(int id) {
@@ -71,9 +72,5 @@ public class FlightController {
     }
     public int getMaxId() {
         return fs.getMaxId();
-    }
-
-    public void displayFlight(Flight flight, Console console) {
-        fs.displayFlight(flight.getId(), console);
     }
 }

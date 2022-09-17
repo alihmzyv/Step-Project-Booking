@@ -1,7 +1,7 @@
 package entities;
 
 import database.Database;
-import database.dao.Identifiable;
+import helpers.Helper;
 
 import java.io.*;
 import java.time.*;
@@ -45,7 +45,7 @@ public class Flight implements Identifiable, Serializable{
         this.dateTimeOfLanding = dateTimeOfLanding;
         this.flightDuration = Duration.between(dateTimeOfDeparture, dateTimeOfLanding);
         this.capacity = capacity;
-        this.flightDesignator = getDesignator();
+        this.flightDesignator = generateDesignator();
         this.passengers = new ArrayList<>();
     }
 
@@ -84,26 +84,40 @@ public class Flight implements Identifiable, Serializable{
         return dateTimeOfDeparture.toLocalDate();
     }
 
+    public LocalDateTime getDateTimeOfLanding() {
+        return dateTimeOfLanding;
+    }
+
     public Duration getFlightDuration() {
         return flightDuration;
     }
+
+    public void addPassenger(Passenger passenger) {
+        passengers.add(passenger);
+    }
+
+    public boolean removePassenger(Passenger passenger) {
+        return passengers.remove(passenger);
+    }
+
+
     //methods
     //static methods
     public static Flight getRandom() {
         Random rnd = new Random();
-        LocalDateTime dateTimeOfDeparture = LocalDateTime.now().plusHours(rnd.nextInt(1, 169));
-        LocalDateTime dateTimeOfLanding = dateTimeOfDeparture.plusMinutes(rnd.nextInt(180, 420));
+        LocalDateTime dateTimeOfDeparture = LocalDateTime.now().plus(Duration.ofDays(7));
+        LocalDateTime dateTimeOfLanding = dateTimeOfDeparture.plus(Duration.ofMinutes(300));
         Airline airline = Airline.getRandom();
         Airport from = Airport.getRandom();
         Airport to = Airport.getRandomExcept(from);
-        int capacity = rnd.nextInt(1, 101);
+        int capacity = rnd.nextInt(30, 101);
         return new Flight(airline, from, to, dateTimeOfDeparture, dateTimeOfLanding, capacity);
     }
 
     public static List<Flight> getRandom(int count) {
         return IntStream.range(0, count)
                 .mapToObj(i -> getRandom())
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     //instance methods
@@ -115,7 +129,7 @@ public class Flight implements Identifiable, Serializable{
         setCapacity(this.capacity + 1);
     }
 
-    public String getDesignator() {
+    public String generateDesignator() {
         return String.format("%s%d", this.airline.getIATADesignator(),
                         Math.abs(Objects.hash(from, to, capacity)))
                 .substring(0, 6);
@@ -144,13 +158,5 @@ public class Flight implements Identifiable, Serializable{
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public LocalDateTime getDateTimeOfLanding() {
-        return dateTimeOfLanding;
-    }
-
-    public LocalDate getDateOfLanding() {
-        return dateTimeOfLanding.toLocalDate();
     }
 }

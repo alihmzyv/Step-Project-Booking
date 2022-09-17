@@ -1,7 +1,6 @@
 package entities;
 
 import database.Database;
-import database.dao.Identifiable;
 
 import java.io.Serial;
 import java.io.Serializable;

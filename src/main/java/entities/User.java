@@ -1,15 +1,12 @@
 package entities;
 
 import database.Database;
-import database.dao.Identifiable;
 
-import java.awt.print.Book;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public class User implements Identifiable, Serializable {
     @Serial
@@ -58,27 +55,8 @@ public class User implements Identifiable, Serializable {
 
     //methods
     //instance methods
-    public Optional<Booking> getBooking(int bookingIndexInput) {
-        try {
-            return Optional.of(bookings.get(bookingIndexInput));
-        }
-        catch (IndexOutOfBoundsException exc) {
-            return Optional.empty();
-        }
-    }
-
     public void addBooking(Booking booking) {
         bookings.add(booking);
-    }
-
-    public boolean removeBooking(int bookingIndexInput) {
-        try {
-            bookings.remove(bookingIndexInput);
-            return true;
-        }
-        catch (IndexOutOfBoundsException exc) {
-            return false;
-        }
     }
 
     public boolean removeBooking(Booking booking) {
@@ -102,6 +80,10 @@ public class User implements Identifiable, Serializable {
 
     @Override
     public String toString() {
-        return username;
+        return "User{" +
+                "name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", username='" + username + '\'' +
+                '}';
     }
 }

@@ -6,3 +6,18 @@
 11:54:14 BookingApp - alihmzyv logged in.
 11:54:33 BookingApp - alihmzyv made the booking: Ali Hamzayev || CX1093 || DELHI (DEL) || ISTANBUL (IST) || September 17, 2022, 11:54 AM.
 11:54:40 BookingApp - alihmzyv logged out.
+14:39:27 BookingApp - alihmzyv registered and logged in.
+14:39:54 BookingApp - alihmzyv searched for a flight with id: 30.
+14:40:29 BookingApp - alihmzyv made the booking: Ali Hamzayev || QF1686 || ISTANBUL (SAW) || BAKU (GYD) || September 17, 2022, 2:40 PM.
+14:40:39 BookingApp - alihmzyv logged out.
+14:43:56 BookingApp - Registered: User{name='Konul', surname='Hamzayeva', username='knlhmzyv'}
+14:43:56 BookingApp - knlhmzyv logged in.
+14:44:01 BookingApp - knlhmzyv logged out.
+14:45:58 BookingApp - alihmzyv logged in.
+14:46:06 BookingApp - alihmzyv searched for a flight with id: 10.
+14:46:13 BookingApp - alihmzyv searched for a flight with id: 1294812.
+14:46:22 BookingApp - alihmzyv searched for a flight with id: 2.
+14:47:47 BookingApp - alihmzyv logged in.
+14:47:57 BookingApp - alihmzyv cancelled the booking: Ali Hamzayev || QF1686 || ISTANBUL (SAW) || BAKU (GYD) || September 17, 2022, 2:40 PM.
+14:48:01 BookingApp - alihmzyv logged out.
+14:48:20 BookingApp - alihmzyv logged in.

@@ -1,13 +1,13 @@
 import database.Database;
-import entities.BookingLogger;
-import entities.User;
-import exceptions.MenuException;
+import entities.BookingAppLogger;
+import exceptions.booking_menu_exceptions.BookingMenuException;
 import io.Console;
 import io.RealConsole;
 import menu_and_menu_items.*;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.List;
 
 public class BookingApp implements Runnable {
@@ -17,12 +17,13 @@ public class BookingApp implements Runnable {
         File mainMenuTextFile = new File("src/main/java/menus_text_files/menu.txt");
         List<MenuItem> mainMenuItems = List.of(new Login(1),
                 new Register(2),
-                new DisplayAllFlights(3),
-                new DisplayFlight(4),
-                new FindFlight(5),
-                new Exit(6));
+                new DisplaySomeFlights(3, Duration.ofHours(24)),
+                new DisplaySomeFlights(4, Duration.ofDays(7)),
+                new DisplayFlight(5),
+                new SearchFlight(6),
+                new Exit(7));
         Console console = new RealConsole();
-        BookingLogger logger = new BookingLogger(LogManager.getLogger("BookingApp"));
+        BookingAppLogger logger = new BookingAppLogger(LogManager.getLogger("BookingApp"));
         this.mainMenu = new BookingMenu(database, console, mainMenuItems, mainMenuTextFile, logger);
     }
     @Override
@@ -32,7 +33,7 @@ public class BookingApp implements Runnable {
                 mainMenu.run();
                 break;
             }
-            catch (MenuException exc) {
+            catch (BookingMenuException exc) {
                 System.out.println(exc.getMessage());
             }
         }

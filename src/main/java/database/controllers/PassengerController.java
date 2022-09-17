@@ -13,10 +13,6 @@ public class PassengerController {
         this.ps = ps;
     }
 
-    public PassengerController() {
-        ps = new PassengerService();
-    }
-
     public PassengerService getService() {
         return ps;
     }
@@ -33,8 +29,8 @@ public class PassengerController {
         return ps.getAllPassengers();
     }
 
-    public void setAllPassengers(List<Passenger> data) {
-        ps.setAllPassengers(data);
+    public void setAllPassengersTo(List<Passenger> data) {
+        ps.setAllPassengersTo(data);
     }
     public int getMaxId() {
         return ps.getMaxId();

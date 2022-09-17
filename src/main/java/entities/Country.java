@@ -23,7 +23,7 @@ public enum Country {
     public String toString() {
         return String.join(" ",
                 Arrays.stream(name().split("_"))
-                        .map(word -> word.charAt(0) + word.substring(1))
+                        .map(word -> word.charAt(0) + word.substring(1).toLowerCase())
                         .toList());
     }
 }

@@ -4,9 +4,9 @@ import entities.User;
 
 import java.util.List;
 
-public class MyFlights extends MenuItem {
-    private User user;
-    public MyFlights(int id, User user) {
+public class MyBookings extends MenuItem {
+    private final User user;
+    public MyBookings(int id, User user) {
         super(id);
         this.user = user;
     }
