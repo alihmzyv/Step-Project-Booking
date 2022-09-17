@@ -24,7 +24,7 @@ public class FindAndBookFlight extends MenuItem {
         if (answer.equals("y")) {
             bookFlight.run();
         }
-        System.out.println("Going back to menu..");
+        getConsole().println("Going back to menu..");
     }
 
     @Override

@@ -4,6 +4,7 @@ import entities.Flight;
 import io.Console;
 import database.services.FlightService;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +45,10 @@ public class FlightController {
 
     public void displayFlight(int flightId, Console console) {
         fs.displayFlight(flightId, console);
+    }
+
+    public void displayFlights(Duration withinNext, Console console) {
+        fs.displayFlights(withinNext, console);
     }
 
     public boolean removeFlight(int id) {

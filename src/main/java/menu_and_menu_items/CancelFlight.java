@@ -24,14 +24,14 @@ public class CancelFlight extends MenuItem {
             Booking booking = user.getAllBookings().get(bookingIndexInput - 1);
             if (getDatabase().getBcInMemory().removeBooking(booking)) {
                 getLogger().cancelBookingInfo(user, booking);
-                System.out.println("Booking was cancelled!");
+                getConsole().println("Booking was cancelled!");
             }
             else {
                 throw new NoSuchBookingException("No such booking found in the database.");
             }
         }
         catch (IndexOutOfBoundsException exc) {
-            System.out.println("There is no such booking index in your bookings list.");
+            getConsole().println("There is no such booking index in your bookings list.");
         }
     }
 }

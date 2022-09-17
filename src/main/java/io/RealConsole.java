@@ -18,7 +18,7 @@ public class RealConsole implements Console {
     }
 
     @Override
-    public void printAsTable(String title, List<String> headings, List objects, int width) {
+    public <A> void printAsTable(String title, List<String> headings, List<A> objects, int width) {
         printThickLine(width);
         printf("%s%s\n", "\t".repeat(width / 8), title);
         printTableHeading(headings, width);
@@ -27,7 +27,7 @@ public class RealConsole implements Console {
     }
 
     @Override
-    public void printNestedAsTable(String title, List<String> headings, List<List> objects, int width) {
+    public <A> void printNestedAsTable(String title, List<String> headings, List<List<A>> objects, int width) {
         printThickLine(width);
         printf("%s%s\n", "\t".repeat(width / 8), title);
         printTableHeading(headings, width);
@@ -39,7 +39,7 @@ public class RealConsole implements Console {
     }
 
     @Override
-    public void printAsIndexedTable(String title, List<String> headings, List objects, int width) {
+    public <A> void printAsIndexedTable(String title, List<String> headings, List<A> objects, int width) {
         printThickLine(width);
         printf("%s%s\n", "\t".repeat(width / 8), title);
         headings = new ArrayList<>(headings);
@@ -51,7 +51,7 @@ public class RealConsole implements Console {
     }
 
     @Override
-    public void printInRow(List<String> headings, List fields, int width) {
+    public <A> void printInRow(List<String> headings, List<A> fields, int width) {
         printTableHeading(headings, width);
         System.out.print("\t".repeat(3));
         println(String.join(" || ", fields.stream().map(obj -> obj.toString()).toList()));
@@ -80,10 +80,10 @@ public class RealConsole implements Console {
         while (true) {
             try {
                 input = sn.nextLine();
-                return input;
+                return input.strip();
             }
             catch (NoSuchElementException exc) {
-                System.out.println("Please do not enter empty string. Try again.");
+                println("Please do not enter empty string. Try again.");
             }
         }
     }
@@ -100,7 +100,7 @@ public class RealConsole implements Console {
                 return input;
             }
             catch (InputMismatchException exc) {
-                System.out.println("Please enter a positive integer. Try again.");
+                println("Please enter a positive integer. Try again.");
                 sn.nextLine();
             }
         }

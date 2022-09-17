@@ -14,6 +14,6 @@ public class EndSession extends ExitButton {
     @Override
     public void run() {
         getLogger().logoutInfo(user);
-        System.out.println("Logging out..");
+        getConsole().println("Logging out..");
     }
 }

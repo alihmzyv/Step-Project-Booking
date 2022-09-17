@@ -18,18 +18,26 @@ public class Register extends MenuItem {
     public void run() throws BookingMenuException{
         String name = getConsole().getInput("Enter your name:");
         String surname = getConsole().getInput("Enter your surname:");
-        String username = getConsole().getInput("Enter your username:");
+        String username;
+        while (true) {
+            username = getConsole().getInput("Enter your username:");
+            if (getDatabase().getUcInMemory().contains(username)) {
+                getConsole().println("Username is already taken. Please try another username.");
+                continue;
+            }
+            break;
+        }
         String password;
         while (true) {
             password = getConsole().getInput("Enter your password:");
             if (!Pattern.matches("^(?=.*[\\d])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{6,}$", password)){
-                System.out.println("""
+                getConsole().println("""
                         Password should contain 6 characters and at least:
                         one upper-case and one lower-case English letter
                         one digit
                         one special character
                         no space""");
-                System.out.println("Try again");
+                getConsole().println("Try again");
                 continue;
             }
             break;
@@ -37,9 +45,9 @@ public class Register extends MenuItem {
         User userRegistered = new User(name, surname, username, password);
         getDatabase().getUcInMemory().saveUser(userRegistered);
         getLogger().registerInfo(userRegistered);
-        System.out.println("Registration was successful!");
+        getConsole().println("Registration was successful!");
         File userMenuTextFile = new File("src/main/java/menus_text_files/userMenu.txt");
-        System.out.println("Logging in...");
+        getConsole().println("Logging in...");
         BookingMenu.getBookingUserMenu(getDatabase(), getConsole(), userMenuTextFile, userRegistered, getLogger()).run();
     }
 }

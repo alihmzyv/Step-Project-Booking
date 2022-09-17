@@ -5,7 +5,9 @@ import entities.Flight;
 import entities.Helper;
 import io.Console;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
@@ -97,6 +99,22 @@ public class FlightService {
                 getAllFlights().orElseGet(ArrayList::new),
                 125);
     }
+
+    public void displayFlights (Duration withinNext, Console console) {
+        if (isEmpty()) {
+            System.out.println("There is no flight at all.");
+            return;
+        }
+        LocalDateTime upperDateTimeLimit = LocalDateTime.now().plus(withinNext);
+        console.printAsTable(
+                String.format("ALL AVAILABLE FLIGHTS WITHIN NEXT %s", Helper.getHumanReadableDuration(withinNext)),
+                List.of("ID", "FLIGHT", "FROM", "TO", "TIME OF DEPARTURE", "TIME OF LANDING", "FLIGHT DURATION"),
+                getAllFlights().orElseGet(ArrayList::new).stream()
+                        .filter(flight -> flight.getDateTimeOfDeparture().isBefore(upperDateTimeLimit))
+                        .toList(),
+                125);
+    }
+
     public boolean isPresent() {
         return dao.isPresent();
     }

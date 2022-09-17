@@ -91,7 +91,7 @@ public class Flight implements Identifiable, Serializable{
     //static methods
     public static Flight getRandom() {
         Random rnd = new Random();
-        LocalDateTime dateTimeOfDeparture = LocalDateTime.now().plusHours(rnd.nextInt(1, 25));
+        LocalDateTime dateTimeOfDeparture = LocalDateTime.now().plusHours(rnd.nextInt(1, 169));
         LocalDateTime dateTimeOfLanding = dateTimeOfDeparture.plusMinutes(rnd.nextInt(180, 420));
         Airline airline = Airline.getRandom();
         Airport from = Airport.getRandom();

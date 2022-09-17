@@ -6,8 +6,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FindFlight extends MenuItem {
     public FindFlight(int id) {
@@ -28,7 +31,7 @@ public class FindFlight extends MenuItem {
                 break;
             }
             catch (DateTimeParseException exc) {
-                System.out.println("Please enter date as described. Try again.");
+                getConsole().println("Please enter date as described. Try again.");
             }
         }
         LocalDate finalDateInput = dateInput;
@@ -47,6 +50,17 @@ public class FindFlight extends MenuItem {
             getConsole().printAsTable("DIRECT FLIGHTS",
                     List.of("ID", "FLIGHT", "FROM", "TO", "TIME OF DEPARTURE", "TIME OF LANDING", "FLIGHT DURATION"),
                     directFlights,
+                    125);
+        }
+
+        List<List<Flight>> indirectFlights = List.of();
+        if (indirectFlights.isEmpty()) {
+            System.out.printf("%s%s\n", "\t".repeat(10),"There is no indirect flights matching your search.");
+        }
+        else {
+            getConsole().printNestedAsTable("INDIRECT FLIGHTS",
+                    List.of("ID", "FLIGHT", "FROM", "TO", "TIME OF DEPARTURE", "TIME OF LANDING", "FLIGHT DURATION"),
+                    indirectFlights,
                     125);
         }
     }

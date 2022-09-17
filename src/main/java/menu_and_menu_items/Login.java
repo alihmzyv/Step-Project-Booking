@@ -24,7 +24,7 @@ public class Login extends MenuItem {
         }
         getLogger().loginInfo(userOptional.get());
         File userMenuTextFile = new File("src/main/java/menus_text_files/userMenu.txt");
-        System.out.println("Logging in...");
+        getConsole().println("Logging in...");
         BookingMenu.getBookingUserMenu(getDatabase(), getConsole(), userMenuTextFile, userOptional.get(), getLogger()).run();
     }
 }

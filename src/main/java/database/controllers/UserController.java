@@ -50,4 +50,8 @@ public class UserController {
     public int getMaxId() {
         return us.getMaxId();
     }
+
+    public boolean contains(String username) {
+        return us.contains(username);
+    }
 }

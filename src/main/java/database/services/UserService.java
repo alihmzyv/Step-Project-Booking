@@ -49,4 +49,8 @@ public class UserService {
     public int getMaxId() {
         return dao.getMaxId();
     }
+    public boolean contains(String username) {
+        return dao.getAll().orElseGet(ArrayList::new).stream()
+                .anyMatch(user -> user.getUsername().equals(username));
+    }
 }

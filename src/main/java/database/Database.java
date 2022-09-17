@@ -30,7 +30,7 @@ public class Database {
                 new FlightService(
                         new DaoFlightFile(new File("src/main/java/database/database_files/flights.bin"))));
         if (fcFile.isEmpty()) {
-            fcFile.setAllFlights(Flight.getRandom(10));
+            fcFile.setAllFlights(Flight.getRandom(100));
         }
         ucFile = new UserController
                 (new UserService(

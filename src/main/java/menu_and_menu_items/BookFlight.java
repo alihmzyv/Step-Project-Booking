@@ -27,7 +27,7 @@ public class BookFlight extends MenuItem {
             getLogger().bookingInfo(user, bookingMade);
             getDatabase().getBcInMemory().saveBooking(bookingMade);
         });
-        System.out.println("Bookings were made !");
+        getConsole().println("Bookings were made !");
     }
 
     private Flight getExistingFlight() throws NoSuchFlightException {

@@ -1,4 +1,0 @@
-Flight = 10;
-Booking = 1;
-User = 1;
-Passenger = 1;

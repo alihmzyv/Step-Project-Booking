@@ -9,6 +9,6 @@ public class Exit extends ExitButton {
     @Override
     public void run() {
         getDatabase().updateLocalDatabase();
-        System.out.println("Exiting the application..");
+        getConsole().println("Exiting the application..");
     }
 }
