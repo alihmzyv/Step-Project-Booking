@@ -1,6 +1,8 @@
 package menu_and_menu_items;
 
 import database.Database;
+import entities.BookingLogger;
+import entities.User;
 import exceptions.booking_menu_exceptions.InsufficientCapacityException;
 import exceptions.booking_menu_exceptions.NoSuchFlightException;
 import io.Console;
@@ -37,5 +39,12 @@ public class FindAndBookFlight extends MenuItem {
         super.setConsole(console);
         findFlight.setConsole(console);
         bookFlight.setConsole(console);
+    }
+
+    @Override
+    public void setLogger(BookingLogger logger) {
+        super.setLogger(logger);
+        findFlight.setLogger(logger);
+        bookFlight.setLogger(logger);
     }
 }

@@ -1,5 +1,6 @@
 package menu_and_menu_items;
 
+import entities.Booking;
 import entities.User;
 import exceptions.booking_menu_exceptions.NoSuchBookingException;
 
@@ -20,7 +21,9 @@ public class CancelFlight extends MenuItem {
         int bookingIndexInput;
         bookingIndexInput = getConsole().getPositiveInt("Please enter the index of a booking you have:");
         try {
-            if (getDatabase().getBcInMemory().removeBooking(user.getAllBookings().get(bookingIndexInput - 1))) {
+            Booking booking = user.getAllBookings().get(bookingIndexInput - 1);
+            if (getDatabase().getBcInMemory().removeBooking(booking)) {
+                getLogger().cancelBookingInfo(user, booking);
                 System.out.println("Booking was cancelled!");
             }
             else {

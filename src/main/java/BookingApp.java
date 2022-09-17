@@ -1,9 +1,11 @@
 import database.Database;
-import entities.Flight;
+import entities.BookingLogger;
+import entities.User;
 import exceptions.MenuException;
 import io.Console;
 import io.RealConsole;
 import menu_and_menu_items.*;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.util.List;
@@ -20,7 +22,8 @@ public class BookingApp implements Runnable {
                 new FindFlight(5),
                 new Exit(6));
         Console console = new RealConsole();
-        this.mainMenu = new BookingMenu(database, console, mainMenuItems, mainMenuTextFile);
+        BookingLogger logger = new BookingLogger(LogManager.getLogger("BookingApp"));
+        this.mainMenu = new BookingMenu(database, console, mainMenuItems, mainMenuTextFile, logger);
     }
     @Override
     public void run() {

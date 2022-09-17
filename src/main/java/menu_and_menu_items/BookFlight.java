@@ -22,8 +22,11 @@ public class BookFlight extends MenuItem {
     public void run() throws NoSuchFlightException, InsufficientCapacityException {
         Flight flightFound = getExistingFlight();
         List<Passenger> passengers = getPassengers(getAvailableCapacity(flightFound.getCapacity()));
-        passengers.forEach(passenger ->
-                getDatabase().getBcInMemory().saveBooking(new Booking(flightFound, user, passenger)));
+        passengers.forEach(passenger -> {
+            Booking bookingMade = new Booking(flightFound, user, passenger);
+            getLogger().bookingInfo(user, bookingMade);
+            getDatabase().getBcInMemory().saveBooking(bookingMade);
+        });
         System.out.println("Bookings were made !");
     }
 

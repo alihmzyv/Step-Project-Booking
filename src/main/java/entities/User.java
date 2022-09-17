@@ -100,4 +100,8 @@ public class User implements Identifiable, Serializable {
         return Objects.hash(username, password);
     }
 
+    @Override
+    public String toString() {
+        return username;
+    }
 }

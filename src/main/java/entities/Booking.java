@@ -65,7 +65,7 @@ public class Booking implements Identifiable, Serializable {
                 flight.getFlightDesignator(),
                 flight.getFrom().toString(),
                 flight.getTo().toString(),
-                dateTimeBooked.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)));
+                dateTimeBooked.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)));
     }
 
     //equals and hashcode

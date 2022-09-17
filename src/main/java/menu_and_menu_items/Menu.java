@@ -1,12 +1,10 @@
 package menu_and_menu_items;
 
 import database.Database;
-import entities.User;
-import exceptions.*;
+import entities.BookingLogger;
 import exceptions.booking_menu_exceptions.BookingMenuException;
 import exceptions.booking_menu_exceptions.WrongMenuItemMenuException;
 import io.Console;
-import io.RealConsole;
 
 import java.io.*;
 import java.util.List;
@@ -18,7 +16,7 @@ public class Menu {
     private final Console console;
 
 
-    public Menu(Database database, Console console, List<MenuItem> menuItems, File menuTextFile) {
+    public Menu(Database database, Console console, List<MenuItem> menuItems, File menuTextFile, BookingLogger logger) {
         this.database = database;
         this.console = console;
         try(BufferedReader br = new BufferedReader(new FileReader(menuTextFile))) {
@@ -40,6 +38,7 @@ public class Menu {
                 .forEach(menuItem -> {
                     menuItem.setDatabase(database);
                     menuItem.setConsole(console);
+                    menuItem.setLogger(logger);
                 });
     }
 

@@ -36,9 +36,10 @@ public class Register extends MenuItem {
         }
         User userRegistered = new User(name, surname, username, password);
         getDatabase().getUcInMemory().saveUser(userRegistered);
+        getLogger().registerInfo(userRegistered);
         System.out.println("Registration was successful!");
         File userMenuTextFile = new File("src/main/java/menus_text_files/userMenu.txt");
         System.out.println("Logging in...");
-        BookingMenu.getBookingUserMenu(getDatabase(), getConsole(), userMenuTextFile, userRegistered).run();
+        BookingMenu.getBookingUserMenu(getDatabase(), getConsole(), userMenuTextFile, userRegistered, getLogger()).run();
     }
 }
