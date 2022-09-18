@@ -15,4 +15,8 @@ public class BookingMenuException extends MenuException {
     public BookingMenuException(String message) {
         super(message);
     }
+
+    public BookingMenuException(Throwable cause) {
+        super(cause);
+    }
 }

@@ -1,5 +1,7 @@
 package helpers;
 
+import exceptions.booking_menu_exceptions.FileDatabaseException;
+
 import java.io.*;
 import java.time.Duration;
 import java.util.regex.Pattern;
@@ -12,21 +14,16 @@ public interface Helper {
                 .toLowerCase();
     }
 
-    static String getString(File textFile) {
-        StringBuilder sb = new StringBuilder();
+    static String readTextFile(File textFile) {
         try(BufferedReader br = new BufferedReader(new FileReader(textFile))) {
+            StringBuilder sb = new StringBuilder();
             br.lines()
                     .forEach(line -> sb.append(line).append("\n"));
-        }
-        catch (FileNotFoundException exc) {
-            System.out.printf("Could not find menu text file at:\n%s\n", textFile.getAbsolutePath());
-            System.exit(1);
+            return sb.toString();
         }
         catch (IOException exc) {
-            System.out.printf("Could not read menu text file at:\n%s\n", textFile.getAbsolutePath());
-            System.exit(1);
+            throw new FileDatabaseException(exc);
         }
-        return sb.toString();
     }
 
     static boolean isStrongPassword(String password) {

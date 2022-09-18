@@ -1,7 +1,6 @@
 package io;
 
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class RealConsole implements Console {
@@ -23,6 +22,15 @@ public class RealConsole implements Console {
         printTitle(title, width);
         printTableHeading(headings, width);
         objects.forEach(obj -> println("\t".repeat(3) + obj));
+        printThickLine(width);
+    }
+
+    @Override
+    public void printAsRow(String title, List<String> headings, List<Object> objects, int width) {
+        printThickLine(width);
+        printTitle(title, width);
+        printTableHeading(headings, width);
+        println("\t".repeat(3) + String.join(" || ", objects.stream().map(Object::toString).toList()));
         printThickLine(width);
     }
 

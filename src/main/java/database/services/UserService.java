@@ -20,6 +20,11 @@ public class UserService {
     public Optional<User> getUser(int id) {
         return dao.get(id);
     }
+
+    public Optional<User> getUser(User user) {
+        return dao.get(user);
+    }
+
     public Optional<User> getUser(String username, String password) {
         if (isEmpty()) {
             return Optional.empty();
@@ -36,10 +41,6 @@ public class UserService {
     }
     public boolean removeUser(User user) {
         return dao.remove(user);
-    }
-
-    public Optional<User> getUser(User user) {
-        return dao.get(user);
     }
 
     public void setAllUsersTo(List<User> data) {

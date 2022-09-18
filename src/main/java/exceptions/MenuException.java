@@ -3,6 +3,7 @@ package exceptions;
 import java.io.Serial;
 
 public class MenuException extends RuntimeException {
+
     @Serial
     private static final long serialVersionUID = 1631981010431577475L;
 
@@ -11,5 +12,9 @@ public class MenuException extends RuntimeException {
 
     public MenuException(String message) {
         super(message);
+    }
+
+    public MenuException(Throwable cause) {
+        super(cause);
     }
 }

@@ -27,7 +27,7 @@ public class Menu implements Runnable {
                     menuItem.setConsole(this.console);
                     menuItem.setLogger(this.logger);
                 });
-        this.menuText = Helper.getString(menuTextFile);
+        this.menuText = Helper.readTextFile(menuTextFile);
     }
 
 

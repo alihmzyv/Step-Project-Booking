@@ -7,6 +7,7 @@ import java.io.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -21,7 +22,7 @@ public class Flight implements Identifiable, Serializable{
     private final Airline airline;
     private final Airport from;
     private final Airport to;
-    private final LocalDateTime dateTimeOfDeparture;
+    private LocalDateTime dateTimeOfDeparture;
     private final LocalDateTime dateTimeOfLanding;
     private final Duration flightDuration;
     private int capacity;
@@ -88,8 +89,16 @@ public class Flight implements Identifiable, Serializable{
         return dateTimeOfLanding;
     }
 
+    public Airline getAirline() {
+        return airline;
+    }
+
     public Duration getFlightDuration() {
         return flightDuration;
+    }
+
+    public void setDateTimeOfDeparture(LocalDateTime dateTimeOfDeparture) {
+        this.dateTimeOfDeparture = dateTimeOfDeparture;
     }
 
     public void addPassenger(Passenger passenger) {
@@ -103,10 +112,10 @@ public class Flight implements Identifiable, Serializable{
 
     //methods
     //static methods
-    public static Flight getRandom() {
+    public static Flight getRandom(int earliest, int latest, ChronoUnit unit) {
         Random rnd = new Random();
-        LocalDateTime dateTimeOfDeparture = LocalDateTime.now().plus(Duration.ofDays(7));
-        LocalDateTime dateTimeOfLanding = dateTimeOfDeparture.plus(Duration.ofMinutes(300));
+        LocalDateTime dateTimeOfDeparture = LocalDateTime.now().plus(Duration.of(rnd.nextInt(earliest, latest + 1), unit));
+        LocalDateTime dateTimeOfLanding = dateTimeOfDeparture.plus(Duration.ofMinutes(rnd.nextInt(60, 301)));
         Airline airline = Airline.getRandom();
         Airport from = Airport.getRandom();
         Airport to = Airport.getRandomExcept(from);
@@ -114,9 +123,9 @@ public class Flight implements Identifiable, Serializable{
         return new Flight(airline, from, to, dateTimeOfDeparture, dateTimeOfLanding, capacity);
     }
 
-    public static List<Flight> getRandom(int count) {
+    public static List<Flight> getRandom(int count, int earliest, int latest, ChronoUnit unit) {
         return IntStream.range(0, count)
-                .mapToObj(i -> getRandom())
+                .mapToObj(i -> getRandom(earliest, latest, unit))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 

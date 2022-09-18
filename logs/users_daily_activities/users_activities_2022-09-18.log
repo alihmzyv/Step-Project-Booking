@@ -1,0 +1,24 @@
+09:15:19 BookingApp - Registered: User{name='Ali', surname='Hamzayev', username='alihmzyv'}
+09:15:19 BookingApp - alihmzyv logged in.
+18:43:12 BookingApp - Registered: User{name='Ali', surname='Hamzayev', username='alihmzyv'}
+18:43:12 BookingApp - alihmzyv logged in.
+18:46:03 BookingApp - Registered: User{name='Ali', surname='Hamzayev', username='alihmzyv'}
+18:46:03 BookingApp - alihmzyv logged in.
+18:46:30 BookingApp - alihmzyv searched for a flight with id: 100.
+18:46:37 BookingApp - alihmzyv searched for a flight with id: 101.
+18:46:45 BookingApp - alihmzyv searched for a flight with id: 1.
+18:48:46 BookingApp - Registered: User{name='aLI', surname='hAMZAYEV', username='alihmzyv'}
+18:48:46 BookingApp - alihmzyv logged in.
+18:49:18 BookingApp - alihmzyv searched for a flight with id: 65.
+18:53:46 BookingApp - Registered: User{name='Ali', surname='Hamzayev', username='alihmzyv'}
+18:53:46 BookingApp - alihmzyv logged in.
+18:56:55 BookingApp - Registered: User{name='Ali', surname='Hamzayev', username='alihmzyv'}
+18:56:55 BookingApp - alihmzyv logged in.
+18:57:00 BookingApp - alihmzyv searched for a flight with id: 65.
+18:58:32 BookingApp - alihmzyv logged out.
+18:59:39 BookingApp - alihmzyv searched for a flight with id: 65.
+19:00:12 BookingApp - alihmzyv made the booking: Ali Hamzayev || BR8037 || Atlanta (ATL) || Istanbul (IST) || September 18, 2022, 10:43 PM || September 18, 2022, 7:00 PM.
+19:00:39 BookingApp - alihmzyv made the booking: Konul Hamzayeva || J27814 || Istanbul (SAW) || Delhi (DEL) || September 19, 2022, 2:43 AM || September 18, 2022, 7:00 PM.
+19:01:48 BookingApp - alihmzyv cancelled the booking: Konul Hamzayeva || J27814 || Istanbul (SAW) || Delhi (DEL) || September 19, 2022, 2:43 AM || September 18, 2022, 7:00 PM.
+19:01:53 BookingApp - alihmzyv logged out.
+19:01:53 BookingApp - alihmzyv logged in.

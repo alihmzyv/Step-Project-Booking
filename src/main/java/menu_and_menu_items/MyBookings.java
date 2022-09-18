@@ -13,7 +13,9 @@ public class MyBookings extends MenuItem {
 
     @Override
     public void run() {
-        getConsole().printAsIndexedTable("YOUR FLIGHTS", List.of("PASSENGER", "FLIGHT", "FROM", "TO", "TIME OF BOOKING"),
+        getConsole().printAsIndexedTable(
+                "YOUR BOOKINGS",
+                List.of("PASSENGER", "FLIGHT", "FROM", "TO", "TIME OF DEPARTURE", "TIME OF BOOKING"),
                 user.getAllBookings(),
                 100);
     }

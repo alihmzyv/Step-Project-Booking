@@ -23,18 +23,18 @@ public class SearchFlight extends MenuItem {
         int freeSeatsInput = getNumOfTicketsInput();
         Predicate<Flight> filter = flight ->
                 flight.getFrom().getCity().equalsIgnoreCase(fromInput) &&
-                        flight.getFrom().getCity().equalsIgnoreCase(toInput) &&
+                        flight.getTo().getCity().equalsIgnoreCase(toInput) &&
                         flight.getDateOfDeparture().equals(departureDateInput) &&
-                        flight.getCapacity() == freeSeatsInput;
+                        flight.getCapacity() >= freeSeatsInput;
         getDatabase().getFcInMemory().displayFlights(filter, getConsole());
     }
 
     private String getFromInput() {
-        return getConsole().getStringInput("From:").toLowerCase();
+        return getConsole().getStringInput("From:");
     }
 
     private String getToInput() {
-        return getConsole().getStringInput("To:").toLowerCase();
+        return getConsole().getStringInput("To:");
     }
 
     private LocalDate getDepartureDateInput() {

@@ -1,6 +1,7 @@
 package database.dao;
 
 import entities.Identifiable;
+import exceptions.booking_menu_exceptions.FileDatabaseException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
     public void save(A object) {
         List<A> data = getAll().orElseGet(ArrayList::new);
         data.add(object);
-        saveAll(data);
+        setAllTo(data);
     }
 
     @Override
@@ -78,18 +79,19 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
             return Optional.empty();
         }
         catch (ClassNotFoundException | IOException exc) {
-            exc.printStackTrace();
-            System.exit(1);
-            return Optional.empty();
+            throw new FileDatabaseException(exc);
         }
     }
 
     public void setAllTo(List<A> data) {
+        if (!file.exists()) {
+            throw new FileDatabaseException(new FileNotFoundException());
+        }
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(data);
         }
-        catch (IOException e) {
-            e.printStackTrace();
+        catch (IOException exc) {
+            throw new FileDatabaseException(exc);
         }
     }
 

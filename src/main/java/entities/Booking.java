@@ -7,7 +7,12 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Booking implements Identifiable, Serializable {
     @Serial
@@ -33,6 +38,15 @@ public class Booking implements Identifiable, Serializable {
         this.passenger = passenger;
         this.id = idCounter++;
         this.dateTimeBooked = LocalDateTime.now();
+    }
+
+    public static Booking getRandom() {
+        return new Booking(User.getRandom(), Flight.getRandom(1, 168, ChronoUnit.HOURS), Passenger.getRandom());
+    }
+    public static List<Booking> getRandom(int count) {
+        return IntStream.range(0, count)
+                .mapToObj(i -> getRandom())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
 

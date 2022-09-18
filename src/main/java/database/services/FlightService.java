@@ -8,6 +8,7 @@ import io.Console;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,9 +58,9 @@ public class FlightService {
         if (isPresent()) {
             List<Flight> updatedFlights = getAllFlights().orElseGet(ArrayList::new).stream()
                     .map(flight -> {
-                        if (flight.getDateTimeOfDeparture().isBefore(LocalDateTime.now()) ||
+                        if (flight.getDateTimeOfDeparture().compareTo(LocalDateTime.now()) <= 0 ||
                                 flight.getCapacity() == 0) {
-                            return Flight.getRandom();
+                            return Flight.getRandom(1, 168, ChronoUnit.HOURS);
                         }
                         return flight;
                     })
@@ -79,11 +80,11 @@ public class FlightService {
             console.printf("THERE IS NO FLIGHT WITH ID: %d\n", flightId);
             return;
         }
-        console.printAsTable(
+        console.printAsRow(
                 "FLIGHT",
                 List.of("ID", "FLIGHT", "FROM", "TO", "TIME OF DEPARTURE", "TIME OF LANDING",
                         "FLIGHT DURATION", "CAPACITY"),
-                List.of(flightOpt.get()),
+                List.of(flightOpt.get(), flightOpt.get().getCapacity()),
                 130);
     }
     public void displayAllFlights(Console console) {
@@ -106,7 +107,7 @@ public class FlightService {
         List<Flight> flightsWithinNext = getFlights(flight ->
                 flight.getDateTimeOfDeparture().isBefore(LocalDateTime.now().plus(withinNext))).get();
         if (flightsWithinNext.isEmpty()) {
-            System.out.println("THERE IS NO FLIGHT AT ALL.");
+            System.out.println("THERE IS NO FLIGHT MATCHING YOUR INPUT.");
             return;
         }
         console.printAsTable(
@@ -123,7 +124,7 @@ public class FlightService {
         }
         List<Flight> flightsFiltered = getFlights(filter).get();
         if (flightsFiltered.isEmpty()) {
-            System.out.println("THERE IS NO FLIGHT AT ALL.");
+            System.out.println("THERE IS NO FLIGHT MATCHING YOUR INPUT.");
             return;
         }
         console.printAsTable(

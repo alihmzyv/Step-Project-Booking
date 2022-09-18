@@ -7,6 +7,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import org.apache.commons.lang3.*;
 
 public class User implements Identifiable, Serializable {
     @Serial
@@ -61,6 +65,19 @@ public class User implements Identifiable, Serializable {
 
     public boolean removeBooking(Booking booking) {
         return bookings.remove(booking);
+    }
+
+    public static User getRandom() {
+        return new User(RandomStringUtils.randomAlphabetic(3, 10),
+                RandomStringUtils.randomAlphabetic(3, 10),
+                RandomStringUtils.randomAlphanumeric(3, 10),
+                RandomStringUtils.randomGraph(6, 10));
+    }
+
+    public static List<User> getRandom(int count) {
+        return IntStream.range(0, count)
+                .mapToObj(i -> getRandom())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
 

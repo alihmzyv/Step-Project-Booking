@@ -10,8 +10,10 @@ import database.services.FlightService;
 import database.services.PassengerService;
 import database.services.UserService;
 import entities.Flight;
+import exceptions.booking_menu_exceptions.FileDatabaseException;
 
 import java.io.*;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class Database {
@@ -30,7 +32,7 @@ public class Database {
                 new FlightService(
                         new DaoFlightFile(new File("src/main/java/database/local_database_files/flights.bin"))));
         if (fcFile.isEmpty()) {
-            fcFile.setAllFlightsTo(Flight.getRandom(100));
+            fcFile.setAllFlightsTo(Flight.getRandom(100, 1, 168, ChronoUnit.HOURS));
         }
         ucFile = new UserController
                 (new UserService(
@@ -99,17 +101,8 @@ public class Database {
                     .map(ch -> Integer.parseInt(ch.toString()))
                     .orElse(1);
         }
-        catch (FileNotFoundException e) {
-            System.out.printf("Could not find idCounter file at %s\n",
-                    "src/main/java/database/local_database_files/idCounters.txt");
-            System.exit(1);
-            return - 1;
-        }
         catch (IOException exc) {
-            System.out.printf("Could not read idCounter file at %s\n",
-                    "src/main/java/database/local_database_files/idCounters.txt");
-            System.exit(1);
-            return - 1;
+            throw new FileDatabaseException(exc);
         }
     }
 }
