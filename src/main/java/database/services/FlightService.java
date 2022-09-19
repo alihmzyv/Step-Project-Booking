@@ -3,6 +3,7 @@ package database.services;
 import database.dao.DAO;
 import entities.Flight;
 import entities.Passenger;
+import exceptions.booking_menu_exceptions.NonInitializedDatabaseException;
 import helpers.Helper;
 import io.Console;
 
@@ -68,6 +69,91 @@ public class FlightService {
             setAllFlightsTo(updatedFlights);
         }
     }
+
+    public boolean incrementCapacity(Flight which) {
+        if (isEmpty()) {
+            throw new NonInitializedDatabaseException("""
+                    Database Not Initialized.
+                    (List field of DAO is null
+                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+        }
+        List<Flight> flights = getAllFlights().get();
+        if (!flights.contains(which)) {
+            return false;
+        }
+        flights.stream()
+                .filter(flight -> flight.equals(which))
+                .findAny()
+                .get()
+                .incrementCapacity();
+        setAllFlightsTo(flights);
+        return true;
+    }
+
+    public boolean decrementCapacity(Flight which) {
+        if (isEmpty()) {
+            throw new NonInitializedDatabaseException("""
+                    Database Not Initialized.
+                    (List field of DAO is null
+                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+        }
+        List<Flight> flights = getAllFlights().get();
+        if (!flights.contains(which)) {
+            return false;
+        }
+        flights.stream()
+                .filter(flight -> flight.equals(which))
+                .findAny()
+                .get()
+                .decrementCapacity();
+        setAllFlightsTo(flights);
+        return true;
+    }
+
+    public boolean addPassenger(Flight which, Passenger whom) {
+        if (isEmpty()) {
+            throw new NonInitializedDatabaseException("""
+                    Database Not Initialized.
+                    (List field of DAO is null
+                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+        }
+        List<Flight> flights = getAllFlights().get();
+        if (!flights.contains(which)) {
+            return false;
+        }
+        flights.stream()
+                .filter(flight -> flight.equals(which))
+                .findAny()
+                .get()
+                .addPassenger(whom);
+        setAllFlightsTo(flights);
+        return true;
+    }
+
+    public boolean removePassenger(Flight which, Passenger whom) {
+        if (isEmpty()) {
+            throw new NonInitializedDatabaseException("""
+                    Database Not Initialized.
+                    (List field of DAO is null
+                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+        }
+        List<Flight> flights = getAllFlights().get();
+        if (!flights.contains(which)) {
+            return false;
+        }
+        if (flights.stream()
+                .filter(flight -> flight.equals(which))
+                .findAny()
+                .get()
+                .removePassenger(whom)) {
+            setAllFlightsTo(flights);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     public boolean removeFlight(int id) {
         return dao.remove(id);
     }

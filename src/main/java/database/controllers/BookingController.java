@@ -5,6 +5,7 @@ import database.services.BookingService;
 import database.services.FlightService;
 import database.services.PassengerService;
 import database.services.UserService;
+import entities.Flight;
 import entities.Passenger;
 
 import java.util.List;
@@ -25,10 +26,9 @@ public class BookingController {
 
     public void saveBooking(Booking booking) {
         bs.saveBooking(booking);
-        us.getUser(booking.getUser()).get().addBooking(booking);
-        fs.getFlight(booking.getFlight()).get().decrementCapacity();
-        fs.getFlight(booking.getFlight()).get().addPassenger(booking.getPassenger());
-        ps.savePassenger(booking.getPassenger());
+        us.addBooking(booking.getUser(), booking);
+        fs.decrementCapacity(booking.getFlight());
+        fs.addPassenger(booking.getFlight(), booking.getPassenger());
     }
 
     public Optional<Booking> getBooking(int id) {
@@ -56,10 +56,9 @@ public class BookingController {
             return false;
         }
         bs.removeBooking(booking);
-        us.getUser(booking.getUser()).get().removeBooking(booking);
-        fs.getFlight(booking.getFlight()).get().incrementCapacity();
-        fs.getFlight(booking.getFlight()).get().removePassenger(booking.getPassenger());
-        ps.removePassenger(booking.getPassenger());
+        us.removeBooking(booking.getUser(), booking);
+        fs.incrementCapacity(booking.getFlight());
+        fs.removePassenger(booking.getFlight(), booking.getPassenger());
         return true;
     }
 

@@ -2,6 +2,7 @@ package database.services;
 
 import database.dao.DAO;
 import entities.Passenger;
+import exceptions.booking_menu_exceptions.NonInitializedDatabaseException;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,14 +42,24 @@ public class PassengerService {
     public void setAllPassengersTo(List<Passenger> data) {
         dao.setAllTo(data);
     }
+    public boolean isEmpty() {
+        return dao.isEmpty();
+    }
+
+    public boolean isPresent() {
+        return dao.isPresent();
+    }
 
     public int getMaxId() {
         return dao.getMaxId();
     }
 
     public boolean contains(Passenger passenger) {
-        if (getAllPassengers().isEmpty()) {
-            return false;
+        if (isEmpty()) {
+            throw new NonInitializedDatabaseException("""
+                    Database Not Initialized.
+                    (List field of DAO is null
+                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
         }
         return getAllPassengers().get().contains(passenger);
     }

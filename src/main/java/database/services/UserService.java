@@ -1,7 +1,10 @@
 package database.services;
 
 import database.dao.DAO;
+import entities.Booking;
 import entities.User;
+import exceptions.booking_menu_exceptions.NoSuchUserException;
+import exceptions.booking_menu_exceptions.NonInitializedDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +39,52 @@ public class UserService {
                 .findAny();
     }
 
+    public boolean addBooking(User which, Booking booking) {
+        if (isEmpty()) {
+            throw new NonInitializedDatabaseException("""
+                    Database Not Initialized.
+                    (List field of DAO is null
+                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+        }
+        List<User> users = getAllUsers().get();
+        if (!users.contains(which)) {
+            throw new NoSuchUserException(String.format("There is no such user in database: %s", which));
+        }
+        users.stream()
+                .filter(user -> user.equals(which))
+                .findAny()
+                .get()
+                .addBooking(booking);
+        setAllUsersTo(users);
+        return true;
+    }
+
+    public boolean removeBooking(User which, Booking booking) {
+        if (isEmpty()) {
+            throw new NonInitializedDatabaseException("""
+                    Database Not Initialized.
+                    (List field of DAO is null
+                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+        }
+        List<User> users = getAllUsers().get();
+        if (!users.contains(which)) {
+            throw new NoSuchUserException(String.format("There is no such user in database: %s", which));
+        }
+        if (users.stream()
+                .filter(user -> user.equals(which))
+                .findAny()
+                .get()
+                .removeBooking(booking)) {
+            setAllUsersTo(users);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
+
     public boolean removeUser(int id) {
         return dao.remove(id);
     }
@@ -64,9 +113,12 @@ public class UserService {
     }
     public boolean contains(String username) {
         if (isEmpty()) {
-            return false;
+            throw new NonInitializedDatabaseException("""
+                    Database Not Initialized.
+                    (List field of DAO is null
+                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
         }
-        return dao.getAll().get().stream()
+        return getAllUsers().get().stream()
                 .anyMatch(user -> user.getUsername().equals(username));
     }
 }
