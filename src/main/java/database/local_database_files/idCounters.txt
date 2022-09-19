@@ -1,4 +1,1 @@
-Flight = 100;
-Booking = 1;
-User = 1;
-Passenger = 1;
+

@@ -20,94 +20,94 @@ class BookingServiceInMemoryTest {
 
     @Test
     void saveBookingTest1() {
-        BookingService fs = new BookingService(new DaoBookingInMemory(bookings));
-        fs.saveBooking(booking);
-        assertEquals(booking, fs.getBooking(booking).get());
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        bs.saveBooking(booking);
+        assertEquals(booking, bs.getBooking(booking).get());
     }
 
     @Test
     void getBookingWithIdTest1() {
-        BookingService fs = new BookingService(new DaoBookingInMemory(bookings));
-        assertTrue(fs.getBooking(booking.getId()).isEmpty());
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        assertTrue(bs.getBooking(booking.getId()).isEmpty());
     }
 
     @Test
     void getBookingWithIdTest2() {
-        BookingService fs = new BookingService(new DaoBookingInMemory(bookings));
-        fs.saveBooking(booking);
-        assertEquals(Optional.of(booking), fs.getBooking(booking.getId()));
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        bs.saveBooking(booking);
+        assertEquals(Optional.of(booking), bs.getBooking(booking.getId()));
     }
 
     @Test
     void getBookingWithObjTest1() {
-        BookingService fs = new BookingService(new DaoBookingInMemory(bookings));
-        assertTrue(fs.getBooking(booking).isEmpty());
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        assertTrue(bs.getBooking(booking).isEmpty());
     }
 
     @Test
     void getBookingWithObjTest2() {
-        BookingService fs = new BookingService(new DaoBookingInMemory(bookings));
-        fs.saveBooking(booking);
-        assertEquals(booking, fs.getBooking(booking).get());
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        bs.saveBooking(booking);
+        assertEquals(booking, bs.getBooking(booking).get());
     }
 
     @Test
     void saveAllBookingsTest1() {
-        BookingService fs = new BookingService(new DaoBookingInMemory(bookings));
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
         List<Booking> bookings2 = Booking.getRandom(100);
-        fs.saveAllBookings(bookings2);
+        bs.saveAllBookings(bookings2);
         List<Booking> allBookings = new ArrayList<>();
         allBookings.addAll(bookings);
         allBookings.addAll(bookings2);
-        assertEquals(Optional.of(allBookings), fs.getAllBookings());
+        assertEquals(Optional.of(allBookings), bs.getAllBookings());
     }
 
     @Test
     void getAllBookingsTest1() {
-        BookingService fs = new BookingService(new DaoBookingInMemory(bookings));
-        assertEquals(bookings, fs.getAllBookings().get());
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        assertEquals(bookings, bs.getAllBookings().get());
     }
 
     @Test
     void setAllBookingsTo() {
-        BookingService fs = new BookingService(new DaoBookingInMemory(bookings));
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
         List<Booking> bookings2 = Booking.getRandom(100);
-        fs.setAllBookingsTo(bookings2);
-        assertEquals(Optional.of(bookings2), fs.getAllBookings());
+        bs.setAllBookingsTo(bookings2);
+        assertEquals(Optional.of(bookings2), bs.getAllBookings());
     }
 
     @Test
     void removeBookingWithIdTest1() {
-        BookingService fs = new BookingService(new DaoBookingInMemory(bookings));
-        assertFalse(fs.removeBooking(booking.getId()));
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        assertFalse(bs.removeBooking(booking.getId()));
     }
 
     @Test
     void removeBookingWithIdTest2() {
-        BookingService fs = new BookingService(new DaoBookingInMemory(bookings));
-        fs.saveBooking(booking);
-        assertTrue(fs.removeBooking(booking.getId()));
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        bs.saveBooking(booking);
+        assertTrue(bs.removeBooking(booking.getId()));
     }
 
     @Test
     void removeBookingWithObjTest1() {
-        BookingService fs = new BookingService(new DaoBookingInMemory(bookings));
-        assertFalse(fs.removeBooking(booking));
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        assertFalse(bs.removeBooking(booking));
     }
 
     @Test
     void removeBookingWithObjTest2() {
-        BookingService fs = new BookingService(new DaoBookingInMemory(bookings));
-        fs.saveBooking(booking);
-        assertTrue(fs.removeBooking(booking));
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        bs.saveBooking(booking);
+        assertTrue(bs.removeBooking(booking));
     }
 
     @Test
     void getMaxId() {
-        BookingService fs = new BookingService(new DaoBookingInMemory(bookings));
-        assertEquals(fs.getAllBookings().get().stream()
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        assertEquals(bs.getAllBookings().get().stream()
                 .mapToInt(Booking::getId)
                 .max()
-                .getAsInt(), fs.getMaxId());
+                .getAsInt(), bs.getMaxId());
     }
 }
