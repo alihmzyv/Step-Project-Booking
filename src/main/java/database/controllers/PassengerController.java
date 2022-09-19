@@ -12,6 +12,9 @@ public class PassengerController {
     public PassengerController(PassengerService ps) {
         this.ps = ps;
     }
+    public void savePassenger(Passenger passenger) {
+        ps.savePassenger(passenger);
+    }
 
     public PassengerService getService() {
         return ps;

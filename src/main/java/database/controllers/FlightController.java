@@ -16,6 +16,10 @@ public class FlightController {
         this.fs = fs;
     }
 
+    public void saveFlight(Flight flight) {
+        fs.saveFlight(flight);
+    }
+
     public FlightService getService() {
         return fs;
     }

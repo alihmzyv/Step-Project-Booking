@@ -45,4 +45,11 @@ public class PassengerService {
     public int getMaxId() {
         return dao.getMaxId();
     }
+
+    public boolean contains(Passenger passenger) {
+        if (getAllPassengers().isEmpty()) {
+            return false;
+        }
+        return getAllPassengers().get().contains(passenger);
+    }
 }

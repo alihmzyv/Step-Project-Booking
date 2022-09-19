@@ -51,7 +51,12 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
         if (dataOpt.isEmpty()) {
             return false;
         }
-        return dataOpt.get().removeIf(obj -> obj.getId() == id);
+        List<A> objects = dataOpt.get();
+        if (objects.removeIf(obj -> obj.getId() == id)) {
+            setAllTo(objects);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -60,7 +65,12 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
         if (dataOpt.isEmpty()) {
             return false;
         }
-        return dataOpt.get().remove(object);
+        List<A> objects = dataOpt.get();
+        if (objects.remove(object)) {
+            setAllTo(objects);
+            return true;
+        }
+        return false;
     }
 
 

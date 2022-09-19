@@ -168,4 +168,8 @@ public class Flight implements Identifiable, Serializable{
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public boolean containsPassenger(Passenger passenger) {
+        return passengers.contains(passenger);
+    }
 }

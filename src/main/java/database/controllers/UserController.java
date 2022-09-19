@@ -24,6 +24,10 @@ public class UserController {
         return us.getUser(id);
     }
 
+    public Optional<User> getUser(User user) {
+        return us.getUser(user);
+    }
+
     public Optional<User> getUser(String username, String password) {
         return us.getUser(username, password);
     }

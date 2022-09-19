@@ -67,6 +67,10 @@ public class User implements Identifiable, Serializable {
         return bookings.remove(booking);
     }
 
+    public boolean hasBooking(Booking booking) {
+        return bookings.contains(booking);
+    }
+
     public static User getRandom() {
         return new User(RandomStringUtils.randomAlphabetic(3, 10),
                 RandomStringUtils.randomAlphabetic(3, 10),

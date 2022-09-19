@@ -21,9 +21,9 @@ public class Register extends MenuItem {
         String password = getPasswordInput();
         User userRegistered = new User(name, surname, username, password);
         saveUser(userRegistered);
-        logRegistration(userRegistered);
         getConsole().println("Registration was successful!");
         getConsole().println("Logging in...");
+        logRegistration(userRegistered);
         File userMenuTextFile = new File("src/main/java/menus_text_files/userMenu.txt");
         BookingMenu.getBookingUserMenu(getDatabase(), getConsole(), userMenuTextFile, userRegistered, getLogger()).run();
     }

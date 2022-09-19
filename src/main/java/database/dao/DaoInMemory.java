@@ -49,7 +49,7 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
         if (getAll().isEmpty()) {
             return false;
         }
-        return getAll().get().remove(object);
+        return objects.remove(object);
     }
 
     @Override

@@ -20,8 +20,8 @@ public class Login extends MenuItem {
         }
         File userMenuTextFile = new File("src/main/java/menus_text_files/userMenu.txt");
         getConsole().println("Logging in...");
-        BookingMenu.getBookingUserMenu(getDatabase(), getConsole(), userMenuTextFile, userOptional.get(), getLogger()).run();
         logLoggingIn(userOptional.get());
+        BookingMenu.getBookingUserMenu(getDatabase(), getConsole(), userMenuTextFile, userOptional.get(), getLogger()).run();
     }
 
     private String getUsernameInput() {

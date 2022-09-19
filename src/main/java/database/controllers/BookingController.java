@@ -63,6 +63,7 @@ public class BookingController {
         return true;
     }
 
+
     public int getMaxId() {
         return bs.getMaxId();
     }
