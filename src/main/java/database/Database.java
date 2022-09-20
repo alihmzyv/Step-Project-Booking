@@ -103,15 +103,6 @@ public class Database {
      * throws LocalDatabaseException whose cause can be IOException due to a problem occurred during writing.
      */
     public static int getIdCounter(String className) {
-        File idCountersFile = new File("src/main/java/database/local_database_files/idCounters.txt");
-        try {
-            if (!idCountersFile.exists()) {
-                idCountersFile.createNewFile();
-            }
-        }
-        catch (IOException exc) {
-            throw new LocalDatabaseException(exc);
-        }
         try(BufferedReader ois = new BufferedReader(
                 new FileReader("src/main/java/database/local_database_files/idCounters.txt"))) {
             return ois.lines()
