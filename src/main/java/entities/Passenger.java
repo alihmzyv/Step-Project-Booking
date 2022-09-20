@@ -1,6 +1,4 @@
 package entities;
-
-import database.Database;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.Serial;
