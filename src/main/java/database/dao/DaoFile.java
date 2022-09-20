@@ -74,6 +74,7 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
         setAll(data);
     }
 
+    @SuppressWarnings("unchecked")
     public Optional<List<A>> getAll() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             return Optional.of((List<A>) ois.readObject());
