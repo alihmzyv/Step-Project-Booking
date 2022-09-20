@@ -24,7 +24,7 @@ public interface Helper {
      * Reads the text file at the specified path and returns the text as a String
      * * textFile - the path to the text file
      * * throws LocalDatabaseException whose cause can be either FileNotFoundException,
-     *   or a different IOException due to a problem occurred during reading.
+     *   or IOException due to a problem occurred during reading.
      */
     static String readTextFile(File textFile) {
         try(BufferedReader br = new BufferedReader(new FileReader(textFile))) {

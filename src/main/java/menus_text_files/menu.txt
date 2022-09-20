@@ -6,4 +6,5 @@
                                             5.SHOW THE DETAILED INFO ABOUT A FLIGHT
                                                         6.SEARCH FLIGHT
                                                              7.EXIT
+                                                             8.HELP
                                 ==================================================================

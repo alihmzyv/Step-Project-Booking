@@ -7,11 +7,15 @@ import exceptions.database_exceptions.NoSuchBookingException;
 public class CancelBooking extends MenuItem {
     private final User user;
 
+
+    //constructors
     public CancelBooking(int id, User user) {
         super(id);
         this.user = user;
     }
 
+
+    //methods
     @Override
     public void run() {
         Booking bookingInput = getBookingInput();

@@ -5,7 +5,7 @@
                                                           4.SEARCH
                                                            5.BOOK
                                                       6.SEARCH AND BOOK
-                                                       7.CANCEL FLIGHT
-                                                        8.MY FLIGHTS
+                                                       7.CANCEL BOOKING
+                                                        8.MY BOOKINGS
                                                         9.END SESSION
                                 ==================================================================

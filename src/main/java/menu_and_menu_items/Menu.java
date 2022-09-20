@@ -16,6 +16,9 @@ public class Menu implements Runnable {
     private final List<MenuItem> menuItems;
     private final String menuText;
     private final BookingAppLogger logger;
+
+
+    //constructors
     public Menu(Database database, Console console, List<MenuItem> menuItems, BookingAppLogger logger, File menuTextFile) {
         this.database = database;
         this.console = console;
@@ -47,7 +50,7 @@ public class Menu implements Runnable {
                 }
             }
             catch (MenuException exc) {
-                System.out.println(exc.getMessage());
+                console.println(exc.getMessage());
             }
         }
     }

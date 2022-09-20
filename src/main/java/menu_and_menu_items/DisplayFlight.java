@@ -10,11 +10,15 @@ public class DisplayFlight extends MenuItem {
         super(id);
     }
 
+
+    //constructors
     public DisplayFlight(int id, User user) {
         super(id);
         this.user = user;
     }
 
+
+    //methods
     @Override
     public void run() {
         int flightIdInput = getFlightIdInput();

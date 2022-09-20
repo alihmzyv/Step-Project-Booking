@@ -7,11 +7,14 @@ import helpers.Helper;
 import java.io.File;
 
 public class Register extends MenuItem {
+
+    //constructors
     public Register (int id) {
         super(id);
     }
 
 
+    //methods
     @Override
     public void run() throws MenuException {
         String name = getNameInput();

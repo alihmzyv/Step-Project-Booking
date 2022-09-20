@@ -40,6 +40,10 @@ public class User implements Identifiable, Serializable {
     }
 
     //getter and setters
+    public static int getIdCounter() {
+        return idCounter;
+    }
+
     @Override
     public int getId() {
         return id;

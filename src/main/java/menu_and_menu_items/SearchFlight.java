@@ -8,12 +8,14 @@ import java.time.format.DateTimeParseException;
 import java.util.function.Predicate;
 
 public class SearchFlight extends MenuItem {
+
+    //constructors
     public SearchFlight(int id) {
         super(id);
     }
 
 
-
+    //methods
     @Override
     public void run() {
         getConsole().println("Please enter below the details of flight you want.");

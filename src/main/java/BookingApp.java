@@ -16,13 +16,15 @@ public class BookingApp implements Runnable {
     BookingApp() {
         Database database = new Database();
         File mainMenuTextFile = new File("src/main/java/menus_text_files/menu.txt");
+        File helpTextFile = new File("README.txt");
         List<MenuItem> mainMenuItems = List.of(new Login(1),
                 new Register(2),
                 new DisplaySomeFlights(3, Duration.ofHours(24)),
                 new DisplaySomeFlights(4, Duration.ofDays(7)),
                 new DisplayFlight(5),
                 new SearchFlight(6),
-                new Exit(7));
+                new Exit(7),
+                new Help(8, helpTextFile));
         Console console = new RealConsole();
         BookingAppLogger logger = new BookingAppLogger(LogManager.getLogger("BookingApp"));
         this.mainMenu = new BookingMenu(database, console, mainMenuItems, mainMenuTextFile, logger);

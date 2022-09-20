@@ -14,12 +14,15 @@ import java.util.stream.IntStream;
 public class BookFlight extends MenuItem {
     private final User user;
 
+
+    //constructors
     public BookFlight(int id, User user) {
         super(id);
         this.user = user;
     }
 
 
+    //methods
     @Override
     public void run() {
         Flight flightInput = getFlightInput();

@@ -6,11 +6,16 @@ import java.util.List;
 
 public class MyBookings extends MenuItem {
     private final User user;
+
+
+    //constructors
     public MyBookings(int id, User user) {
         super(id);
         this.user = user;
     }
 
+
+    //methods
     @Override
     public void run() {
         getConsole().printAsIndexedTable(

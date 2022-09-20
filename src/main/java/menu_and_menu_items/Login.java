@@ -8,11 +8,13 @@ import java.util.Optional;
 
 public class Login extends MenuItem {
 
+    //constructors
     public Login(int id) {
         super(id);
     }
 
 
+    //methods
     public void run() throws MenuException {
         Optional<User> userOptional = getUser(getUsernameInput(), getPasswordInput());
         if (userOptional.isEmpty()) {
