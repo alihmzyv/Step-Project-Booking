@@ -121,6 +121,6 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
                 .map(Identifiable::getId)
                 .mapToInt(id -> id)
                 .max()
-                .orElse(1);
+                .orElse(0);
     }
 }
