@@ -16,14 +16,13 @@ public class FlightController {
         this.fs = fs;
     }
 
-    public void saveFlight(Flight flight) {
-        fs.saveFlight(flight);
-    }
-
     public FlightService getService() {
         return fs;
     }
 
+    public void saveFlight(Flight flight) {
+        fs.saveFlight(flight);
+    }
     public Optional<Flight> getFlight(int id) {
         return fs.getFlight(id);
     }
@@ -40,10 +39,6 @@ public class FlightController {
         fs.setAllFlightsTo(flights);
     }
 
-    public void displayAllFlights(Console console) {
-        fs.displayAllFlights(console);
-    }
-
     public void displayFlight(int flightId, Console console) {
         fs.displayFlight(flightId, console);
     }
@@ -56,18 +51,9 @@ public class FlightController {
         fs.displayFlights(filter, console);
     }
 
-    public boolean removeFlight(int id) {
-        return fs.removeFlight(id);
-    }
-
-    public boolean removeFlight(Flight flight) {
-        return fs.removeFlight(flight);
-    }
-
     public void updateAllFlights() {
         fs.updateAllFlights();
     }
-
     public boolean isPresent() {
         return fs.isPresent();
     }

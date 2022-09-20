@@ -13,111 +13,99 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerInMemoryTest {
 
-    List<User> users = User.getRandom(100);
-    User user = User.getRandom();
-
-    @Test
-    void saveUserTest1() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        uc.saveUser(user);
-        assertEquals(user, uc.getUser(user).get());
-    }
-
-    @Test
-    void getUserWithIdTest1() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        assertTrue(uc.getUser(user.getId()).isEmpty());
-    }
-
-    @Test
-    void getUserWithIdTest2() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        uc.saveUser(user);
-        assertEquals(Optional.of(user), uc.getUser(user.getId()));
-    }
-
-    @Test
-    void getUserWithObjTest1() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        assertTrue(uc.getUser(user).isEmpty());
-    }
-
-    @Test
-    void getUserWithObjTest2() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        uc.saveUser(user);
-        assertEquals(user, uc.getUser(user).get());
-    }
-
-    @Test
-    void getUserWithUsernameAndPsswrdTest1() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        uc.saveUser(user);
-        assertEquals(Optional.of(user), uc.getUser(user.getUsername(), user.getPassword()));
-    }
-
-    @Test
-    void getUserWithUsernameAndPsswrdTest2() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        assertEquals(Optional.empty(), uc.getUser(user.getUsername(), user.getPassword()));
-    }
+    List<User> randomUsers = User.getRandom(100);
+    User randomUser = User.getRandom();
 
     @Test
     void getAllUsersTest1() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        assertEquals(users, uc.getAllUsers().get());
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
+        assertEquals(randomUsers, uc.getAllUsers().get());
     }
 
     @Test
     void setAllUsersTo() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        List<User> users2 = User.getRandom(100);
-        uc.setAllUsersTo(users2);
-        assertEquals(Optional.of(users2), uc.getAllUsers());
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
+        List<User> randomUsers2 = User.getRandom(100);
+        uc.setAllUsersTo(randomUsers2);
+        assertEquals(Optional.of(randomUsers2), uc.getAllUsers());
     }
 
     @Test
-    void removeUserWithIdTest1() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        assertFalse(uc.removeUser(user.getId()));
+    void isPresentTest1() {
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
+        assertTrue(uc.isPresent());
     }
 
     @Test
-    void removeUserWithIdTest2() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        uc.saveUser(user);
-        assertTrue(uc.removeUser(user.getId()));
+    void isEmptyTest1() {
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
+        assertFalse(uc.isEmpty());
+    }
+
+    @Test
+    void saveUserTest1() {
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
+        uc.saveUser(randomUser);
+        assertTrue(uc.isPresent());
+        assertTrue(uc.getAllUsers().get().stream()
+                .anyMatch(user -> user.equals(randomUser)));
+    }
+
+    @Test
+    void getUserWithObjTest1() {
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
+        assertTrue(uc.getUser(randomUser).isEmpty());
+    }
+
+    @Test
+    void getUserWithObjTest2() {
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
+        uc.saveUser(randomUser);
+        assertEquals(randomUser, uc.getUser(randomUser).get());
+    }
+
+    @Test
+    void getUserWithUsernameAndPsswrdTest1() {
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
+        uc.saveUser(randomUser);
+        assertEquals(Optional.of(randomUser), uc.getUser(randomUser.getUsername(), randomUser.getPassword()));
+    }
+
+    @Test
+    void getUserWithUsernameAndPsswrdTest2() {
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
+        assertEquals(Optional.empty(), uc.getUser(randomUser.getUsername(), randomUser.getPassword()));
     }
 
     @Test
     void removeUserWithObjTest1() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        assertFalse(uc.removeUser(user));
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
+        assertFalse(uc.removeUser(randomUser));
     }
 
     @Test
     void removeUserWithObjTest2() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        uc.saveUser(user);
-        assertTrue(uc.removeUser(user));
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
+        uc.saveUser(randomUser);
+        assertTrue(uc.removeUser(randomUser));
     }
 
     @Test
     void containsTest1() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        uc.saveUser(user);
-        assertTrue(uc.contains(user.getUsername()));
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
+        uc.saveUser(randomUser);
+        assertTrue(uc.contains(randomUser.getUsername()));
     }
 
     @Test
     void containsTest2() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
-        assertFalse(uc.contains(user.getUsername()));
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
+        assertFalse(uc.contains(randomUser.getUsername()));
     }
 
     @Test
     void getMaxId() {
-        UserController uc = new UserController(new UserService(new DaoUserInMemory(users)));
+        UserController uc = new UserController(new UserService(new DaoUserInMemory(randomUsers)));
         assertEquals(uc.getAllUsers().get().stream()
                 .mapToInt(User::getId)
                 .max()

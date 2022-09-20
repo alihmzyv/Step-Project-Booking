@@ -2,9 +2,12 @@ package database.in_memory.services;
 
 import database.dao.DaoUserInMemory;
 import database.services.UserService;
+import entities.Booking;
 import entities.User;
+import exceptions.booking_menu_exceptions.NoSuchUserException;
 import org.junit.jupiter.api.Test;
 
+import java.awt.print.Book;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,111 +15,130 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserServiceInMemoryTest {
-    List<User> users = User.getRandom(100);
-    User user = User.getRandom();
-
-    @Test
-    void saveUserTest1() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
-        assertEquals(user, us.getUser(user).get());
-    }
-
-    @Test
-    void getUserWithIdTest1() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        assertTrue(us.getUser(user.getId()).isEmpty());
-    }
-
-    @Test
-    void getUserWithIdTest2() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
-        assertEquals(Optional.of(user), us.getUser(user.getId()));
-    }
-
-    @Test
-    void getUserWithObjTest1() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        assertTrue(us.getUser(user).isEmpty());
-    }
-
-    @Test
-    void getUserWithObjTest2() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
-        assertEquals(user, us.getUser(user).get());
-    }
-
-    @Test
-    void getUserWithUsernameAndPsswrdTest1() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
-        assertEquals(Optional.of(user), us.getUser(user.getUsername(), user.getPassword()));
-    }
-
-    @Test
-    void getUserWithUsernameAndPsswrdTest2() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        assertEquals(Optional.empty(), us.getUser(user.getUsername(), user.getPassword()));
-    }
+    List<User> randomUsers = User.getRandom(100);
+    User randomUser = User.getRandom();
+    Booking randomBooking = Booking.getRandom();
 
     @Test
     void getAllUsersTest1() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        assertEquals(users, us.getAllUsers().get());
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        assertEquals(Optional.of(randomUsers), us.getAllUsers());
     }
 
     @Test
     void setAllUsersTo() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        List<User> users2 = User.getRandom(100);
-        us.setAllUsersTo(users2);
-        assertEquals(Optional.of(users2), us.getAllUsers());
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        List<User> randomUsers2 = User.getRandom(100);
+        us.setAllUsersTo(randomUsers2);
+        assertEquals(Optional.of(randomUsers2), us.getAllUsers());
     }
 
     @Test
-    void removeUserWithIdTest1() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        assertFalse(us.removeUser(user.getId()));
+    void isPresentTest1() {
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        assertTrue(us.isPresent());
     }
 
     @Test
-    void removeUserWithIdTest2() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
-        assertTrue(us.removeUser(user.getId()));
+    void isEmptyTest1() {
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        assertFalse(us.isEmpty());
+    }
+
+    @Test
+    void saveUserTest1() {
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        us.saveUser(randomUser);
+        assertTrue(us.isPresent());
+        assertTrue(us.getAllUsers().get().stream()
+                .anyMatch(user -> user.equals(randomUser)));
+    }
+
+    @Test
+    void getUserWithObjTest1() {
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        assertEquals(Optional.empty(), us.getUser(randomUser));
+    }
+
+    @Test
+    void getUserWithObjTest2() {
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        us.saveUser(randomUser);
+        assertEquals(Optional.of(randomUser), us.getUser(randomUser));
+    }
+
+    @Test
+    void getUserWithUsernameAndPsswrdTest1() {
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        assertEquals(Optional.empty(), us.getUser(randomUser.getUsername(), randomUser.getPassword()));
+    }
+
+    @Test
+    void getUserWithUsernameAndPsswrdTest2() {
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        us.saveUser(randomUser);
+        assertEquals(Optional.of(randomUser), us.getUser(randomUser.getUsername(), randomUser.getPassword()));
     }
 
     @Test
     void removeUserWithObjTest1() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        assertFalse(us.removeUser(user));
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        assertFalse(us.removeUser(randomUser));
     }
 
     @Test
     void removeUserWithObjTest2() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
-        assertTrue(us.removeUser(user));
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        us.saveUser(randomUser);
+        assertTrue(us.removeUser(randomUser));
+    }
+
+    @Test
+    void addBookingTest1() {
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        assertThrowsExactly(NoSuchUserException.class, () -> us.addBooking(randomUser, randomBooking));
+    }
+
+    @Test
+    void addBookingTest2() {
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        User randomUser = User.getRandom();
+        us.saveUser(randomUser);
+        assertTrue(us.addBooking(randomUser, randomBooking));
+    }
+
+    @Test
+    void removeBookingTest1() {
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        assertThrowsExactly(NoSuchUserException.class, () -> us.removeBooking(randomUser, randomBooking));
+    }
+
+    @Test
+    void removeBookingTest2() {
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        User randomUser = User.getRandom();
+        randomUser.addBooking(randomBooking);
+        us.saveUser(randomUser);
+        assertTrue(us.removeBooking(randomUser, randomBooking));
     }
 
     @Test
     void containsTest1() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
-        assertTrue(us.contains(user.getUsername()));
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        assertFalse(us.contains(randomUser.getUsername()));
     }
 
     @Test
     void containsTest2() {
-        UserService us = new UserService(new DaoUserInMemory(users));
-        assertFalse(us.contains(user.getUsername()));
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        us.saveUser(randomUser);
+        assertTrue(us.contains(randomUser.getUsername()));
     }
 
     @Test
     void getMaxId() {
-        UserService us = new UserService(new DaoUserInMemory(users));
+        UserService us = new UserService(new DaoUserInMemory(randomUsers));
+        assertTrue(us.isPresent());
         assertEquals(us.getAllUsers().get().stream()
                 .mapToInt(User::getId)
                 .max()

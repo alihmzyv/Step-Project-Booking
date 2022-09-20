@@ -20,9 +20,6 @@ public class UserService {
     public void saveUser(User user) {
         dao.save(user);
     }
-    public Optional<User> getUser(int id) {
-        return dao.get(id);
-    }
 
     public Optional<User> getUser(User user) {
         return dao.get(user);
@@ -82,12 +79,6 @@ public class UserService {
             return false;
         }
     }
-
-
-
-    public boolean removeUser(int id) {
-        return dao.remove(id);
-    }
     public boolean removeUser(User user) {
         return dao.remove(user);
     }
@@ -100,12 +91,12 @@ public class UserService {
         return dao.getAll();
     }
 
-    public boolean isEmpty() {
-        return dao.isEmpty();
-    }
-
     public boolean isPresent() {
         return dao.isPresent();
+    }
+
+    public boolean isEmpty() {
+        return dao.isEmpty();
     }
 
     public int getMaxId() {

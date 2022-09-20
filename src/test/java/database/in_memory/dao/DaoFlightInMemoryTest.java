@@ -17,17 +17,54 @@ class DaoFlightInMemoryTest {
     private final Flight randomFlight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
 
     @Test
+    void getAllTest1() {
+        DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
+        assertEquals(Optional.of(randomFlights), daoFlightInMemory.getAll());
+    }
+
+    @Test
+    void saveAllTest1() {
+        DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
+        List<Flight> randomFlights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
+        daoFlightInMemory.saveAll(randomFlights2);
+        List<Flight> allFlights = new ArrayList<>(randomFlights);
+        allFlights.addAll(randomFlights2);
+        assertEquals(Optional.of(allFlights), daoFlightInMemory.getAll());
+    }
+
+    @Test
+    void setAllTo() {
+        DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
+        List<Flight> randomFlights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
+        daoFlightInMemory.setAllTo(randomFlights2);
+        assertEquals(Optional.of(randomFlights2), daoFlightInMemory.getAll());
+    }
+
+    @Test
+    void isPresentTest1() {
+        DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
+        assertTrue(daoFlightInMemory.isPresent());
+    }
+
+    @Test
+    void isEmptyTest1() {
+        DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
+        assertFalse(daoFlightInMemory.isEmpty());
+    }
+
+    @Test
     void saveTest1() {
         DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
         daoFlightInMemory.save(randomFlight);
-        assertEquals(randomFlight, daoFlightInMemory.get(randomFlight).get());
+        assertTrue(daoFlightInMemory.isPresent());
+        assertTrue(daoFlightInMemory.getAll().get().stream()
+                .anyMatch(flight -> flight.equals(randomFlight)));
     }
-
 
     @Test
     void getWithIdTest1() {
         DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
-        assertTrue(daoFlightInMemory.get(randomFlight.getId()).isEmpty());
+        assertEquals(Optional.empty(), daoFlightInMemory.get(randomFlight.getId()));
     }
 
     @Test
@@ -40,14 +77,14 @@ class DaoFlightInMemoryTest {
     @Test
     void getWithObjTest1() {
         DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
-        assertTrue(daoFlightInMemory.get(randomFlight).isEmpty());
+        assertEquals(Optional.empty(), daoFlightInMemory.get(randomFlight));
     }
 
     @Test
     void getWithObjTest2() {
         DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
         daoFlightInMemory.save(randomFlight);
-        assertEquals(randomFlight, daoFlightInMemory.get(randomFlight).get());
+        assertEquals(Optional.of(randomFlight), daoFlightInMemory.get(randomFlight));
     }
 
     @Test
@@ -77,33 +114,9 @@ class DaoFlightInMemoryTest {
     }
 
     @Test
-    void getAllTest1() {
-        DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
-        assertEquals(randomFlights, daoFlightInMemory.getAll().get());
-    }
-
-    @Test
-    void saveAllTest1() {
-        DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
-        List<Flight> randomFlights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
-        daoFlightInMemory.saveAll(randomFlights2);
-        List<Flight> allFlights = new ArrayList<>();
-        allFlights.addAll(randomFlights);
-        allFlights.addAll(randomFlights2);
-        assertEquals(Optional.of(allFlights), daoFlightInMemory.getAll());
-    }
-
-    @Test
-    void setAllTo() {
-        DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
-        List<Flight> randomFlights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
-        daoFlightInMemory.setAllTo(randomFlights2);
-        assertEquals(Optional.of(randomFlights2), daoFlightInMemory.getAll());
-    }
-
-    @Test
     void getMaxId() {
         DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
+        assertTrue(daoFlightInMemory.isPresent());
         assertEquals(daoFlightInMemory.getAll().get().stream()
                 .mapToInt(Flight::getId)
                 .max()

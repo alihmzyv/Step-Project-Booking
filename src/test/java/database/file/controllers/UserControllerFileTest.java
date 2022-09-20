@@ -16,14 +16,14 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserControllerFileTest {
-    List<User> users = User.getRandom(100);
-    User user = User.getRandom();
+    List<User> randomUsers = User.getRandom(100);
+    User randomUser = User.getRandom();
     private final File file = new File("src/test/java/database/file/files/users.bin");
     private final File fileNonExisting = new File("none.bin");
 
     private void makeFull() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-            oos.writeObject(users);
+            oos.writeObject(randomUsers);
         }
         catch (IOException exc) {
             throw new FileDatabaseException(exc);
@@ -44,7 +44,7 @@ public class UserControllerFileTest {
     void getAllUsersTest1() {
         makeFull();
         UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        assertEquals(Optional.of(users), uc.getAllUsers());
+        assertEquals(Optional.of(randomUsers), uc.getAllUsers());
     }
 
     @Test
@@ -66,26 +66,26 @@ public class UserControllerFileTest {
     void setAllUsersToTest1() {
         makeFull();
         UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        List<User> users2 = User.getRandom(100);
-        uc.setAllUsersTo(users2);
-        assertEquals(Optional.of(users2), uc.getAllUsers());
+        List<User> randomUsers2 = User.getRandom(100);
+        uc.setAllUsersTo(randomUsers2);
+        assertEquals(Optional.of(randomUsers2), uc.getAllUsers());
     }
 
     @Test
     void setAllUsersToTest2() {
         makeEmpty();
         UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        List<User> users2 = User.getRandom(100);
-        uc.setAllUsersTo(users2);
-        assertEquals(Optional.of(users2), uc.getAllUsers());
+        List<User> randomUsers2 = User.getRandom(100);
+        uc.setAllUsersTo(randomUsers2);
+        assertEquals(Optional.of(randomUsers2), uc.getAllUsers());
     }
 
     @Test
     void setAllUsersToTest3() {
         UserService uc = new UserService(new DaoUserFile(fileNonExisting));
-        List<User> users2 = User.getRandom(100);
+        List<User> randomUsers2 = User.getRandom(100);
         FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> uc.setAllUsersTo(users2));
+                () -> uc.setAllUsersTo(randomUsers2));
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
 
@@ -94,55 +94,25 @@ public class UserControllerFileTest {
     void saveTest1() {
         makeFull();
         UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        uc.saveUser(user);
-        List<User> usersCopy = new ArrayList<>(users);
-        usersCopy.add(user);
-        assertEquals(Optional.of(usersCopy), uc.getAllUsers());
+        uc.saveUser(randomUser);
+        List<User> randomUsersCopy = new ArrayList<>(randomUsers);
+        randomUsersCopy.add(randomUser);
+        assertEquals(Optional.of(randomUsersCopy), uc.getAllUsers());
     }
 
     @Test
     void saveTest2() {
         makeEmpty();
         UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        uc.saveUser(user);
-        assertEquals(Optional.of(List.of(user)), uc.getAllUsers());
+        uc.saveUser(randomUser);
+        assertEquals(Optional.of(List.of(randomUser)), uc.getAllUsers());
     }
 
     @Test
     void saveTest3() {
         UserService uc = new UserService(new DaoUserFile(fileNonExisting));
         FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> uc.saveUser(user));
-        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
-    }
-
-    @Test
-    void getWithIdTest1() {
-        makeFull();
-        UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        assertEquals(Optional.empty(), uc.getUser(User.getRandom().getId()));
-    }
-
-    @Test
-    void getWithIdTest2() {
-        makeFull();
-        UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        uc.saveUser(user);
-        assertEquals(Optional.of(user), uc.getUser(user.getId()));
-    }
-
-    @Test
-    void getWithIdTest3() {
-        makeEmpty();
-        UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        assertThrowsExactly(NonInitializedDatabaseException.class, () -> uc.getUser(User.getRandom().getId()));
-    }
-
-    @Test
-    void getWithIdTest4() {
-        UserService uc = new UserService(new DaoUserFile(fileNonExisting));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> uc.getUser(User.getRandom().getId()));
+                () -> uc.saveUser(randomUser));
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
 
@@ -150,15 +120,15 @@ public class UserControllerFileTest {
     void getWithObjTest1() {
         makeFull();
         UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        assertEquals(Optional.empty(), uc.getUser(user));
+        assertEquals(Optional.empty(), uc.getUser(randomUser));
     }
 
     @Test
     void getWithObjTest2() {
         makeFull();
         UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        uc.saveUser(user);
-        assertEquals(Optional.of(user), uc.getUser(user));
+        uc.saveUser(randomUser);
+        assertEquals(Optional.of(randomUser), uc.getUser(randomUser));
     }
 
     @Test
@@ -180,60 +150,29 @@ public class UserControllerFileTest {
     void getWithUsernamePsswrdTest1() {
         makeFull();
         UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        assertEquals(Optional.empty(), uc.getUser(User.getRandom().getId()));
+        assertEquals(Optional.empty(), uc.getUser(randomUser.getUsername(), randomUser.getPassword()));
     }
 
     @Test
     void getWithUsernamePsswrdTest2() {
         makeFull();
         UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        uc.saveUser(user);
-        assertEquals(Optional.of(user), uc.getUser(user.getUsername(), user.getPassword()));
+        uc.saveUser(randomUser);
+        assertEquals(Optional.of(randomUser), uc.getUser(randomUser.getUsername(), randomUser.getPassword()));
     }
 
     @Test
     void getWithUsernamePsswrdTest3() {
         makeEmpty();
         UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        assertEquals(Optional.empty(), uc.getUser(user.getUsername(), user.getPassword()));
+        assertEquals(Optional.empty(), uc.getUser(randomUser.getUsername(), randomUser.getPassword()));
     }
 
     @Test
     void getWithUsernamePsswrdTest4() {
         UserService uc = new UserService(new DaoUserFile(fileNonExisting));
         FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> uc.getUser(user.getUsername(), user.getPassword()));
-        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
-    }
-
-
-    @Test
-    void removeWithIdTest1() {
-        makeFull();
-        UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        assertFalse(uc.removeUser(User.getRandom().getId()));
-    }
-
-    @Test
-    void removeWithIdTest2() {
-        makeFull();
-        UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        uc.saveUser(user);
-        assertTrue(uc.removeUser(user.getId()));
-    }
-
-    @Test
-    void removeWithIdTest3() {
-        makeEmpty();
-        UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        assertThrowsExactly(NonInitializedDatabaseException.class, () -> uc.removeUser(User.getRandom().getId()));
-    }
-
-    @Test
-    void removeWithIdTest4() {
-        UserService uc = new UserService(new DaoUserFile(fileNonExisting));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> uc.removeUser(User.getRandom().getId()));
+                () -> uc.getUser(randomUser.getUsername(), randomUser.getPassword()));
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
 
@@ -248,8 +187,8 @@ public class UserControllerFileTest {
     void removeWithObjTest2() {
         makeFull();
         UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        uc.saveUser(user);
-        assertTrue(uc.removeUser(user));
+        uc.saveUser(randomUser);
+        assertTrue(uc.removeUser(randomUser));
     }
 
     @Test
@@ -276,8 +215,8 @@ public class UserControllerFileTest {
     @Test
     void containsTest2() {
         UserController uc = new UserController(new UserService(new DaoUserFile(file)));
-        uc.saveUser(user);
-        assertTrue(uc.contains(user.getUsername()));
+        uc.saveUser(randomUser);
+        assertTrue(uc.contains(randomUser.getUsername()));
     }
 
     @Test

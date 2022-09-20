@@ -3,6 +3,7 @@ package database.services;
 import database.dao.DAO;
 import entities.Flight;
 import entities.Passenger;
+import exceptions.booking_menu_exceptions.NoSuchFlightException;
 import exceptions.booking_menu_exceptions.NonInitializedDatabaseException;
 import helpers.Helper;
 import io.Console;
@@ -43,10 +44,6 @@ public class FlightService {
                 getAllFlights().get().stream()
                 .filter(filter)
                 .collect(Collectors.toCollection(ArrayList::new)));
-    }
-
-    public void saveAllFlights(List<Flight> flights) {
-        dao.saveAll(flights);
     }
     public Optional<List<Flight>> getAllFlights() {
         return dao.getAll();
@@ -99,7 +96,7 @@ public class FlightService {
         }
         List<Flight> flights = getAllFlights().get();
         if (!flights.contains(which)) {
-            return false;
+            throw new NoSuchFlightException(String.format("There is no such flight in database: %s", which));
         }
         flights.stream()
                 .filter(flight -> flight.equals(which))
@@ -119,7 +116,7 @@ public class FlightService {
         }
         List<Flight> flights = getAllFlights().get();
         if (!flights.contains(which)) {
-            return false;
+            throw new NoSuchFlightException(String.format("There is no such flight in database: %s", which));
         }
         flights.stream()
                 .filter(flight -> flight.equals(which))
@@ -153,13 +150,6 @@ public class FlightService {
             return false;
         }
     }
-
-    public boolean removeFlight(int id) {
-        return dao.remove(id);
-    }
-    public boolean removeFlight(Flight flight) {
-        return dao.remove(flight);
-    }
     public void displayFlight(int flightId, Console console) {
         Optional<Flight> flightOpt = getFlight(flightId);
         if (flightOpt.isEmpty()) {
@@ -172,17 +162,6 @@ public class FlightService {
                         "FLIGHT DURATION", "CAPACITY"),
                 List.of(flightOpt.get(), flightOpt.get().getCapacity()),
                 130);
-    }
-    public void displayAllFlights(Console console) {
-        if (isEmpty()) {
-            console.println("THERE IS NO FLIGHT AT ALL.");
-            return;
-        }
-        console.printAsTable(
-                "ALL AVAILABLE FLIGHTS",
-                List.of("ID", "FLIGHT", "FROM", "TO", "TIME OF DEPARTURE", "TIME OF LANDING", "FLIGHT DURATION"),
-                getAllFlights().get(),
-                125);
     }
 
     public void displayFlights (Duration withinNext, Console console) {
@@ -230,5 +209,4 @@ public class FlightService {
     public int getMaxId() {
         return dao.getMaxId();
     }
-
 }

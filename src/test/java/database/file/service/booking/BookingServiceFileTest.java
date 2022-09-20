@@ -120,37 +120,6 @@ class BookingServiceFileTest {
     }
 
     @Test
-    void getWithIdTest1() {
-        makeFull();
-        BookingService bs = new BookingService(new DaoBookingFile(file));
-        assertEquals(Optional.empty(), bs.getBooking(Booking.getRandom().getId()));
-    }
-
-    @Test
-    void getWithIdTest2() {
-        makeFull();
-        BookingService bs = new BookingService(new DaoBookingFile(file));
-        Booking randomBooking = Booking.getRandom();
-        bs.saveBooking(randomBooking);
-        assertEquals(Optional.of(randomBooking), bs.getBooking(randomBooking.getId()));
-    }
-
-    @Test
-    void getWithIdTest3() {
-        makeEmpty();
-        BookingService bs = new BookingService(new DaoBookingFile(file));
-        assertThrowsExactly(NonInitializedDatabaseException.class, () ->  bs.getBooking(Booking.getRandom().getId()));
-    }
-
-    @Test
-    void getWithIdTest4() {
-        BookingService bs = new BookingService(new DaoBookingFile(fileNonExisting));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> bs.getBooking(Booking.getRandom().getId()));
-        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
-    }
-
-    @Test
     void getWithObjTest1() {
         makeFull();
         BookingService bs = new BookingService(new DaoBookingFile(file));
@@ -183,37 +152,6 @@ class BookingServiceFileTest {
     }
 
     @Test
-    void removeWithIdTest1() {
-        makeFull();
-        BookingService bs = new BookingService(new DaoBookingFile(file));
-        assertFalse(bs.removeBooking(Booking.getRandom().getId()));
-    }
-
-    @Test
-    void removeWithIdTest2() {
-        makeFull();
-        BookingService bs = new BookingService(new DaoBookingFile(file));
-        Booking randomBooking = Booking.getRandom();
-        bs.saveBooking(randomBooking);
-        assertTrue(bs.removeBooking(randomBooking.getId()));
-    }
-
-    @Test
-    void removeWithIdTest3() {
-        makeEmpty();
-        BookingService bs = new BookingService(new DaoBookingFile(file));
-        assertThrowsExactly(NonInitializedDatabaseException.class, () -> bs.removeBooking(Booking.getRandom().getId()));
-    }
-
-    @Test
-    void removeWithIdTest4() {
-        BookingService bs = new BookingService(new DaoBookingFile(fileNonExisting));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> bs.removeBooking(Booking.getRandom().getId()));
-        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
-    }
-
-    @Test
     void removeWithObjTest1() {
         makeFull();
         BookingService bs = new BookingService(new DaoBookingFile(file));
@@ -241,36 +179,6 @@ class BookingServiceFileTest {
         BookingService bs = new BookingService(new DaoBookingFile(fileNonExisting));
         FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
                 () -> bs.removeBooking(Booking.getRandom()));
-        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
-    }
-
-    @Test
-    void saveAllBookingsTest1() {
-        makeFull();
-        BookingService bs = new BookingService(new DaoBookingFile(file));
-        List<Booking> bookings2 = Booking.getRandom(100);
-        bs.saveAllBookings(bookings2);
-        List<Booking> allBookings = new ArrayList<>();
-        allBookings.addAll(bookings);
-        allBookings.addAll(bookings2);
-        assertEquals(Optional.of(allBookings), bs.getAllBookings());
-    }
-
-    @Test
-    void saveAllBookingsTest2() {
-        makeEmpty();
-        BookingService bs = new BookingService(new DaoBookingFile(file));
-        List<Booking> bookings2 = Booking.getRandom(100);
-        bs.saveAllBookings(bookings2);
-        assertEquals(Optional.of(bookings2), bs.getAllBookings());
-    }
-
-    @Test
-    void saveAllBookingsTest3() {
-        BookingService bs = new BookingService(new DaoBookingFile(fileNonExisting));
-        List<Booking> bookings2 = Booking.getRandom(100);
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> bs.saveAllBookings(bookings2));
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
 

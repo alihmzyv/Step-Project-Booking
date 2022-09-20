@@ -97,6 +97,10 @@ public class Flight implements Identifiable, Serializable{
         return flightDuration;
     }
 
+    public List<Passenger> getPassengers() {
+        return passengers;
+    }
+
     public void setDateTimeOfDeparture(LocalDateTime dateTimeOfDeparture) {
         this.dateTimeOfDeparture = dateTimeOfDeparture;
     }

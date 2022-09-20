@@ -184,67 +184,6 @@ class FlightServiceFileTest {
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
 
-    @Test
-    void removeWithIdTest1() {
-        makeFull();
-        FlightService fs = new FlightService(new DaoFlightFile(file));
-        assertFalse(fs.removeFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS).getId()));
-    }
-
-    @Test
-    void removeWithIdTest2() {
-        makeFull();
-        FlightService fs = new FlightService(new DaoFlightFile(file));
-        Flight randomFlight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        fs.saveFlight(randomFlight);
-        assertTrue(fs.removeFlight(randomFlight.getId()));
-    }
-
-    @Test
-    void removeWithIdTest3() {
-        makeEmpty();
-        FlightService fs = new FlightService(new DaoFlightFile(file));
-        assertThrowsExactly(NonInitializedDatabaseException.class, () -> fs.removeFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS).getId()));
-    }
-
-    @Test
-    void removeWithIdTest4() {
-        FlightService fs = new FlightService(new DaoFlightFile(fileNonExisting));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> fs.removeFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS).getId()));
-        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
-    }
-
-    @Test
-    void removeWithObjTest1() {
-        makeFull();
-        FlightService fs = new FlightService(new DaoFlightFile(file));
-        assertFalse(fs.removeFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS)));
-    }
-
-    @Test
-    void removeWithObjTest2() {
-        makeFull();
-        FlightService fs = new FlightService(new DaoFlightFile(file));
-        Flight randomFlight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        fs.saveFlight(randomFlight);
-        assertTrue(fs.removeFlight(randomFlight));
-    }
-
-    @Test
-    void removeWithObjTest3() {
-        makeEmpty();
-        FlightService fs = new FlightService(new DaoFlightFile(file));
-        assertThrowsExactly(NonInitializedDatabaseException.class, () -> fs.removeFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS)));
-    }
-
-    @Test
-    void removeWithObjTest4() {
-        FlightService fs = new FlightService(new DaoFlightFile(fileNonExisting));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> fs.removeFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS)));
-        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
-    }
 
     @Test
     void updateAllFlightsTest1() {
@@ -270,36 +209,6 @@ class FlightServiceFileTest {
         fs.setAllFlightsTo(flightsCopy);
         fs.updateAllFlights();
         assertNotEquals(Optional.of(flightsCopy), fs.getAllFlights());
-    }
-
-    @Test
-    void saveAllFlightsTest1() {
-        makeFull();
-        FlightService fs = new FlightService(new DaoFlightFile(file));
-        List<Flight> flights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
-        fs.saveAllFlights(flights2);
-        List<Flight> allFlights = new ArrayList<>();
-        allFlights.addAll(flights);
-        allFlights.addAll(flights2);
-        assertEquals(Optional.of(allFlights), fs.getAllFlights());
-    }
-
-    @Test
-    void saveAllFlightsTest2() {
-        makeEmpty();
-        FlightService fs = new FlightService(new DaoFlightFile(file));
-        List<Flight> flights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
-        fs.saveAllFlights(flights2);
-        assertEquals(Optional.of(flights2), fs.getAllFlights());
-    }
-
-    @Test
-    void saveAllFlightsTest3() {
-        FlightService fs = new FlightService(new DaoFlightFile(fileNonExisting));
-        List<Flight> flights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> fs.saveAllFlights(flights2));
-        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
 
     @Test

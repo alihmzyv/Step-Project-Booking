@@ -2,12 +2,10 @@ package database;
 
 import database.controllers.BookingController;
 import database.controllers.FlightController;
-import database.controllers.PassengerController;
 import database.controllers.UserController;
 import database.dao.*;
 import database.services.BookingService;
 import database.services.FlightService;
-import database.services.PassengerService;
 import database.services.UserService;
 import entities.Flight;
 import exceptions.booking_menu_exceptions.FileDatabaseException;
@@ -20,11 +18,9 @@ public class Database {
     private final FlightController fcFile;
     private final BookingController bcFile;
     private final UserController ucFile;
-    private final PassengerController pcFile;
     private final FlightController fcInMemory;
     private final BookingController bcInMemory;
     private final UserController ucInMemory;
-    private final PassengerController pcInMemory;
 
 
     public Database() {
@@ -37,24 +33,20 @@ public class Database {
         ucFile = new UserController
                 (new UserService(
                         new DaoUserFile(new File("src/main/java/database/local_database_files/users.bin"))));
-        pcFile = new PassengerController(
-                new PassengerService(
-                        new DaoPassengerFile(new File("src/main/java/database/local_database_files/passengers.bin"))));
         bcFile = new BookingController(
                 new BookingService
                         (new DaoBookingFile(new File("src/main/java/database/local_database_files/bookings.bin"))),
                 ucFile.getService(),
-                fcFile.getService(),
-                pcFile.getService());
+                fcFile.getService()
+        );
 
         fcInMemory = new FlightController(new FlightService(new DaoFlightInMemory(fcFile.getAllFlights().orElseGet(ArrayList::new))));
         fcInMemory.updateAllFlights();
         ucInMemory = new UserController(new UserService(new DaoUserInMemory(ucFile.getAllUsers().orElseGet(ArrayList::new))));
-        pcInMemory = new PassengerController(new PassengerService(new DaoPassengerInMemory(pcFile.getAllPassengers().orElseGet(ArrayList::new))));
         bcInMemory = new BookingController(new BookingService(new DaoBookingInMemory(bcFile.getAllBookings().orElseGet(ArrayList::new))),
                 ucInMemory.getService(),
-                fcInMemory.getService(),
-                pcInMemory.getService());
+                fcInMemory.getService()
+        );
     }
 
     public FlightController getFcInMemory() {
@@ -73,7 +65,6 @@ public class Database {
         bcFile.setAllBookingsTo(bcInMemory.getAllBookings().get());
         ucFile.setAllUsersTo(ucInMemory.getAllUsers().get());
         fcFile.setAllFlightsTo(fcInMemory.getAllFlights().get());
-        pcFile.setAllPassengersTo(pcInMemory.getAllPassengers().get());
         updateLocaleIdCounters();
     }
 
@@ -83,7 +74,6 @@ public class Database {
             pw.println(String.format("Flight = %d;", fcInMemory.getMaxId()));
             pw.println(String.format("Booking = %d;", bcInMemory.getMaxId()));
             pw.println(String.format("User = %d;", ucInMemory.getMaxId()));
-            pw.println(String.format("Passenger = %d;", pcInMemory.getMaxId()));
         }
         catch (IOException exc) {
             exc.printStackTrace();

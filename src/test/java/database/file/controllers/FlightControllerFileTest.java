@@ -208,68 +208,6 @@ class FlightControllerFileTest {
     }
 
     @Test
-    void removeWithIdTest1() {
-        makeFull();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        assertFalse(fc.removeFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS).getId()));
-    }
-
-    @Test
-    void removeWithIdTest2() {
-        makeFull();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        Flight randomFlight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        fc.saveFlight(randomFlight);
-        assertTrue(fc.removeFlight(randomFlight.getId()));
-    }
-
-    @Test
-    void removeWithIdTest3() {
-        makeEmpty();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        assertThrowsExactly(NonInitializedDatabaseException.class, () -> fc.removeFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS).getId()));
-    }
-
-    @Test
-    void removeWithIdTest4() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(fileNonExisting)));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> fc.removeFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS).getId()));
-        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
-    }
-
-    @Test
-    void removeWithObjTest1() {
-        makeFull();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        assertFalse(fc.removeFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS)));
-    }
-
-    @Test
-    void removeWithObjTest2() {
-        makeFull();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        Flight randomFlight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        fc.saveFlight(randomFlight);
-        assertTrue(fc.removeFlight(randomFlight));
-    }
-
-    @Test
-    void removeWithObjTest3() {
-        makeEmpty();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        assertThrowsExactly(NonInitializedDatabaseException.class, () -> fc.removeFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS)));
-    }
-
-    @Test
-    void removeWithObjTest4() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(fileNonExisting)));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> fc.removeFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS)));
-        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
-    }
-
-    @Test
     void getMaxIdTest1() {
         makeFull();
         FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));

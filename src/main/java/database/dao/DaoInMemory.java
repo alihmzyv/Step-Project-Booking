@@ -18,10 +18,7 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
     @Override
     public void save(A object) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+            throw new NonInitializedDatabaseException("List field of DAO is null");
         }
         objects.add(object);
     }
@@ -29,10 +26,7 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
     @Override
     public Optional<A> get(int id) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+            throw new NonInitializedDatabaseException("List field of DAO is null");
         }
         return getAll().get().stream()
                 .filter(obj -> obj.getId() == id)
@@ -42,10 +36,7 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
     @Override
     public Optional<A> get(A object) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+            throw new NonInitializedDatabaseException("List field of DAO is null");
         }
         return getAll().get().stream()
                 .filter(obj -> obj.equals(object))
@@ -55,10 +46,7 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
     @Override
     public boolean remove(int id) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+            throw new NonInitializedDatabaseException("List field of DAO is null");
         }
         return objects.removeIf(obj -> obj.getId() == id);
     }
@@ -66,10 +54,7 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
     @Override
     public boolean remove(A object) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+            throw new NonInitializedDatabaseException("List field of DAO is null");
         }
         return objects.remove(object);
     }
@@ -82,10 +67,7 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
     @Override
     public void saveAll(List<A> objects) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+            throw new NonInitializedDatabaseException("List field of DAO is null");
         }
         this.objects.addAll(objects);
     }

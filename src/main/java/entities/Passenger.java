@@ -11,24 +11,17 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Passenger implements Identifiable, Serializable {
+public class Passenger implements Serializable {
     @Serial
     private static final long serialVersionUID = -3109893404888493359L;
-    private static int idCounter;
 
-    private final int id;
     private final String name;
     private final String surname;
 
 
-    static {
-        idCounter = Database.getIdCounter("Passenger");
-    }
-
 
     //constructors
     public Passenger(String name, String surname) {
-        this.id = idCounter++;
         this.name = name;
         this.surname = surname;
     }
@@ -45,10 +38,6 @@ public class Passenger implements Identifiable, Serializable {
 
 
     //getter and setters
-    @Override
-    public int getId() {
-        return id;
-    }
 
 
     //methods
@@ -63,11 +52,11 @@ public class Passenger implements Identifiable, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Passenger passenger = (Passenger) o;
-        return id == passenger.id;
+        return Objects.equals(name, passenger.name) && Objects.equals(surname, passenger.surname);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(name, surname);
     }
 }

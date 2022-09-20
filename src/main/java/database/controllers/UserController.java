@@ -20,9 +20,6 @@ public class UserController {
     public void saveUser(User user) {
         us.saveUser(user);
     }
-    public Optional<User> getUser(int id) {
-        return us.getUser(id);
-    }
 
     public Optional<User> getUser(User user) {
         return us.getUser(user);
@@ -39,12 +36,17 @@ public class UserController {
     public void setAllUsersTo(List<User> data) {
         us.setAllUsersTo(data);
     }
-    public boolean removeUser(int id) {
-        return us.removeUser(id);
-    }
 
     public boolean removeUser(User user) {
         return us.removeUser(user);
+    }
+
+    public boolean isPresent() {
+        return us.isPresent();
+    }
+
+    public boolean isEmpty() {
+        return us.isEmpty();
     }
 
     public int getMaxId() {

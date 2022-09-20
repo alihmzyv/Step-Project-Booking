@@ -27,10 +27,7 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
     @Override
     public Optional<A> get(int id) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+            throw new NonInitializedDatabaseException("File field of DAO is an empty file or a file not containing a List of corresponding entity.");
         }
         return getAll().get().stream()
                 .filter(obj -> obj.getId() == id)
@@ -40,10 +37,7 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
     @Override
     public Optional<A> get(A object) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+            throw new NonInitializedDatabaseException("File field of DAO is an empty file or a file not containing a List of corresponding entity.");
         }
         return getAll().get().stream()
                 .filter(obj -> obj.equals(object))
@@ -53,10 +47,7 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
     @Override
     public boolean remove(int id) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+            throw new NonInitializedDatabaseException("File field of DAO is an empty file or a file not containing a List of corresponding entity.");
         }
         List<A> data = getAll().get();
         if (data.removeIf(obj -> obj.getId() == id)) {
@@ -69,10 +60,8 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
     @Override
     public boolean remove(A object) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+            throw new NonInitializedDatabaseException(
+                    "File field of DAO is an empty file or a file not containing a List of corresponding entity.");
         }
         List<A> data = getAll().get();
         if (data.remove(object)) {

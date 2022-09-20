@@ -16,108 +16,96 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FlightControllerInMemoryTest {
 
-    List<Flight> flights = Flight.getRandom(10, 1, 168, ChronoUnit.HOURS);
-    Flight flight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-
-
-    @Test
-    void saveFlightTest1() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(flights)));
-        fc.saveFlight(flight);
-        assertEquals(flight, fc.getFlight(flight).get());
-    }
-
-    @Test
-    void getFlightWithIdTest1() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(flights)));
-        assertTrue(fc.getFlight(flight.getId()).isEmpty());
-    }
-
-    @Test
-    void getFlightWithIdTest2() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(flights)));
-        fc.saveFlight(flight);
-        assertEquals(Optional.of(flight), fc.getFlight(flight.getId()));
-    }
-
-    @Test
-    void getFlightWithObjTest1() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(flights)));
-        assertTrue(fc.getFlight(flight).isEmpty());
-    }
-
-    @Test
-    void getFlightWithObjTest2() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(flights)));
-        fc.saveFlight(flight);
-        assertEquals(flight, fc.getFlight(flight).get());
-    }
+    List<Flight> randomFligths = Flight.getRandom(10, 1, 168, ChronoUnit.HOURS);
+    Flight randomFligth = Flight.getRandom(1, 168, ChronoUnit.HOURS);
 
     @Test
     void getAllFlightsTest1() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(flights)));
-        assertEquals(flights, fc.getAllFlights().get());
+        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(randomFligths)));
+        assertEquals(randomFligths, fc.getAllFlights().get());
     }
 
     @Test
     void setAllFlightsTo() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(flights)));
-        List<Flight> flights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
-        fc.setAllFlightsTo(flights2);
-        assertEquals(Optional.of(flights2), fc.getAllFlights());
+        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(randomFligths)));
+        List<Flight> randomFligths2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
+        fc.setAllFlightsTo(randomFligths2);
+        assertEquals(Optional.of(randomFligths2), fc.getAllFlights());
+    }
+
+    @Test
+    void isPresent() {
+        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(randomFligths)));
+        assertTrue(fc.isPresent());
+    }
+
+    @Test
+    void isEmpty() {
+        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(randomFligths)));
+        assertFalse(fc.isEmpty());
+    }
+
+    @Test
+    void saveFlightTest1() {
+        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(randomFligths)));
+        fc.saveFlight(randomFligth);
+        assertTrue(fc.isPresent());
+        assertTrue(fc.getAllFlights().get().stream()
+                .anyMatch(flight -> flight.equals(randomFligth)));
+    }
+
+    @Test
+    void getFlightWithIdTest1() {
+        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(randomFligths)));
+        assertEquals(Optional.empty(), fc.getFlight(randomFligth.getId()));
+    }
+
+    @Test
+    void getFlightWithIdTest2() {
+        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(randomFligths)));
+        fc.saveFlight(randomFligth);
+        assertEquals(Optional.of(randomFligth), fc.getFlight(randomFligth.getId()));
+    }
+
+    @Test
+    void getFlightWithObjTest1() {
+        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(randomFligths)));
+        assertEquals(Optional.empty(), fc.getFlight(randomFligth));
+    }
+
+    @Test
+    void getFlightWithObjTest2() {
+        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(randomFligths)));
+        fc.saveFlight(randomFligth);
+        assertEquals(Optional.of(randomFligth), fc.getFlight(randomFligth));
     }
 
     @Test
     void updateAllFlightsTest1() {
-        List<Flight> flightsCopy = new ArrayList<>(flights);
+        List<Flight> randomFligthsCopy = new ArrayList<>(randomFligths);
         Flight randomFlight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        randomFlight.setDateTimeOfDeparture(LocalDateTime.now()); //already before than LocalDateTime.now()
-        flightsCopy.add(randomFlight);
-        FlightService fc = new FlightService(new DaoFlightInMemory(flightsCopy));
+        randomFlight.setDateTimeOfDeparture(LocalDateTime.now()); //already before than LocalDateTime.now(), thus outdated
+        randomFligthsCopy.add(randomFlight);
+        FlightService fc = new FlightService(new DaoFlightInMemory(randomFligthsCopy));
         fc.updateAllFlights();
-        assertNotEquals(Optional.of(flightsCopy), fc.getAllFlights());
+        assertNotEquals(Optional.of(randomFligthsCopy), fc.getAllFlights());
     }
 
     @Test
     void updateAllFlightsTest2() {
-        List<Flight> flightsCopy = new ArrayList<>(flights);
-        Flight flight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        flight.setCapacity(0);
-        flightsCopy.add(flight);
-        FlightService fc = new FlightService(new DaoFlightInMemory(flightsCopy));
+        List<Flight> randomFligthsCopy = new ArrayList<>(randomFligths);
+        Flight randomFligth = Flight.getRandom(1, 168, ChronoUnit.HOURS);
+        randomFligth.setCapacity(0); //sold out
+        randomFligthsCopy.add(randomFligth);
+        FlightService fc = new FlightService(new DaoFlightInMemory(randomFligthsCopy));
         fc.updateAllFlights();
-        assertNotEquals(Optional.of(flightsCopy), fc.getAllFlights());
-    }
-
-    @Test
-    void removeFlightWithIdTest1() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(flights)));
-        assertFalse(fc.removeFlight(flight.getId()));
-    }
-
-    @Test
-    void removeFlightWithIdTest2() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(flights)));
-        fc.saveFlight(flight);
-        assertTrue(fc.removeFlight(flight.getId()));
-    }
-
-    @Test
-    void removeFlightWithObjTest1() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(flights)));
-        assertFalse(fc.removeFlight(flight));
-    }
-
-    @Test
-    void removeFlightWithObjTest2() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(flights)));
-        fc.saveFlight(flight);
-        assertTrue(fc.removeFlight(flight));
+        assertNotEquals(Optional.of(randomFligthsCopy), fc.getAllFlights());
     }
 
     @Test
     void getMaxId() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(flights)));
+        FlightController fc = new FlightController(new FlightService(new DaoFlightInMemory(randomFligths)));
+        assertTrue(fc.isPresent());
         assertEquals(fc.getAllFlights().get().stream()
                 .mapToInt(Flight::getId)
                 .max()

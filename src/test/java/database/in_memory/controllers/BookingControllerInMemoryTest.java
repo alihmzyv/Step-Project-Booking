@@ -3,11 +3,9 @@ package database.in_memory.controllers;
 import database.controllers.BookingController;
 import database.dao.DaoBookingInMemory;
 import database.dao.DaoFlightInMemory;
-import database.dao.DaoPassengerInMemory;
 import database.dao.DaoUserInMemory;
 import database.services.BookingService;
 import database.services.FlightService;
-import database.services.PassengerService;
 import database.services.UserService;
 import entities.Booking;
 import entities.Flight;
@@ -19,236 +17,177 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class BookingControllerInMemoryTest {
 
-    List<Booking> bookings = Booking.getRandom(100);
     List<Flight> flights = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
     List<User> users = User.getRandom(100);
     List<Passenger> passengers = Passenger.getRandom(100);
-
-    @Test
-    void saveBooking() {
-        User user = User.getRandom();
-        Flight flight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        Passenger passenger = Passenger.getRandom();
-        Booking booking = new Booking(user, flight, passenger);
-        UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
-        FlightService fs = new FlightService(new DaoFlightInMemory(flights));
-        fs.saveFlight(flight);
-        int capacityBeforeBooking = fs.getFlight(flight).get().getCapacity();
-        PassengerService ps = new PassengerService(new DaoPassengerInMemory(passengers));
-        ps.savePassenger(passenger);
-        BookingController bc = new BookingController(
-                new BookingService(new DaoBookingInMemory(bookings)),
-                us,
-                fs,
-                ps);
-        bc.saveBooking(booking);
-        assertEquals(Optional.of(booking), bc.getBooking(booking));
-        assertTrue(us.getUser(user).get().hasBooking(booking));
-        assertEquals(fs.getFlight(flight).get().getCapacity(), capacityBeforeBooking - 1);
-        assertTrue(fs.getFlight(flight).get().containsPassenger(passenger));
-        assertTrue(ps.contains(passenger));
-    }
-
-    @Test
-    void getBookingWithIdTest1() {
-        User user = User.getRandom();
-        Flight flight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        Passenger passenger = Passenger.getRandom();
-        Booking booking = new Booking(user, flight, passenger);
-        UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
-        FlightService fs = new FlightService(new DaoFlightInMemory(flights));
-        fs.saveFlight(flight);
-        PassengerService ps = new PassengerService(new DaoPassengerInMemory(passengers));
-        ps.savePassenger(passenger);
-        BookingController bc = new BookingController(
-                new BookingService(new DaoBookingInMemory(bookings)),
-                us,
-                fs,
-                ps);
-        assertTrue(bc.getBooking(booking.getId()).isEmpty());
-    }
-
-    @Test
-    void getBookingWithIdTest2() {
-        User user = User.getRandom();
-        Flight flight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        Passenger passenger = Passenger.getRandom();
-        Booking booking = new Booking(user, flight, passenger);
-        UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
-        FlightService fs = new FlightService(new DaoFlightInMemory(flights));
-        fs.saveFlight(flight);
-        PassengerService ps = new PassengerService(new DaoPassengerInMemory(passengers));
-        ps.savePassenger(passenger);
-        BookingController bc = new BookingController(
-                new BookingService(new DaoBookingInMemory(bookings)),
-                us,
-                fs,
-                ps);
-        bc.saveBooking(booking);
-        assertEquals(Optional.of(booking), bc.getBooking(booking.getId()));
-    }
-
-    @Test
-    void getBookingWithObjTest1() {
-        User user = User.getRandom();
-        Flight flight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        Passenger passenger = Passenger.getRandom();
-        Booking booking = new Booking(user, flight, passenger);
-        UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
-        FlightService fs = new FlightService(new DaoFlightInMemory(flights));
-        fs.saveFlight(flight);
-        PassengerService ps = new PassengerService(new DaoPassengerInMemory(passengers));
-        ps.savePassenger(passenger);
-        BookingController bc = new BookingController(
-                new BookingService(new DaoBookingInMemory(bookings)),
-                us,
-                fs,
-                ps);
-        assertTrue(bc.getBooking(booking).isEmpty());
-    }
-
-    @Test
-    void getBookingWithObjTest2() {
-        User user = User.getRandom();
-        Flight flight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        Passenger passenger = Passenger.getRandom();
-        Booking booking = new Booking(user, flight, passenger);
-        UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
-        FlightService fs = new FlightService(new DaoFlightInMemory(flights));
-        fs.saveFlight(flight);
-        PassengerService ps = new PassengerService(new DaoPassengerInMemory(passengers));
-        ps.savePassenger(passenger);
-        BookingController bc = new BookingController(
-                new BookingService(new DaoBookingInMemory(bookings)),
-                us,
-                fs,
-                ps);
-        bc.saveBooking(booking);
-        assertEquals(booking, bc.getBooking(booking).get());
-    }
-
-    @Test
-    void saveAllBookings() {
-        User user = User.getRandom();
-        Flight flight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        Passenger passenger = Passenger.getRandom();
-        Booking booking = new Booking(user, flight, passenger);
-        UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
-        FlightService fs = new FlightService(new DaoFlightInMemory(flights));
-        fs.saveFlight(flight);
-        PassengerService ps = new PassengerService(new DaoPassengerInMemory(passengers));
-        ps.savePassenger(passenger);
-        BookingController bc = new BookingController(
-                new BookingService(new DaoBookingInMemory(bookings)),
-                us,
-                fs,
-                ps);
-        List<Booking> bookings2 = Booking.getRandom(100);
-        bc.saveAllBookings(bookings2);
-        List<Booking> allBookings = new ArrayList<>();
-        allBookings.addAll(bookings);
-        allBookings.addAll(bookings2);
-        assertEquals(Optional.of(allBookings), bc.getAllBookings());
-    }
+    List<Booking> bookings = IntStream.range(0, 100)
+            .mapToObj(i -> new Booking(users.get(i), flights.get(i), passengers.get(i)))
+            .collect(Collectors.toCollection(ArrayList::new));
 
     @Test
     void getAllBookingsTest1() {
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
         UserService us = new UserService(new DaoUserInMemory(users));
         FlightService fs = new FlightService(new DaoFlightInMemory(flights));
-        PassengerService ps = new PassengerService(new DaoPassengerInMemory(passengers));
         BookingController bc = new BookingController(
-                new BookingService(new DaoBookingInMemory(bookings)),
+                bs,
                 us,
-                fs,
-                ps);
-        assertEquals(bookings, bc.getAllBookings().get());
+                fs
+        );
+        assertEquals(Optional.of(bookings), bc.getAllBookings());
     }
 
     @Test
     void setAllBookingsTo() {
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
         UserService us = new UserService(new DaoUserInMemory(users));
         FlightService fs = new FlightService(new DaoFlightInMemory(flights));
-        PassengerService ps = new PassengerService(new DaoPassengerInMemory(passengers));
         BookingController bc = new BookingController(
-                new BookingService(new DaoBookingInMemory(bookings)),
+                bs,
                 us,
-                fs,
-                ps);
+                fs
+        );
         List<Booking> bookings2 = Booking.getRandom(100);
         bc.setAllBookingsTo(bookings2);
         assertEquals(Optional.of(bookings2), bc.getAllBookings());
     }
 
     @Test
-    void removeBookingTest1() {
-        User user = User.getRandom();
-        Flight flight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        Passenger passenger = Passenger.getRandom();
-        Booking booking = new Booking(user, flight, passenger);
+    void isPresentTest1() {
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
         UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
         FlightService fs = new FlightService(new DaoFlightInMemory(flights));
-        fs.saveFlight(flight);
-        PassengerService ps = new PassengerService(new DaoPassengerInMemory(passengers));
-        ps.savePassenger(passenger);
         BookingController bc = new BookingController(
-                new BookingService(new DaoBookingInMemory(bookings)),
+                bs,
                 us,
-                fs,
-                ps);
-        int capacityBeforeRemoving = fs.getFlight(flight).get().getCapacity();
-        assertFalse(bc.removeBooking(booking));
-        assertEquals(fs.getFlight(flight).get().getCapacity(), capacityBeforeRemoving);
+                fs
+        );
+        assertTrue(bc.isPresent());
+    }
+
+    @Test
+    void isEmptyTest1() {
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        UserService us = new UserService(new DaoUserInMemory(users));
+        FlightService fs = new FlightService(new DaoFlightInMemory(flights));
+        BookingController bc = new BookingController(
+                bs,
+                us,
+                fs
+        );
+        assertFalse(bc.isEmpty());
+    }
+
+    @Test
+    void saveBooking() {
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        UserService us = new UserService(new DaoUserInMemory(users));
+        FlightService fs = new FlightService(new DaoFlightInMemory(flights));
+        BookingController bc = new BookingController(
+                bs,
+                us,
+                fs
+        );
+        Booking randomBooking = Booking.getRandom();
+        User user = randomBooking.getUser();
+        Flight flight = randomBooking.getFlight();
+        Passenger passenger = randomBooking.getPassenger();
+        int capacityBeforeBooking = flight.getCapacity();
+        bc.saveBooking(randomBooking);
+        assertEquals(Optional.of(randomBooking), bc.getBooking(randomBooking));
+        assertTrue(us.getUser(user).get().hasBooking(randomBooking));
+        assertEquals(capacityBeforeBooking - 1, fs.getFlight(flight).get().getCapacity());
+        assertTrue(fs.getFlight(flight).get().containsPassenger(passenger));
+    }
+
+    @Test
+    void getBookingWithObjTest1() {
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        UserService us = new UserService(new DaoUserInMemory(users));
+        FlightService fs = new FlightService(new DaoFlightInMemory(flights));
+        BookingController bc = new BookingController(
+                bs,
+                us,
+                fs
+        );
+        Booking randomBooking = Booking.getRandom();
+        assertEquals(Optional.empty(), bc.getBooking(randomBooking));
+    }
+
+    @Test
+    void getBookingWithObjTest2() {
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        UserService us = new UserService(new DaoUserInMemory(users));
+        FlightService fs = new FlightService(new DaoFlightInMemory(flights));
+        BookingController bc = new BookingController(
+                bs,
+                us,
+                fs
+        );
+        Booking randomBooking = Booking.getRandom();
+        bc.saveBooking(randomBooking);
+        assertEquals(Optional.of(randomBooking), bc.getBooking(randomBooking));
+    }
+
+    @Test
+    void removeBookingTest1() {
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
+        UserService us = new UserService(new DaoUserInMemory(users));
+        FlightService fs = new FlightService(new DaoFlightInMemory(flights));
+        BookingController bc = new BookingController(
+                bs,
+                us,
+                fs
+        );
+        Booking randomBooking = Booking.getRandom();
+        Flight flight = randomBooking.getFlight();
+        int capacityBeforeRemoving = flight.getCapacity();
+        assertFalse(bc.removeBooking(randomBooking));
+        assertEquals(capacityBeforeRemoving, flight.getCapacity());
     }
 
     @Test
     void removeBookingTest2() {
-        User user = User.getRandom();
-        Flight flight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        Passenger passenger = Passenger.getRandom();
-        Booking booking = new Booking(user, flight, passenger);
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
         UserService us = new UserService(new DaoUserInMemory(users));
-        us.saveUser(user);
         FlightService fs = new FlightService(new DaoFlightInMemory(flights));
-        fs.saveFlight(flight);
-        PassengerService ps = new PassengerService(new DaoPassengerInMemory(passengers));
-        ps.savePassenger(passenger);
         BookingController bc = new BookingController(
-                new BookingService(new DaoBookingInMemory(bookings)),
+                bs,
                 us,
-                fs,
-                ps);
-        bc.saveBooking(booking);
-        int capacityBeforeRemoving = fs.getFlight(flight).get().getCapacity();
-        assertTrue(bc.removeBooking(booking));
-        assertEquals(Optional.empty(), bc.getBooking(booking));
-        assertFalse(us.getUser(user).get().hasBooking(booking));
-        assertEquals(fs.getFlight(flight).get().getCapacity(), capacityBeforeRemoving + 1);
+                fs
+        );
+        Booking randomBooking = Booking.getRandom();
+        User user = randomBooking.getUser();
+        Flight flight = randomBooking.getFlight();
+        Passenger passenger = randomBooking.getPassenger();
+        bc.saveBooking(randomBooking);
+        int capacityBeforeRemoving = flight.getCapacity();
+        assertTrue(bc.removeBooking(randomBooking));
+        assertEquals(Optional.empty(), bc.getBooking(randomBooking));
+        assertFalse(us.getUser(user).get().hasBooking(randomBooking));
+        assertEquals(capacityBeforeRemoving + 1, fs.getFlight(flight).get().getCapacity());
         assertFalse(fs.getFlight(flight).get().containsPassenger(passenger));
     }
 
     @Test
     void getMaxId() {
+        BookingService bs = new BookingService(new DaoBookingInMemory(bookings));
         UserService us = new UserService(new DaoUserInMemory(users));
         FlightService fs = new FlightService(new DaoFlightInMemory(flights));
-        PassengerService ps = new PassengerService(new DaoPassengerInMemory(passengers));
         BookingController bc = new BookingController(
-                new BookingService(new DaoBookingInMemory(bookings)),
+                bs,
                 us,
-                fs,
-                ps);
+                fs
+        );
+        assertTrue(bc.isPresent());
         assertEquals(bc.getAllBookings().get().stream()
                 .mapToInt(Booking::getId)
                 .max()
