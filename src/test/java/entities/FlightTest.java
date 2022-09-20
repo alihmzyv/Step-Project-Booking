@@ -25,7 +25,7 @@ class FlightTest {
 
     private Predicate<Flight> getPredicate (int latest, ChronoUnit unit) {
         return flight ->
-                flight.getDateTimeOfDeparture().compareTo(LocalDateTime.now().plus(Duration.of(latest, unit))) < 0 &&
+                flight.getDateTimeOfDeparture().compareTo(LocalDateTime.now().plus(Duration.of(latest, unit))) <= 0 &&
                 flight.getDateTimeOfLanding().compareTo(flight.getDateTimeOfDeparture().plus(Duration.ofMinutes(60))) >= 0 &&
                 flight.getDateTimeOfLanding().compareTo(flight.getDateTimeOfDeparture().plus(Duration.ofMinutes(300))) <= 0 &&
                 Arrays.stream(Airline.values()).anyMatch(airline -> airline.equals(flight.getAirline())) &&

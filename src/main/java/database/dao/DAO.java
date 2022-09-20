@@ -16,5 +16,6 @@ public interface DAO<A extends Identifiable> {
     void setAll(List<A> data);
     boolean isPresent();
     boolean isEmpty();
+    void requiresNonNull();
     int getMaxId();
 }

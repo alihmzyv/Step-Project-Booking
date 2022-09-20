@@ -29,7 +29,7 @@ class FlightServiceInMemoryTest {
     void setAllFlightsToTest1() {
         FlightService fs = new FlightService(new DaoFlightInMemory(randomFlights));
         List<Flight> randomFlights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
-        fs.setAllFlightsTo(randomFlights2);
+        fs.setAllFlights(randomFlights2);
         assertEquals(Optional.of(randomFlights2), fs.getAllFlights());
     }
 

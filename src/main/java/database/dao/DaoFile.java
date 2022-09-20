@@ -13,10 +13,14 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
 
     private final File file;
 
+
+    //constructors
     public DaoFile(File file) {
         this.file = file;
     }
 
+
+    //methods
     @Override
     public void save(A object) {
         List<A> data = getAll().orElseGet(ArrayList::new);
@@ -26,9 +30,7 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
 
     @Override
     public Optional<A> get(int id) {
-        if (isEmpty()) {
-            throw new NonInstantiatedDaoException("File field of DAO is an empty file or a file not containing a List of corresponding entity.");
-        }
+        requiresNonNull();
         return getAll().get().stream()
                 .filter(obj -> obj.getId() == id)
                 .findAny();
@@ -36,9 +38,7 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
 
     @Override
     public Optional<A> get(A object) {
-        if (isEmpty()) {
-            throw new NonInstantiatedDaoException("File field of DAO is an empty file or a file not containing a List of corresponding entity.");
-        }
+        requiresNonNull();
         return getAll().get().stream()
                 .filter(obj -> obj.equals(object))
                 .findAny();
@@ -46,9 +46,7 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
 
     @Override
     public boolean remove(int id) {
-        if (isEmpty()) {
-            throw new NonInstantiatedDaoException("File field of DAO is an empty file or a file not containing a List of corresponding entity.");
-        }
+        requiresNonNull();
         List<A> data = getAll().get();
         if (data.removeIf(obj -> obj.getId() == id)) {
             setAll(data);
@@ -59,10 +57,7 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
 
     @Override
     public boolean remove(A object) {
-        if (isEmpty()) {
-            throw new NonInstantiatedDaoException(
-                    "File field of DAO is an empty file or a file not containing a List of corresponding entity.");
-        }
+        requiresNonNull();
         List<A> data = getAll().get();
         if (data.remove(object)) {
             setAll(data);
@@ -93,9 +88,8 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
 
     public void setAll(List<A> data) {
         if (!file.exists()) {
-            throw new LocalDatabaseException(new FileNotFoundException(String.format(
-                    "Database file could not be found at: %s",
-                    file.getAbsolutePath())));
+            throw new LocalDatabaseException(
+                    new FileNotFoundException(String.format("File not found at: %s", file.getAbsolutePath())));
         }
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(data);
@@ -113,6 +107,11 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
     @Override
     public boolean isEmpty() {
         return getAll().isEmpty();
+    }
+
+    @Override
+    public void requiresNonNull() {
+        getAll().orElseThrow(() -> new NonInstantiatedDaoException("The file field of Dao is an empty file or a file not containing any list of the corresponding entity."));
     }
 
     @Override

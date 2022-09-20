@@ -19,18 +19,16 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
 
     //methods
     @Override
-    public void save(A obj) {
+    public void save(A object) {
         if (isEmpty()) {
-            throw new NonInstantiatedDaoException("List field of DAO is null.");
+            data = new ArrayList<>();
         }
-        data.add(obj);
+        data.add(object);
     }
 
     @Override
     public Optional<A> get(int id) {
-        if (isEmpty()) {
-            throw new NonInstantiatedDaoException("List field of DAO is null.");
-        }
+        requiresNonNull();
         return getAll().get().stream()
                 .filter(obj -> obj.getId() == id)
                 .findAny();
@@ -38,9 +36,7 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
 
     @Override
     public Optional<A> get(A object) {
-        if (isEmpty()) {
-            throw new NonInstantiatedDaoException("List field of DAO is null");
-        }
+        requiresNonNull();
         return getAll().get().stream()
                 .filter(obj -> obj.equals(object))
                 .findAny();
@@ -48,17 +44,13 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
 
     @Override
     public boolean remove(int id) {
-        if (isEmpty()) {
-            throw new NonInstantiatedDaoException("List field of DAO is null");
-        }
+        requiresNonNull();
         return data.removeIf(obj -> obj.getId() == id);
     }
 
     @Override
     public boolean remove(A object) {
-        if (isEmpty()) {
-            throw new NonInstantiatedDaoException("List field of DAO is null");
-        }
+        requiresNonNull();
         return data.remove(object);
     }
 
@@ -70,9 +62,9 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
     @Override
     public void saveAll(List<A> objects) {
         if (isEmpty()) {
-            throw new NonInstantiatedDaoException("List field of DAO is null");
+            data = new ArrayList<>();
         }
-        this.data.addAll(objects);
+        data.addAll(objects);
     }
 
     @Override
@@ -90,6 +82,10 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
         return getAll().isEmpty();
     }
 
+    @Override
+    public void requiresNonNull() {
+        getAll().orElseThrow(() -> new NonInstantiatedDaoException("The data field of Dao is null."));
+    }
     @Override
     public int getMaxId() {
         return getAll().orElseGet(ArrayList::new).stream()

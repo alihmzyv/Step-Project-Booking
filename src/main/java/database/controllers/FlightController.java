@@ -12,14 +12,20 @@ import java.util.function.Predicate;
 public class FlightController {
     private final FlightService fs;
 
+
+    //constructors
     public FlightController(FlightService fs) {
         this.fs = fs;
     }
 
+
+    //getter and setters
     public FlightService getService() {
         return fs;
     }
 
+
+    //methods
     public void saveFlight(Flight flight) {
         fs.saveFlight(flight);
     }
@@ -36,7 +42,11 @@ public class FlightController {
     }
 
     public void setAllFlightsTo(List<Flight> flights) {
-        fs.setAllFlightsTo(flights);
+        fs.setAllFlights(flights);
+    }
+
+    public void updateAllFlights() {
+        fs.updateAllFlights();
     }
 
     public void displayFlight(int flightId, Console console) {
@@ -51,9 +61,6 @@ public class FlightController {
         fs.displayFlights(filter, console);
     }
 
-    public void updateAllFlights() {
-        fs.updateAllFlights();
-    }
     public boolean isPresent() {
         return fs.isPresent();
     }

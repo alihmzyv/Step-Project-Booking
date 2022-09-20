@@ -23,6 +23,7 @@ public class Database {
     private final UserController ucInMemory;
 
 
+    //constructors
     public Database() {
         fcFile = new FlightController(
                 new FlightService(
@@ -49,6 +50,8 @@ public class Database {
         );
     }
 
+
+    //methods
     public FlightController getFcInMemory() {
         return fcInMemory;
     }
@@ -76,8 +79,7 @@ public class Database {
             pw.println(String.format("User = %d;", ucInMemory.getMaxId()));
         }
         catch (IOException exc) {
-            exc.printStackTrace();
-            System.exit(1);
+            throw new LocalDatabaseException(exc);
         }
     }
 

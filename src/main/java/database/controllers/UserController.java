@@ -34,7 +34,7 @@ public class UserController {
     }
 
     public void setAllUsersTo(List<User> data) {
-        us.setAllUsersTo(data);
+        us.setAllUsers(data);
     }
 
     public boolean removeUser(User user) {

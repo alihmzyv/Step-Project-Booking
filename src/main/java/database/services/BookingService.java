@@ -9,10 +9,14 @@ import java.util.Optional;
 public class BookingService {
     private final DAO<Booking> dao;
 
+
+    //constructors
     public BookingService(DAO<Booking> dao) {
         this.dao = dao;
     }
 
+
+    //methods
     public void saveBooking(Booking booking) {
         dao.save(booking);
     }
@@ -29,7 +33,7 @@ public class BookingService {
         return dao.getAll();
     }
 
-    public void setAllBookingsTo(List<Booking> data) {
+    public void setAllBookings(List<Booking> data) {
         dao.setAll(data);
     }
 
@@ -39,6 +43,10 @@ public class BookingService {
 
     public boolean isEmpty() {
         return dao.isEmpty();
+    }
+
+    public void requiresNonNull() {
+        dao.requiresNonNull();
     }
 
     public int getMaxId() {

@@ -5,9 +5,6 @@ import database.services.BookingService;
 import entities.Booking;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +25,7 @@ class BookingServiceInMemoryTest {
     void setAllBookingsTo() {
         BookingService bs = new BookingService(new DaoBookingInMemory(randomBookings));
         List<Booking> randomBookings2 = Booking.getRandom(100);
-        bs.setAllBookingsTo(randomBookings2);
+        bs.setAllBookings(randomBookings2);
         assertEquals(Optional.of(randomBookings2), bs.getAllBookings());
     }
 

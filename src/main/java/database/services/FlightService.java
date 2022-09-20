@@ -1,6 +1,7 @@
 package database.services;
 
 import database.dao.DAO;
+import database.dao.DaoFile;
 import entities.Flight;
 import entities.Passenger;
 import exceptions.database_exceptions.NoSuchFlightException;
@@ -20,10 +21,14 @@ import java.util.stream.Collectors;
 public class FlightService {
     private final DAO<Flight> dao;
 
+
+    //constructors
     public FlightService(DAO<Flight> dao) {
         this.dao = dao;
     }
 
+
+    //methods
     public void saveFlight(Flight flight) {
         dao.save(flight);
     }
@@ -36,120 +41,126 @@ public class FlightService {
         return dao.get(flight);
     }
 
-    public Optional<List<Flight>> getFlights(Predicate<Flight> filter) {
-        if (isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(
-                getAllFlights().get().stream()
+    /*
+     * Returns the list of flights in the database that matches the given predicate
+     * * filter - the predicate against which flights will be tested
+     * * returns an empty list if there is no flight matching the filter.
+     * * throws NonInstantiatedDaoException if calling getAll() on dao would return empty Optional
+     */
+    public List<Flight> getFlights(Predicate<Flight> filter) {
+        requiresNonNull();
+        return getAllFlights().get().stream()
                 .filter(filter)
-                .collect(Collectors.toCollection(ArrayList::new)));
+                .collect(Collectors.toCollection(ArrayList::new));
     }
+
     public Optional<List<Flight>> getAllFlights() {
         return dao.getAll();
     }
 
-    public void setAllFlightsTo(List<Flight> flights) {
+    public void setAllFlights(List<Flight> flights) {
         dao.setAll(flights);
     }
+
+    /*
+     * Replaces the flights in the database whose:
+     * * capacity is zero or the dateTimeOfDeparture is already before than the current date-time
+     * * throws NonInstantiatedDaoException if calling getAll() on dao would return empty Optional
+     */
     public void updateAllFlights() {
-        if (isPresent()) {
-            List<Flight> updatedFlights = getAllFlights().orElseGet(ArrayList::new).stream()
-                    .map(flight -> {
-                        if (flight.getDateTimeOfDeparture().compareTo(LocalDateTime.now()) <= 0 ||
-                                flight.getCapacity() == 0) {
-                            return Flight.getRandom(1, 168, ChronoUnit.HOURS);
-                        }
-                        return flight;
+        requiresNonNull();
+        List<Flight> updatedFlights = getAllFlights().get().stream()
+                .map(flight -> {
+                    if (flight.getDateTimeOfDeparture().compareTo(LocalDateTime.now()) <= 0 ||
+                            flight.getCapacity() == 0) {
+                        return Flight.getRandom(1, 168, ChronoUnit.HOURS);
+                    }
+                    return flight;
                     })
-                    .collect(Collectors.toList());
-            setAllFlightsTo(updatedFlights);
-        }
+                .collect(Collectors.toList());
+        setAllFlights(updatedFlights);
     }
 
-    public boolean incrementCapacity(Flight which) {
-        if (isEmpty()) {
-            throw new NonInstantiatedDaoException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
-        }
+    /*
+     * Increases the capacity of the given flight by 1.
+     * * throws NonInstantiatedDaoException if calling getAll() on dao would return empty Optional
+     * * throws NoSuchFlightException if the database does not contain the given flight
+     */
+    public void incrementCapacity(Flight which) {
+        requiresNonNull();
         List<Flight> flights = getAllFlights().get();
-        if (!flights.contains(which)) {
-            throw new NoSuchFlightException(String.format("There is no such flight in database: %s", which));
-        }
         flights.stream()
                 .filter(flight -> flight.equals(which))
                 .findAny()
-                .get()
+                .orElseThrow(() ->
+                        new NoSuchFlightException(String.format("There is no such flight in database: %s", which)))
                 .incrementCapacity();
-        setAllFlightsTo(flights);
-        return true;
+        setAllFlights(flights);
     }
 
-    public boolean decrementCapacity(Flight which) {
-        if (isEmpty()) {
-            throw new NonInstantiatedDaoException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
-        }
+    /*
+     * Decreases the capacity of the given flight by 1.
+     * * throws NonInstantiatedDaoException if calling getAll() on dao would return empty Optional
+     * * throws NoSuchFlightException if the database does not contain the given flight
+     */
+    public void decrementCapacity(Flight which) {
+        requiresNonNull();
         List<Flight> flights = getAllFlights().get();
-        if (!flights.contains(which)) {
-            throw new NoSuchFlightException(String.format("There is no such flight in database: %s", which));
-        }
         flights.stream()
                 .filter(flight -> flight.equals(which))
                 .findAny()
-                .get()
+                .orElseThrow(() ->
+                        new NoSuchFlightException(String.format("There is no such flight in database: %s", which)))
                 .decrementCapacity();
-        setAllFlightsTo(flights);
-        return true;
+        setAllFlights(flights);
     }
 
-    public boolean addPassenger(Flight which, Passenger whom) {
-        if (isEmpty()) {
-            throw new NonInstantiatedDaoException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
-        }
+    /*
+     * Adds the given passenger to the passengers list of the given flight.
+     * * which - the Flight to which Passenger to be added
+     * * whom - the Passenger to be added
+     * * throws NonInstantiatedDaoException if calling getAll() on dao would return empty Optional
+     * * throws NoSuchFlightException if the database does not contain the given flight
+     */
+    public void addPassenger(Flight which, Passenger whom) {
+        requiresNonNull();
         List<Flight> flights = getAllFlights().get();
-        if (!flights.contains(which)) {
-            throw new NoSuchFlightException(String.format("There is no such flight in database: %s", which));
-        }
         flights.stream()
                 .filter(flight -> flight.equals(which))
                 .findAny()
-                .get()
+                .orElseThrow(() ->
+                        new NoSuchFlightException(String.format("There is no such flight in database: %s", which)))
                 .addPassenger(whom);
-        setAllFlightsTo(flights);
-        return true;
+        setAllFlights(flights);
     }
 
+    /*
+     * If the given flight contains the passenger, removes the passenger from the passengers list of flight,
+     * and returns true, otherwise returns false
+     * * which - the Flight from which the passenger should be removed
+     * * whom - the Passenger to be removed
+     * * throws NonInstantiatedDaoException if calling getAll() on dao would return empty Optional
+     * * throws NoSuchFlightException if the database does not contain the given flight
+     */
     public boolean removePassenger(Flight which, Passenger whom) {
-        if (isEmpty()) {
-            throw new NonInstantiatedDaoException("""
-                    Database Not Initialized.
-                    (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
-        }
+        requiresNonNull();
         List<Flight> flights = getAllFlights().get();
-        if (!flights.contains(which)) {
-            throw new NoSuchFlightException(String.format("There is no such flight in database: %s", which));
-        }
         if (flights.stream()
                 .filter(flight -> flight.equals(which))
                 .findAny()
-                .get()
+                .orElseThrow(() -> new NoSuchFlightException(String.format("There is no such flight in database: %s", which)))
                 .removePassenger(whom)) {
-            setAllFlightsTo(flights);
+            setAllFlights(flights);
             return true;
         }
-        else {
-            return false;
-        }
+        return false;
     }
+
+    /*
+     * Displays the flight in the database whose id matches the given id,
+     * otherwise if there is no such flight, displays "No Flight" message.
+     * * throws NonInstantiatedDaoException if calling getAll() on dao would return empty Optional
+     */
     public void displayFlight(int flightId, Console console) {
         Optional<Flight> flightOpt = getFlight(flightId);
         if (flightOpt.isEmpty()) {
@@ -164,30 +175,24 @@ public class FlightService {
                 130);
     }
 
+    /*
+     * Displays the flights whose dateTimeOfDeparture is before the current date-time with added the given duration,
+     * if there is no such a flight in the database, display "No Flight" message.
+     * * throws NonInstantiatedDaoException if calling getAll() on dao would return empty Optional
+     */
     public void displayFlights (Duration withinNext, Console console) {
-        if (isEmpty()) {
-            System.out.println("THERE IS NO FLIGHT AT ALL.");
-            return;
-        }
-        List<Flight> flightsWithinNext = getFlights(flight ->
-                flight.getDateTimeOfDeparture().isBefore(LocalDateTime.now().plus(withinNext))).get();
-        if (flightsWithinNext.isEmpty()) {
-            System.out.println("THERE IS NO FLIGHT MATCHING YOUR INPUT.");
-            return;
-        }
-        console.printAsTable(
-                String.format("ALL AVAILABLE FLIGHTS WITHIN NEXT %s", Helper.getHumanReadableDuration(withinNext)),
-                List.of("ID", "FLIGHT", "FROM", "TO", "TIME OF DEPARTURE", "TIME OF LANDING", "FLIGHT DURATION"),
-                flightsWithinNext,
-                125);
+        Predicate<Flight> filter = flight ->
+                flight.getDateTimeOfDeparture().isBefore(LocalDateTime.now().plus(withinNext));
+        displayFlights(filter, console);
     }
 
+    /*
+     * Displays the flights which is matches the given predicate,
+     * if there is no such a flight in the database, display "No Flight" message.
+     * * throws NonInstantiatedDaoException if calling getAll() on dao would return empty Optional
+     */
     public void displayFlights(Predicate<Flight> filter, Console console) {
-        if (isEmpty()) {
-            System.out.println("THERE IS NO FLIGHT AT ALL.");
-            return;
-        }
-        List<Flight> flightsFiltered = getFlights(filter).get();
+        List<Flight> flightsFiltered = getFlights(filter);
         if (flightsFiltered.isEmpty()) {
             System.out.println("THERE IS NO FLIGHT MATCHING YOUR INPUT.");
             return;
@@ -205,6 +210,9 @@ public class FlightService {
     }
     public boolean isEmpty() {
         return dao.isEmpty();
+    }
+    public void requiresNonNull() {
+        dao.requiresNonNull();
     }
     public int getMaxId() {
         return dao.getMaxId();

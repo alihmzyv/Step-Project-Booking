@@ -26,7 +26,7 @@ public class UserServiceInMemoryTest {
     void setAllUsersTo() {
         UserService us = new UserService(new DaoUserInMemory(randomUsers));
         List<User> randomUsers2 = User.getRandom(100);
-        us.setAllUsersTo(randomUsers2);
+        us.setAllUsers(randomUsers2);
         assertEquals(Optional.of(randomUsers2), us.getAllUsers());
     }
 
@@ -111,7 +111,8 @@ public class UserServiceInMemoryTest {
         Booking randomBooking = Booking.getRandom();
         UserService us = new UserService(new DaoUserInMemory(randomUsers));
         us.saveUser(randomUser);
-        assertTrue(us.addBooking(randomUser, randomBooking));
+        us.addBooking(randomUser, randomBooking);
+        assertTrue(us.getUser(randomUser).get().hasBooking(randomBooking));
     }
 
     @Test

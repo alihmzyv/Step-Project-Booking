@@ -7,6 +7,5 @@
     <file url="file://$PROJECT_DIR$/src/main/java/database/local_database_files/users.bin" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/test/java/database/dao/dao_file/database_files/flights_no_flights.bin" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/test/java/database/file/service/booking/bookings.bin" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/src/test/java/database/file/service/booking/bookings.bin" charset="windows-1251" />
   </component>
 </project>

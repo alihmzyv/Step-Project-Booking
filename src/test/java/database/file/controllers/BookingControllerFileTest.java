@@ -227,7 +227,16 @@ class BookingControllerFileTest {
                 us,
                 fs
         );
-        assertThrowsExactly(NonInstantiatedDaoException.class, () -> bc.saveBooking(Booking.getRandom()));
+        Booking randomBooking = Booking.getRandom();
+        User user = randomBooking.getUser();
+        Flight flight = randomBooking.getFlight();
+        int capacityBeforeBooking = flight.getCapacity();
+        Passenger passenger = randomBooking.getPassenger();
+        bc.saveBooking(randomBooking);
+        assertEquals(Optional.of(randomBooking), bc.getBooking(randomBooking));
+        assertTrue(us.getUser(user).get().hasBooking(randomBooking));
+        assertEquals(fs.getFlight(flight).get().getCapacity(), capacityBeforeBooking - 1);
+        assertTrue(fs.getFlight(flight).get().hasPassenger(passenger));
     }
 
     @Test

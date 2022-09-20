@@ -71,7 +71,7 @@ class FlightServiceFileTest {
         makeFull();
         FlightService fs = new FlightService(new DaoFlightFile(file));
         List<Flight> flights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
-        fs.setAllFlightsTo(flights2);
+        fs.setAllFlights(flights2);
         assertEquals(Optional.of(flights2), fs.getAllFlights());
     }
 
@@ -80,7 +80,7 @@ class FlightServiceFileTest {
         makeEmpty();
         FlightService fs = new FlightService(new DaoFlightFile(file));
         List<Flight> flights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
-        fs.setAllFlightsTo(flights2);
+        fs.setAllFlights(flights2);
         assertEquals(Optional.of(flights2), fs.getAllFlights());
     }
 
@@ -89,7 +89,7 @@ class FlightServiceFileTest {
         FlightService fs = new FlightService(new DaoFlightFile(fileNonExisting));
         List<Flight> flights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
         LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
-                () -> fs.setAllFlightsTo(flights2));
+                () -> fs.setAllFlights(flights2));
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
 
@@ -111,7 +111,7 @@ class FlightServiceFileTest {
     void isPresentTest3() {
         FlightService fs = new FlightService(new DaoFlightFile(fileNonExisting));
         LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
-                () -> fs.isPresent());
+                fs::isPresent);
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
 
@@ -133,7 +133,7 @@ class FlightServiceFileTest {
     void isEmptyTest3() {
         FlightService fs = new FlightService(new DaoFlightFile(fileNonExisting));
         LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
-                () -> fs.isEmpty());
+                fs::isEmpty);
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
 
@@ -234,7 +234,7 @@ class FlightServiceFileTest {
         flight.setDateTimeOfDeparture(LocalDateTime.now()); //already before than LocalDateTime.now()
         List<Flight> flightsCopy = new ArrayList<>(fs.getAllFlights().get());
         flightsCopy.add(flight);
-        fs.setAllFlightsTo(flightsCopy);
+        fs.setAllFlights(flightsCopy);
         fs.updateAllFlights();
         assertNotEquals(Optional.of(flightsCopy), fs.getAllFlights());
     }
@@ -247,7 +247,7 @@ class FlightServiceFileTest {
         flight.setCapacity(0); //already before than LocalDateTime.now()
         List<Flight> flightsCopy = new ArrayList<>(fs.getAllFlights().get());
         flightsCopy.add(flight);
-        fs.setAllFlightsTo(flightsCopy);
+        fs.setAllFlights(flightsCopy);
         fs.updateAllFlights();
         assertNotEquals(Optional.of(flightsCopy), fs.getAllFlights());
     }
