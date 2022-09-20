@@ -1,1 +1,3 @@
-
+Flight = 100;
+Booking = 2;
+User = 1;

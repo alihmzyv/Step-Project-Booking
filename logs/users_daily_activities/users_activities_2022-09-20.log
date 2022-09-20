@@ -1,2 +1,14 @@
 00:35:00 BookingApp - alihmzyv logged in.
 00:35:18 BookingApp - alihmzyv searched for a flight with id: 65.
+12:38:04 BookingApp - Registered: User{name='Ali', surname='hamzayev', username='alihmzyv'}
+12:38:04 BookingApp - alihmzyv logged in.
+12:38:25 BookingApp - alihmzyv searched for a flight with id: 2.
+12:39:08 BookingApp - alihmzyv made the booking: Ali Hamzayev || SQ6340 || Khimki (SVO) || Paris (CDG) || September 20, 2022, 9:35 PM || September 20, 2022, 12:39 PM.
+12:39:08 BookingApp - alihmzyv made the booking: Konul Hamzayeva || SQ6340 || Khimki (SVO) || Paris (CDG) || September 20, 2022, 9:35 PM || September 20, 2022, 12:39 PM.
+12:39:20 BookingApp - alihmzyv logged out.
+12:39:35 BookingApp - alihmzyv logged in.
+12:39:50 BookingApp - alihmzyv searched for a flight with id: 2.
+12:40:00 BookingApp - alihmzyv cancelled the booking: Ali Hamzayev || SQ6340 || Khimki (SVO) || Paris (CDG) || September 20, 2022, 9:35 PM || September 20, 2022, 12:39 PM.
+12:40:09 BookingApp - alihmzyv logged out.
+12:40:24 BookingApp - alihmzyv logged in.
+12:40:34 BookingApp - alihmzyv logged out.
