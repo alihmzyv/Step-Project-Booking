@@ -1,9 +1,11 @@
 *** IN ORDER TO CHANGES TO THE LOCAL DATABASE, YOU SHOULD ALWAYS LEAVE AS 9 - END SESSION, THEN 7 - EXIT.
-OTHERWISE REGISTRATION, BOOKING, CANCEL BOOKING OPERATIONS WILL BE CONSIDERED AS NOT HAPPENED. ***
+OTHERWISE REGISTRATION, BOOKING, CANCEL BOOKING OPERATIONS WILL BE CONSIDERED AS NOT HAPPENED SINCE THE LOCAL DATABASE
+IS ONLY UPDATED WHEN 7 - EXIT IS CHOSEN FOR THE SAKE OF PERFORMANCE ***
 
 Hello !
 To continue with any of the menu items, you can enter the number of the menu item.
 e.g., to register, type "2" and press enter button.
+You can find the daily activities of users in "logs/users_daily_activities" path.
 
                                         MAIN MENU:
 1 - LOGIN - if you have registered (2 - REGISTER), you can choose this. You will be required to enter your username and
