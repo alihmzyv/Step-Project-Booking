@@ -169,7 +169,7 @@ public class FlightService {
         }
         console.printAsRow(
                 "FLIGHT",
-                List.of("ID", "FLIGHT", "FROM", "TO", "TIME OF DEPARTURE", "TIME OF LANDING",
+                List.of("ID", "FLIGHT", "FROM", "TO", "DATE-TIME OF DEPARTURE", "DATE-TIME OF LANDING",
                         "FLIGHT DURATION", "CAPACITY"),
                 List.of(flightOpt.get(), flightOpt.get().getCapacity()),
                 130);
@@ -199,7 +199,7 @@ public class FlightService {
         }
         console.printAsTable(
                 "ALL FLIGHTS MATCHING",
-                List.of("ID", "FLIGHT", "FROM", "TO", "TIME OF DEPARTURE", "TIME OF LANDING", "FLIGHT DURATION"),
+                List.of("ID", "FLIGHT", "FROM", "TO", "DATE-TIME OF DEPARTURE", "DATE-TIME OF LANDING", "FLIGHT DURATION"),
                 flightsFiltered,
                 125
         );

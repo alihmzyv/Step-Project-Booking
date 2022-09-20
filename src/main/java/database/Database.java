@@ -89,9 +89,9 @@ public class Database {
     private void updateLocaleIdCounters() {
         try(PrintWriter pw = new PrintWriter(
                 new FileWriter("src/main/java/database/local_database_files/idCounters.txt"))) {
-            pw.println(String.format("Flight = %d;", Flight.getIdCounter()));
-            pw.println(String.format("Booking = %d;", Booking.getIdCounter()));
-            pw.println(String.format("User = %d;", User.getIdCounter()));
+            pw.println(String.format("Flight = %d;", fcInMemory.getMaxId() + 1));
+            pw.println(String.format("Booking = %d;", bcInMemory.getMaxId() + 1));
+            pw.println(String.format("User = %d;", ucInMemory.getMaxId() + 1));
         }
         catch (IOException exc) {
             throw new LocalDatabaseException(exc);
