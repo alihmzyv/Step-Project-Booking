@@ -3,8 +3,8 @@ package database.services;
 import database.dao.DAO;
 import entities.Flight;
 import entities.Passenger;
-import exceptions.booking_menu_exceptions.NoSuchFlightException;
-import exceptions.booking_menu_exceptions.NonInitializedDatabaseException;
+import exceptions.database_exceptions.NoSuchFlightException;
+import exceptions.database_exceptions.NonInstantiatedDaoException;
 import helpers.Helper;
 import io.Console;
 
@@ -50,7 +50,7 @@ public class FlightService {
     }
 
     public void setAllFlightsTo(List<Flight> flights) {
-        dao.setAllTo(flights);
+        dao.setAll(flights);
     }
     public void updateAllFlights() {
         if (isPresent()) {
@@ -69,14 +69,14 @@ public class FlightService {
 
     public boolean incrementCapacity(Flight which) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
+            throw new NonInstantiatedDaoException("""
                     Database Not Initialized.
                     (List field of DAO is null
                     or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
         }
         List<Flight> flights = getAllFlights().get();
         if (!flights.contains(which)) {
-            return false;
+            throw new NoSuchFlightException(String.format("There is no such flight in database: %s", which));
         }
         flights.stream()
                 .filter(flight -> flight.equals(which))
@@ -89,7 +89,7 @@ public class FlightService {
 
     public boolean decrementCapacity(Flight which) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
+            throw new NonInstantiatedDaoException("""
                     Database Not Initialized.
                     (List field of DAO is null
                     or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
@@ -109,7 +109,7 @@ public class FlightService {
 
     public boolean addPassenger(Flight which, Passenger whom) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
+            throw new NonInstantiatedDaoException("""
                     Database Not Initialized.
                     (List field of DAO is null
                     or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
@@ -129,14 +129,14 @@ public class FlightService {
 
     public boolean removePassenger(Flight which, Passenger whom) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
+            throw new NonInstantiatedDaoException("""
                     Database Not Initialized.
                     (List field of DAO is null
                     or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
         }
         List<Flight> flights = getAllFlights().get();
         if (!flights.contains(which)) {
-            return false;
+            throw new NoSuchFlightException(String.format("There is no such flight in database: %s", which));
         }
         if (flights.stream()
                 .filter(flight -> flight.equals(which))

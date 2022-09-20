@@ -35,10 +35,17 @@ public enum Airport implements Serializable {
 
     //methods
     //static methods
+    /*
+     * returns a random enum constant of Airport
+     */
     public static Airport getRandom() {
         return Airport.values()[new Random().nextInt(Airport.values().length)];
     }
 
+    /*
+     * returns a random enum constant of Airport, different from the specified Airport enum constant
+     * that - the enum constant which should not be returned
+     */
     public static Airport getRandomExcept(Airport that) {
         return Arrays.stream(Airport.values())
                 .filter(airport -> airport != that)
@@ -47,7 +54,7 @@ public enum Airport implements Serializable {
 
     //instance methods
     /*
-     * returns the String returned by calling .toString on the field "city"
+     * returns the String returned by calling toString() on the field "city"
      */
     public String getCity() {
         return city.toString();

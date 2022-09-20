@@ -4,8 +4,8 @@ import entities.Booking;
 import entities.Flight;
 import entities.Passenger;
 import entities.User;
-import exceptions.booking_menu_exceptions.InsufficientCapacityException;
-import exceptions.booking_menu_exceptions.NoSuchFlightException;
+import exceptions.database_exceptions.InsufficientCapacityException;
+import exceptions.database_exceptions.NoSuchFlightException;
 
 import java.util.List;
 import java.util.stream.Collectors;

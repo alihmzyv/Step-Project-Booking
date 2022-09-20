@@ -1,8 +1,6 @@
 package database.in_memory.dao;
 
 import database.dao.DaoBookingInMemory;
-import database.dao.DaoBookingInMemory;
-import entities.Booking;
 import entities.Booking;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +35,7 @@ class DaoBookingInMemoryTest {
     void setAllTo() {
         DaoBookingInMemory daoBookingInMemory = new DaoBookingInMemory(randomBookings);
         List<Booking> randomBookings2 = Booking.getRandom(100);
-        daoBookingInMemory.setAllTo(randomBookings2);
+        daoBookingInMemory.setAll(randomBookings2);
         assertEquals(Optional.of(randomBookings2), daoBookingInMemory.getAll());
     }
 

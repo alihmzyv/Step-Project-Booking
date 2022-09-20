@@ -36,6 +36,9 @@ public enum Airline implements Serializable {
 
     //methods
     //static methods
+    /*
+     * returns a random enum constant of Airline
+     */
     public static Airline getRandom() {
         return Airline.values()[new Random().nextInt(Airline.values().length)];
     }

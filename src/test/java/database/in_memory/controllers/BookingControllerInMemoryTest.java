@@ -105,7 +105,7 @@ class BookingControllerInMemoryTest {
         assertEquals(Optional.of(randomBooking), bc.getBooking(randomBooking));
         assertTrue(us.getUser(user).get().hasBooking(randomBooking));
         assertEquals(capacityBeforeBooking - 1, fs.getFlight(flight).get().getCapacity());
-        assertTrue(fs.getFlight(flight).get().containsPassenger(passenger));
+        assertTrue(fs.getFlight(flight).get().hasPassenger(passenger));
     }
 
     @Test
@@ -174,7 +174,7 @@ class BookingControllerInMemoryTest {
         assertEquals(Optional.empty(), bc.getBooking(randomBooking));
         assertFalse(us.getUser(user).get().hasBooking(randomBooking));
         assertEquals(capacityBeforeRemoving + 1, fs.getFlight(flight).get().getCapacity());
-        assertFalse(fs.getFlight(flight).get().containsPassenger(passenger));
+        assertFalse(fs.getFlight(flight).get().hasPassenger(passenger));
     }
 
     @Test

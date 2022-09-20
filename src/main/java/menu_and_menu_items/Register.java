@@ -1,11 +1,10 @@
 package menu_and_menu_items;
 
 import entities.User;
-import exceptions.booking_menu_exceptions.BookingMenuException;
+import exceptions.menu_exceptions.MenuException;
 import helpers.Helper;
 
 import java.io.File;
-import java.util.regex.Pattern;
 
 public class Register extends MenuItem {
     public Register (int id) {
@@ -14,7 +13,7 @@ public class Register extends MenuItem {
 
 
     @Override
-    public void run() throws BookingMenuException{
+    public void run() throws MenuException {
         String name = getNameInput();
         String surname = getSurnameInput();
         String username = getUsernameInput();

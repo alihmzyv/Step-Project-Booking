@@ -3,10 +3,9 @@ package database.services;
 import database.dao.DAO;
 import entities.Booking;
 import entities.User;
-import exceptions.booking_menu_exceptions.NoSuchUserException;
-import exceptions.booking_menu_exceptions.NonInitializedDatabaseException;
+import exceptions.database_exceptions.NoSuchUserException;
+import exceptions.database_exceptions.NonInstantiatedDaoException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,10 +37,10 @@ public class UserService {
 
     public boolean addBooking(User which, Booking booking) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
+            throw new NonInstantiatedDaoException("""
                     Database Not Initialized.
                     (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.)""");
         }
         List<User> users = getAllUsers().get();
         if (!users.contains(which)) {
@@ -58,10 +57,10 @@ public class UserService {
 
     public boolean removeBooking(User which, Booking booking) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
+            throw new NonInstantiatedDaoException("""
                     Database Not Initialized.
                     (List field of DAO is null
-                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");
+                    or File field of DAO is an empty file or a file not containing a List of corresponding entity.)""");
         }
         List<User> users = getAllUsers().get();
         if (!users.contains(which)) {
@@ -84,7 +83,7 @@ public class UserService {
     }
 
     public void setAllUsersTo(List<User> data) {
-        dao.setAllTo(data);
+        dao.setAll(data);
     }
 
     public Optional<List<User>> getAllUsers() {
@@ -104,7 +103,7 @@ public class UserService {
     }
     public boolean contains(String username) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("""
+            throw new NonInstantiatedDaoException("""
                     Database Not Initialized.
                     (List field of DAO is null
                     or File field of DAO is an empty file or a file not containing a List of corresponding entity.""");

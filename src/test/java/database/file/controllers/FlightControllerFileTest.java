@@ -4,8 +4,8 @@ import database.controllers.FlightController;
 import database.dao.DaoFlightFile;
 import database.services.FlightService;
 import entities.Flight;
-import exceptions.booking_menu_exceptions.FileDatabaseException;
-import exceptions.booking_menu_exceptions.NonInitializedDatabaseException;
+import exceptions.database_exceptions.LocalDatabaseException;
+import exceptions.database_exceptions.NonInstantiatedDaoException;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -19,17 +19,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FlightControllerFileTest {
 
-    List<Flight> flights = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
-    Flight flight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
+    List<Flight> randomFlights = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
+    Flight randomFlight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
     private final File file = new File("src/test/java/database/file/files/flights.bin");
     private final File fileNonExisting = new File("none.bin");
 
     private void makeFull() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-            oos.writeObject(flights);
+            oos.writeObject(randomFlights);
         }
         catch (IOException exc) {
-            throw new FileDatabaseException(exc);
+            throw new LocalDatabaseException(exc);
         }
     }
 
@@ -38,105 +38,15 @@ class FlightControllerFileTest {
             new FileOutputStream(file).close();
         }
         catch (IOException exc) {
-            throw new FileDatabaseException(exc);
+            throw new LocalDatabaseException(exc);
         }
-    }
-
-    @Test
-    void saveFlightTest1() {
-        makeFull();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        fc.saveFlight(flight);
-        List<Flight> flightsCopy = new ArrayList<>(flights);
-        flightsCopy.add(flight);
-        assertEquals(Optional.of(flightsCopy), fc.getAllFlights());
-    }
-
-    @Test
-    void saveFlightTest2() {
-        makeEmpty();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        fc.saveFlight(flight);
-        assertEquals(Optional.of(List.of(flight)), fc.getAllFlights());
-    }
-
-    @Test
-    void saveFlightTest3() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(fileNonExisting)));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> fc.saveFlight(flight));
-        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
-    }
-
-
-    @Test
-    void getWithIdTest1() {
-        makeFull();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        assertEquals(Optional.empty(), fc.getFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS).getId()));
-    }
-
-    @Test
-    void getWithIdTest2() {
-        makeFull();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        Flight randomFlight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        fc.saveFlight(randomFlight);
-        assertEquals(Optional.of(randomFlight), fc.getFlight(randomFlight.getId()));
-    }
-
-    @Test
-    void getWithIdTest3() {
-        makeEmpty();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        assertThrowsExactly(NonInitializedDatabaseException.class, () -> fc.getFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS).getId()));
-    }
-
-    @Test
-    void getWithIdTest4() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(fileNonExisting)));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> fc.getFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS).getId()));
-        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
-    }
-
-    @Test
-    void getWithObjTest1() {
-        makeFull();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        Flight randomFlight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        assertEquals(Optional.empty(), fc.getFlight(randomFlight));
-    }
-
-    @Test
-    void getWithObjTest2() {
-        makeFull();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        Flight randomFlight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
-        fc.saveFlight(randomFlight);
-        assertEquals(Optional.of(randomFlight), fc.getFlight(randomFlight));
-    }
-
-    @Test
-    void getWithObjTest3() {
-        makeEmpty();
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        assertThrowsExactly(NonInitializedDatabaseException.class, () -> fc.getFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS)));
-    }
-
-    @Test
-    void getWithObjTest4() {
-        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(fileNonExisting)));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> fc.getFlight(Flight.getRandom(1, 168, ChronoUnit.HOURS)));
-        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
 
     @Test
     void getAllFlightsTest1() {
         makeFull();
         FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
-        assertEquals(Optional.of(flights), fc.getAllFlights());
+        assertEquals(Optional.of(randomFlights), fc.getAllFlights());
     }
 
     @Test
@@ -149,7 +59,7 @@ class FlightControllerFileTest {
     @Test
     void getAllFlightsTest3() {
         FlightController fc = new FlightController(new FlightService(new DaoFlightFile(fileNonExisting)));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
                 fc::getAllFlights);
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
@@ -176,8 +86,142 @@ class FlightControllerFileTest {
     void setAllFlightsToTest3() {
         FlightController fc = new FlightController(new FlightService(new DaoFlightFile(fileNonExisting)));
         List<Flight> flights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
                 () -> fc.setAllFlightsTo(flights2));
+        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
+    }
+
+    @Test
+    void isPresentTest1() {
+        makeFull();
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        assertTrue(fc.isPresent());
+    }
+
+    @Test
+    void isPresentTest2() {
+        makeEmpty();
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        assertFalse(fc.isPresent());
+    }
+
+    @Test
+    void isPresentTest3() {
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(fileNonExisting)));
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
+                () -> fc.isPresent());
+        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
+    }
+
+    @Test
+    void isEmptyTest1() {
+        makeFull();
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        assertFalse(fc.isEmpty());
+    }
+
+    @Test
+    void isEmptyTest2() {
+        makeEmpty();
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        assertTrue(fc.isEmpty());
+    }
+
+    @Test
+    void isEmptyTest3() {
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(fileNonExisting)));
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
+                () -> fc.isEmpty());
+        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
+    }
+
+    @Test
+    void saveFlightTest1() {
+        makeFull();
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        fc.saveFlight(randomFlight);
+        assertTrue(fc.isPresent());
+        assertTrue(fc.getAllFlights().get().stream()
+                .anyMatch(flight -> flight.equals(randomFlight)));
+    }
+
+    @Test
+    void saveFlightTest2() {
+        makeEmpty();
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        fc.saveFlight(randomFlight);
+        assertTrue(fc.isPresent());
+        assertTrue(fc.getAllFlights().get().stream()
+                .anyMatch(flight -> flight.equals(randomFlight)));
+    }
+
+    @Test
+    void saveFlightTest3() {
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(fileNonExisting)));
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
+                () -> fc.saveFlight(randomFlight));
+        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
+    }
+
+
+    @Test
+    void getWithIdTest1() {
+        makeFull();
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        assertEquals(Optional.empty(), fc.getFlight(randomFlight.getId()));
+    }
+
+    @Test
+    void getWithIdTest2() {
+        makeFull();
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        fc.saveFlight(randomFlight);
+        assertEquals(Optional.of(randomFlight), fc.getFlight(randomFlight.getId()));
+    }
+
+    @Test
+    void getWithIdTest3() {
+        makeEmpty();
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        assertThrowsExactly(NonInstantiatedDaoException.class, () -> fc.getFlight(randomFlight.getId()));
+    }
+
+    @Test
+    void getWithIdTest4() {
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(fileNonExisting)));
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
+                () -> fc.getFlight(randomFlight.getId()));
+        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
+    }
+
+    @Test
+    void getWithObjTest1() {
+        makeFull();
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        assertEquals(Optional.empty(), fc.getFlight(randomFlight));
+    }
+
+    @Test
+    void getWithObjTest2() {
+        makeFull();
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        Flight randomFlight = Flight.getRandom(1, 168, ChronoUnit.HOURS);
+        fc.saveFlight(randomFlight);
+        assertEquals(Optional.of(randomFlight), fc.getFlight(randomFlight));
+    }
+
+    @Test
+    void getWithObjTest3() {
+        makeEmpty();
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        assertThrowsExactly(NonInstantiatedDaoException.class, () -> fc.getFlight(randomFlight));
+    }
+
+    @Test
+    void getWithObjTest4() {
+        FlightController fc = new FlightController(new FlightService(new DaoFlightFile(fileNonExisting)));
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
+                () -> fc.getFlight(randomFlight));
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
 
@@ -211,6 +255,7 @@ class FlightControllerFileTest {
     void getMaxIdTest1() {
         makeFull();
         FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        assertTrue(fc.isPresent());
         assertEquals(fc.getAllFlights().get().stream()
                 .mapToInt(Flight::getId)
                 .max()
@@ -221,13 +266,14 @@ class FlightControllerFileTest {
     void getMaxIdTest2() {
         makeEmpty();
         FlightController fc = new FlightController(new FlightService(new DaoFlightFile(file)));
+        assertTrue(fc.isEmpty());
         assertEquals(1, fc.getMaxId());
     }
 
     @Test
     void getMaxIdTest3() {
         FlightController fc = new FlightController(new FlightService(new DaoFlightFile(fileNonExisting)));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
                 fc::getMaxId);
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }

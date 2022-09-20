@@ -1,32 +1,35 @@
 package database.dao;
 
 import entities.Identifiable;
-import exceptions.booking_menu_exceptions.NonInitializedDatabaseException;
+import exceptions.database_exceptions.NonInstantiatedDaoException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class DaoInMemory<A extends Identifiable> implements DAO<A>{
+    private List<A> data;
 
-    private List<A> objects;
 
-    public DaoInMemory(List<A> objects) {
-        this.objects = new ArrayList<>(objects);
+    //constructors
+    public DaoInMemory(List<A> data) {
+        this.data = new ArrayList<>(data);
     }
 
+
+    //methods
     @Override
-    public void save(A object) {
+    public void save(A obj) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("List field of DAO is null");
+            throw new NonInstantiatedDaoException("List field of DAO is null.");
         }
-        objects.add(object);
+        data.add(obj);
     }
 
     @Override
     public Optional<A> get(int id) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("List field of DAO is null");
+            throw new NonInstantiatedDaoException("List field of DAO is null.");
         }
         return getAll().get().stream()
                 .filter(obj -> obj.getId() == id)
@@ -36,7 +39,7 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
     @Override
     public Optional<A> get(A object) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("List field of DAO is null");
+            throw new NonInstantiatedDaoException("List field of DAO is null");
         }
         return getAll().get().stream()
                 .filter(obj -> obj.equals(object))
@@ -46,35 +49,35 @@ public class DaoInMemory<A extends Identifiable> implements DAO<A>{
     @Override
     public boolean remove(int id) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("List field of DAO is null");
+            throw new NonInstantiatedDaoException("List field of DAO is null");
         }
-        return objects.removeIf(obj -> obj.getId() == id);
+        return data.removeIf(obj -> obj.getId() == id);
     }
 
     @Override
     public boolean remove(A object) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("List field of DAO is null");
+            throw new NonInstantiatedDaoException("List field of DAO is null");
         }
-        return objects.remove(object);
+        return data.remove(object);
     }
 
     @Override
     public Optional<List<A>> getAll() {
-        return Optional.ofNullable(objects);
+        return Optional.ofNullable(data);
     }
 
     @Override
     public void saveAll(List<A> objects) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("List field of DAO is null");
+            throw new NonInstantiatedDaoException("List field of DAO is null");
         }
-        this.objects.addAll(objects);
+        this.data.addAll(objects);
     }
 
     @Override
-    public void setAllTo(List<A> data) {
-        objects = new ArrayList<>(data);
+    public void setAll(List<A> data) {
+        this.data = new ArrayList<>(data);
     }
 
     @Override

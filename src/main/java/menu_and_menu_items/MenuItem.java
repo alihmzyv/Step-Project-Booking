@@ -2,7 +2,6 @@ package menu_and_menu_items;
 
 import database.Database;
 import entities.BookingAppLogger;
-import exceptions.booking_menu_exceptions.BookingMenuException;
 import io.Console;
 
 public abstract class MenuItem implements Runnable {

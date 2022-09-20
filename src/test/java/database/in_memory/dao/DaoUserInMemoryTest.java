@@ -1,13 +1,9 @@
 package database.in_memory.dao;
 
 import database.dao.DaoUserInMemory;
-import database.dao.DaoUserInMemory;
-import database.dao.DaoUserInMemory;
-import entities.User;
 import entities.User;
 import org.junit.jupiter.api.Test;
 
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +34,7 @@ class DaoUserInMemoryTest {
     void setAllTo() {
         DaoUserInMemory daoUserInMemory = new DaoUserInMemory(randomUsers);
         List<User> randomUsers2 = User.getRandom(100);
-        daoUserInMemory.setAllTo(randomUsers2);
+        daoUserInMemory.setAll(randomUsers2);
         assertEquals(Optional.of(randomUsers2), daoUserInMemory.getAll());
     }
 

@@ -30,7 +30,7 @@ public class BookingService {
     }
 
     public void setAllBookingsTo(List<Booking> data) {
-        dao.setAllTo(data);
+        dao.setAll(data);
     }
 
     public boolean isPresent() {

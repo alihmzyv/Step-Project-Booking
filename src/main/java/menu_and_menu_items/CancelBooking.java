@@ -2,7 +2,7 @@ package menu_and_menu_items;
 
 import entities.Booking;
 import entities.User;
-import exceptions.booking_menu_exceptions.NoSuchBookingException;
+import exceptions.database_exceptions.NoSuchBookingException;
 
 public class CancelBooking extends MenuItem {
     private final User user;

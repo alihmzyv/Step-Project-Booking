@@ -8,7 +8,7 @@ import database.services.BookingService;
 import database.services.FlightService;
 import database.services.UserService;
 import entities.Flight;
-import exceptions.booking_menu_exceptions.FileDatabaseException;
+import exceptions.database_exceptions.LocalDatabaseException;
 
 import java.io.*;
 import java.time.temporal.ChronoUnit;
@@ -92,7 +92,7 @@ public class Database {
                     .orElse(1);
         }
         catch (IOException exc) {
-            throw new FileDatabaseException(exc);
+            throw new LocalDatabaseException(exc);
         }
     }
 }

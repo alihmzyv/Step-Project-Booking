@@ -1,6 +1,6 @@
 import database.Database;
 import entities.BookingAppLogger;
-import exceptions.booking_menu_exceptions.BookingMenuException;
+import exceptions.menu_exceptions.MenuException;
 import io.Console;
 import io.RealConsole;
 import menu_and_menu_items.*;
@@ -33,7 +33,7 @@ public class BookingApp implements Runnable {
                 mainMenu.run();
                 break;
             }
-            catch (BookingMenuException exc) {
+            catch (MenuException exc) {
                 System.out.println(exc.getMessage());
             }
         }

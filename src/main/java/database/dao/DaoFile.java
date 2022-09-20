@@ -1,8 +1,8 @@
 package database.dao;
 
 import entities.Identifiable;
-import exceptions.booking_menu_exceptions.FileDatabaseException;
-import exceptions.booking_menu_exceptions.NonInitializedDatabaseException;
+import exceptions.database_exceptions.LocalDatabaseException;
+import exceptions.database_exceptions.NonInstantiatedDaoException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -21,13 +21,13 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
     public void save(A object) {
         List<A> data = getAll().orElseGet(ArrayList::new);
         data.add(object);
-        setAllTo(data);
+        setAll(data);
     }
 
     @Override
     public Optional<A> get(int id) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("File field of DAO is an empty file or a file not containing a List of corresponding entity.");
+            throw new NonInstantiatedDaoException("File field of DAO is an empty file or a file not containing a List of corresponding entity.");
         }
         return getAll().get().stream()
                 .filter(obj -> obj.getId() == id)
@@ -37,7 +37,7 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
     @Override
     public Optional<A> get(A object) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("File field of DAO is an empty file or a file not containing a List of corresponding entity.");
+            throw new NonInstantiatedDaoException("File field of DAO is an empty file or a file not containing a List of corresponding entity.");
         }
         return getAll().get().stream()
                 .filter(obj -> obj.equals(object))
@@ -47,11 +47,11 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
     @Override
     public boolean remove(int id) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException("File field of DAO is an empty file or a file not containing a List of corresponding entity.");
+            throw new NonInstantiatedDaoException("File field of DAO is an empty file or a file not containing a List of corresponding entity.");
         }
         List<A> data = getAll().get();
         if (data.removeIf(obj -> obj.getId() == id)) {
-            setAllTo(data);
+            setAll(data);
             return true;
         }
         return false;
@@ -60,12 +60,12 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
     @Override
     public boolean remove(A object) {
         if (isEmpty()) {
-            throw new NonInitializedDatabaseException(
+            throw new NonInstantiatedDaoException(
                     "File field of DAO is an empty file or a file not containing a List of corresponding entity.");
         }
         List<A> data = getAll().get();
         if (data.remove(object)) {
-            setAllTo(data);
+            setAll(data);
             return true;
         }
         return false;
@@ -76,7 +76,7 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
     public void saveAll(List<A> objects) {
         List<A> data = getAll().orElseGet(ArrayList::new);
         data.addAll(objects);
-        setAllTo(data);
+        setAll(data);
     }
 
     public Optional<List<A>> getAll() {
@@ -87,13 +87,13 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
             return Optional.empty();
         }
         catch (ClassNotFoundException | IOException exc) {
-            throw new FileDatabaseException(exc);
+            throw new LocalDatabaseException(exc);
         }
     }
 
-    public void setAllTo(List<A> data) {
+    public void setAll(List<A> data) {
         if (!file.exists()) {
-            throw new FileDatabaseException(new FileNotFoundException(String.format(
+            throw new LocalDatabaseException(new FileNotFoundException(String.format(
                     "Database file could not be found at: %s",
                     file.getAbsolutePath())));
         }
@@ -101,7 +101,7 @@ public class DaoFile<A extends Identifiable> implements DAO<A> {
             oos.writeObject(data);
         }
         catch (IOException exc) {
-            throw new FileDatabaseException(exc);
+            throw new LocalDatabaseException(exc);
         }
     }
 

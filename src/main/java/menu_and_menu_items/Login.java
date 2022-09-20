@@ -1,8 +1,8 @@
 package menu_and_menu_items;
 
 import entities.User;
-import exceptions.booking_menu_exceptions.BookingMenuException;
-import exceptions.booking_menu_exceptions.NoSuchUserException;
+import exceptions.menu_exceptions.MenuException;
+import exceptions.database_exceptions.NoSuchUserException;
 import java.io.File;
 import java.util.Optional;
 
@@ -13,7 +13,7 @@ public class Login extends MenuItem {
     }
 
 
-    public void run() throws BookingMenuException {
+    public void run() throws MenuException {
         Optional<User> userOptional = getUser(getUsernameInput(), getPasswordInput());
         if (userOptional.isEmpty()) {
             throw new NoSuchUserException("Wrong username and/or password. Try again.");

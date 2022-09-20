@@ -1,7 +1,6 @@
 package menu_and_menu_items;
 
 import entities.User;
-import exceptions.booking_menu_exceptions.NoSuchFlightException;
 
 import java.util.Optional;
 

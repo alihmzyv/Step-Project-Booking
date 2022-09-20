@@ -2,8 +2,8 @@ package menu_and_menu_items;
 
 import database.Database;
 import entities.BookingAppLogger;
-import exceptions.booking_menu_exceptions.BookingMenuException;
-import exceptions.booking_menu_exceptions.WrongMenuItemMenuException;
+import exceptions.menu_exceptions.MenuException;
+import exceptions.menu_exceptions.NoSuchMenuItemException;
 import helpers.Helper;
 import io.Console;
 
@@ -40,13 +40,13 @@ public class Menu implements Runnable {
                 MenuItem menuItemChosen = menuItems.stream()
                         .filter(menuItem -> menuItem.getId() == menuItemIdInput)
                         .findAny()
-                        .orElseThrow(() -> new WrongMenuItemMenuException("Wrong menu item. Try again."));
+                        .orElseThrow(() -> new NoSuchMenuItemException("Wrong menu item. Try again."));
                 menuItemChosen.run();
                 if (menuItemChosen.isExit()) {
                     break;
                 }
             }
-            catch (BookingMenuException exc) {
+            catch (MenuException exc) {
                 System.out.println(exc.getMessage());
             }
         }

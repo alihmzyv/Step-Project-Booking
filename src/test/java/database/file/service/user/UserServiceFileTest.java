@@ -2,13 +2,14 @@ package database.file.service.user;
 
 import database.dao.DaoUserFile;
 import database.services.UserService;
+import entities.Booking;
 import entities.User;
-import exceptions.booking_menu_exceptions.FileDatabaseException;
-import exceptions.booking_menu_exceptions.NonInitializedDatabaseException;
+import exceptions.database_exceptions.LocalDatabaseException;
+import exceptions.database_exceptions.NoSuchUserException;
+import exceptions.database_exceptions.NonInstantiatedDaoException;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ class UserServiceFileTest {
             oos.writeObject(randomUsers);
         }
         catch (IOException exc) {
-            throw new FileDatabaseException(exc);
+            throw new LocalDatabaseException(exc);
         }
     }
 
@@ -35,7 +36,7 @@ class UserServiceFileTest {
             new FileOutputStream(file).close();
         }
         catch (IOException exc) {
-            throw new FileDatabaseException(exc);
+            throw new LocalDatabaseException(exc);
         }
     }
 
@@ -57,7 +58,7 @@ class UserServiceFileTest {
     @Test
     void getAllUsersTest3() {
         UserService us = new UserService(new DaoUserFile(fileNonExisting));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
                 us::getAllUsers);
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
@@ -84,20 +85,63 @@ class UserServiceFileTest {
     void setAllUsersToTest3() {
         UserService us = new UserService(new DaoUserFile(fileNonExisting));
         List<User> randomUsers2 = User.getRandom(100);
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
                 () -> us.setAllUsersTo(randomUsers2));
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
 
+    @Test
+    void isPresentTest1() {
+        makeFull();
+        UserService us = new UserService(new DaoUserFile(file));
+        assertTrue(us.isPresent());
+    }
+
+    @Test
+    void isPresentTest2() {
+        makeEmpty();
+        UserService us = new UserService(new DaoUserFile(file));
+        assertFalse(us.isPresent());
+    }
+
+    @Test
+    void isPresentTest3() {
+        UserService us = new UserService(new DaoUserFile(fileNonExisting));
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
+                () -> us.isPresent());
+        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
+    }
+
+    @Test
+    void isEmptyTest1() {
+        makeFull();
+        UserService us = new UserService(new DaoUserFile(file));
+        assertFalse(us.isEmpty());
+    }
+
+    @Test
+    void isEmptyTest2() {
+        makeEmpty();
+        UserService us = new UserService(new DaoUserFile(file));
+        assertTrue(us.isEmpty());
+    }
+
+    @Test
+    void isEmptyTest3() {
+        UserService us = new UserService(new DaoUserFile(fileNonExisting));
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
+                () -> us.isEmpty());
+        assertEquals(FileNotFoundException.class, exc.getCause().getClass());
+    }
 
     @Test
     void saveTest1() {
         makeFull();
         UserService us = new UserService(new DaoUserFile(file));
         us.saveUser(randomUser);
-        List<User> randomUsersCopy = new ArrayList<>(randomUsers);
-        randomUsersCopy.add(randomUser);
-        assertEquals(Optional.of(randomUsersCopy), us.getAllUsers());
+        assertTrue(us.isPresent());
+        assertTrue(us.getAllUsers().get().stream()
+                .anyMatch(user -> user.equals(randomUser)));
     }
 
     @Test
@@ -105,13 +149,15 @@ class UserServiceFileTest {
         makeEmpty();
         UserService us = new UserService(new DaoUserFile(file));
         us.saveUser(randomUser);
-        assertEquals(Optional.of(List.of(randomUser)), us.getAllUsers());
+        assertTrue(us.isPresent());
+        assertTrue(us.getAllUsers().get().stream()
+                .anyMatch(user -> user.equals(randomUser)));
     }
 
     @Test
     void saveTest3() {
         UserService us = new UserService(new DaoUserFile(fileNonExisting));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
                 () -> us.saveUser(randomUser));
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
@@ -135,14 +181,14 @@ class UserServiceFileTest {
     void getWithObjTest3() {
         makeEmpty();
         UserService us = new UserService(new DaoUserFile(file));
-        assertThrowsExactly(NonInitializedDatabaseException.class, () -> us.getUser(User.getRandom()));
+        assertThrowsExactly(NonInstantiatedDaoException.class, () -> us.getUser(randomUser));
     }
 
     @Test
     void getWithObjTest4() {
         UserService us = new UserService(new DaoUserFile(fileNonExisting));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> us.getUser(User.getRandom()));
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
+                () -> us.getUser(randomUser));
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
 
@@ -171,7 +217,7 @@ class UserServiceFileTest {
     @Test
     void getWithUsernamePsswrdTest4() {
         UserService us = new UserService(new DaoUserFile(fileNonExisting));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
                 () -> us.getUser(randomUser.getUsername(), randomUser.getPassword()));
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }
@@ -181,7 +227,7 @@ class UserServiceFileTest {
     void removeWithObjTest1() {
         makeFull();
         UserService us = new UserService(new DaoUserFile(file));
-        assertFalse(us.removeUser(User.getRandom()));
+        assertFalse(us.removeUser(randomUser));
     }
 
     @Test
@@ -196,21 +242,57 @@ class UserServiceFileTest {
     void removeWithObjTest3() {
         makeEmpty();
         UserService us = new UserService(new DaoUserFile(file));
-        assertThrowsExactly(NonInitializedDatabaseException.class, () -> us.removeUser(User.getRandom()));
+        assertThrowsExactly(NonInstantiatedDaoException.class, () -> us.removeUser(randomUser));
     }
 
     @Test
     void removeWithObjTest4() {
         UserService us = new UserService(new DaoUserFile(fileNonExisting));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
-                () -> us.removeUser(User.getRandom()));
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
+                () -> us.removeUser(randomUser));
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
+    }
+
+    @Test
+    void addBookingTest1() {
+        makeFull();
+        User randomUser = User.getRandom();
+        Booking randomBooking = Booking.getRandom();
+        UserService us = new UserService(new DaoUserFile(file));
+        assertThrowsExactly(NoSuchUserException.class, () -> us.addBooking(randomUser, randomBooking));
+    }
+
+    @Test
+    void addBookingTest2() {
+        User randomUser = User.getRandom();
+        Booking randomBooking = Booking.getRandom();
+        UserService us = new UserService(new DaoUserFile(file));
+        us.saveUser(randomUser);
+        assertTrue(us.addBooking(randomUser, randomBooking));
+    }
+
+    @Test
+    void removeBookingTest1() {
+        User randomUser = User.getRandom();
+        Booking randomBooking = Booking.getRandom();
+        UserService us = new UserService(new DaoUserFile(file));
+        assertThrowsExactly(NoSuchUserException.class, () -> us.removeBooking(randomUser, randomBooking));
+    }
+
+    @Test
+    void removeBookingTest2() {
+        User randomUser = User.getRandom();
+        Booking randomBooking = Booking.getRandom();
+        UserService us = new UserService(new DaoUserFile(file));
+        randomUser.addBooking(randomBooking);
+        us.saveUser(randomUser);
+        assertTrue(us.removeBooking(randomUser, randomBooking));
     }
 
     @Test
     void containsTest1() {
         UserService us = new UserService(new DaoUserFile(file));
-        assertThrowsExactly(NonInitializedDatabaseException.class, () -> us.contains(User.getRandom().getUsername()));
+        assertThrowsExactly(NonInstantiatedDaoException.class, () -> us.contains(randomUser.getUsername()));
     }
 
     @Test
@@ -224,6 +306,7 @@ class UserServiceFileTest {
     void getMaxIdTest1() {
         makeFull();
         UserService us = new UserService(new DaoUserFile(file));
+        assertTrue(us.isPresent());
         assertEquals(us.getAllUsers().get().stream()
                 .mapToInt(User::getId)
                 .max()
@@ -234,13 +317,14 @@ class UserServiceFileTest {
     void getMaxIdTest2() {
         makeEmpty();
         UserService us = new UserService(new DaoUserFile(file));
+        assertTrue(us.isEmpty());
         assertEquals(1, us.getMaxId());
     }
 
     @Test
     void getMaxIdTest3() {
         UserService us = new UserService(new DaoUserFile(fileNonExisting));
-        FileDatabaseException exc = assertThrowsExactly(FileDatabaseException.class,
+        LocalDatabaseException exc = assertThrowsExactly(LocalDatabaseException.class,
                 us::getMaxId);
         assertEquals(FileNotFoundException.class, exc.getCause().getClass());
     }

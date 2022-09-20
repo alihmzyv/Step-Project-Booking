@@ -36,7 +36,7 @@ class DaoFlightInMemoryTest {
     void setAllTo() {
         DaoFlightInMemory daoFlightInMemory = new DaoFlightInMemory(randomFlights);
         List<Flight> randomFlights2 = Flight.getRandom(100, 1, 168, ChronoUnit.HOURS);
-        daoFlightInMemory.setAllTo(randomFlights2);
+        daoFlightInMemory.setAll(randomFlights2);
         assertEquals(Optional.of(randomFlights2), daoFlightInMemory.getAll());
     }
 

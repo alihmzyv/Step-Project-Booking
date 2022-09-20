@@ -4,8 +4,8 @@ import entities.Booking;
 import database.services.BookingService;
 import database.services.FlightService;
 import database.services.UserService;
-import exceptions.booking_menu_exceptions.NoSuchFlightException;
-import exceptions.booking_menu_exceptions.NoSuchUserException;
+import exceptions.database_exceptions.NoSuchFlightException;
+import exceptions.database_exceptions.NoSuchUserException;
 
 import java.util.List;
 import java.util.Optional;
